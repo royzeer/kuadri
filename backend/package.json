@@ -1,0 +1,36 @@
+{
+  "name": "kuadri-api",
+  "version": "1.0.0",
+  "description": "API REST de Kuadri: tareas, recordatorios automáticos, enfoque, estadísticas, rachas y logros.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "db:init": "node scripts/init-db.js",
+    "test": "jest --runInBand"
+  },
+  "author": "Roycer Stevan Cervantes Ropero",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testTimeout": 20000
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mysql2": "^3.24.6",
+    "node-cron": "^4.6.0",
+    "nodemailer": "^10.3.1"
+  },
+  "devDependencies": {
+    "jest": "^30.5.2",
+    "supertest": "^7.3.1"
+  }
+}

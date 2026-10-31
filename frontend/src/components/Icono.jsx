@@ -13,6 +13,8 @@ import {
   Plane,
   CircleCheck,
   Sun,
+  Tag,
+  Trophy,
   Wallet,
   Zap,
 } from 'lucide-react';
@@ -34,6 +36,8 @@ const ICONOS = {
   check: CircleCheck,
   reloj: Clock,
   sol: Sun,
+  trofeo: Trophy,
+  etiqueta: Tag,
 };
 
 export const ICONOS_CATEGORIA = ['carpeta', 'libro', 'codigo', 'corazon', 'rayo', 'cafe', 'avion', 'pincel', 'control', 'dinero'];

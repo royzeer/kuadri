@@ -65,6 +65,11 @@ erDiagram
   LOGROS ||--o{ USUARIO_LOGROS : otorgado
   CATEGORIAS |o--o{ TAREAS : clasifica
   TAREAS |o--o{ SESIONES_ENFOQUE : asociada
+  USUARIOS ||--o{ METAS : define
+  CATEGORIAS |o--o{ METAS : clasifica
+  METAS ||--o{ META_PASOS : contiene
+  USUARIOS ||--o{ DESEOS : quiere
+  DESEOS ||--o{ PRECIOS_DESEO : historial
 
   USUARIOS {
     int id PK
@@ -118,6 +123,39 @@ erDiagram
     int usuario_id PK
     int logro_id PK
     datetime obtenido_en
+  }
+  METAS {
+    int id PK
+    int usuario_id FK
+    int categoria_id FK
+    varchar titulo
+    text descripcion
+    date fecha_objetivo
+    datetime cumplida_en
+  }
+  META_PASOS {
+    int id PK
+    int meta_id FK
+    varchar texto
+    boolean hecho
+  }
+  DESEOS {
+    int id PK
+    int usuario_id FK
+    varchar nombre
+    varchar enlace
+    varchar imagen
+    decimal precio_objetivo
+    enum prioridad
+    boolean aviso_enviado
+    datetime comprado_en
+  }
+  PRECIOS_DESEO {
+    int id PK
+    int deseo_id FK
+    decimal precio
+    varchar tienda
+    datetime registrado_en
   }
 ```
 
@@ -214,6 +252,23 @@ Todas las respuestas usan el formato `{ ok, data, mensaje }`. Las rutas marcadas
 | PUT | /api/tareas/:id | Editar tarea | Sí |
 | PATCH | /api/tareas/:id/completar | Marcar completada o pendiente | Sí |
 | DELETE | /api/tareas/:id | Eliminar tarea | Sí |
+| GET | /api/metas | Listar metas con pasos y porcentaje de avance | Sí |
+| POST | /api/metas | Crear meta (con pasos opcionales) | Sí |
+| GET | /api/metas/:id | Ver una meta | Sí |
+| PUT | /api/metas/:id | Editar meta | Sí |
+| PATCH | /api/metas/:id/cumplir | Marcar cumplida o en curso | Sí |
+| DELETE | /api/metas/:id | Eliminar meta | Sí |
+| POST | /api/metas/:id/pasos | Agregar paso | Sí |
+| PATCH | /api/metas/:id/pasos/:pasoId | Marcar o desmarcar paso | Sí |
+| DELETE | /api/metas/:id/pasos/:pasoId | Quitar paso | Sí |
+| GET | /api/deseos | Listar deseos con precio actual y mínimo | Sí |
+| POST | /api/deseos | Agregar deseo (con precio de hoy opcional) | Sí |
+| GET | /api/deseos/:id | Ver deseo con historial, tendencia y si llegó al objetivo | Sí |
+| PUT | /api/deseos/:id | Editar deseo | Sí |
+| PATCH | /api/deseos/:id/comprar | Marcar comprado o devolver a la lista | Sí |
+| DELETE | /api/deseos/:id | Eliminar deseo | Sí |
+| POST | /api/deseos/:id/precios | Anotar precio | Sí |
+| DELETE | /api/deseos/:id/precios/:precioId | Borrar un precio del historial | Sí |
 | POST | /api/enfoque | Registrar sesión de enfoque | Sí |
 | GET | /api/estadisticas/resumen | Resumen semanal, racha y totales | Sí |
 | GET | /api/logros | Logros con estado obtenido o bloqueado | Sí |

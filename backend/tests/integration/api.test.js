@@ -183,3 +183,134 @@ describe('Recordatorios automáticos', () => {
     expect(notis.body.data.map((n) => n.mensaje)).toContain('Se acerca la entrega: Entrega sorpresa');
   });
 });
+
+describe('Metas personales', () => {
+  let auth;
+  let metaId;
+
+  beforeAll(async () => {
+    auth = { Authorization: `Bearer ${await registrar('flor@test.com')}` };
+  });
+
+  test('crea una meta con pasos y progreso en cero', async () => {
+    const res = await request(app)
+      .post('/api/metas')
+      .set(auth)
+      .send({ titulo: 'Aprender inglés B1', fechaObjetivo: '2027-06-30', pasos: ['Curso A2', 'Curso B1'] });
+    expect(res.status).toBe(201);
+    expect(res.body.data.pasos.map((p) => p.texto)).toEqual(['Curso A2', 'Curso B1']);
+    expect(res.body.data.progreso).toBe(0);
+    expect(res.body.data.fecha_objetivo).toBe('2027-06-30');
+    metaId = res.body.data.id;
+  });
+
+  test('rechaza una meta sin nombre o con fecha inválida', async () => {
+    const res = await request(app).post('/api/metas').set(auth).send({ titulo: ' ', fechaObjetivo: '30/06/2027' });
+    expect(res.status).toBe(422);
+    expect(Object.keys(res.body.data.errores).sort()).toEqual(['fechaObjetivo', 'titulo']);
+  });
+
+  test('al hacer todos los pasos la meta se cumple sola y da el logro "Soñador"', async () => {
+    const { body } = await request(app).get(`/api/metas/${metaId}`).set(auth);
+    const [p1, p2] = body.data.pasos;
+
+    const medio = await request(app).patch(`/api/metas/${metaId}/pasos/${p1.id}`).set(auth).send({ hecho: true });
+    expect(medio.body.data.meta.progreso).toBe(50);
+    expect(medio.body.data.meta.cumplida_en).toBeNull();
+
+    const fin = await request(app).patch(`/api/metas/${metaId}/pasos/${p2.id}`).set(auth).send({ hecho: true });
+    expect(fin.body.data.meta.progreso).toBe(100);
+    expect(fin.body.data.meta.cumplida_en).not.toBeNull();
+    expect(fin.body.data.nuevosLogros.map((l) => l.codigo)).toContain('META_1');
+  });
+
+  test('si se agrega un paso nuevo, la meta vuelve a quedar en curso', async () => {
+    const res = await request(app).post(`/api/metas/${metaId}/pasos`).set(auth).send({ texto: 'Examen oficial' });
+    expect(res.status).toBe(201);
+    expect(res.body.data.meta.cumplida_en).toBeNull();
+    expect(res.body.data.meta.progreso).toBe(67);
+  });
+
+  test('una meta sin pasos se puede marcar como cumplida a mano', async () => {
+    const creada = await request(app).post('/api/metas').set(auth).send({ titulo: 'Leer un libro al mes' });
+    const res = await request(app).patch(`/api/metas/${creada.body.data.id}/cumplir`).set(auth).send({ cumplida: true });
+    expect(res.status).toBe(200);
+    expect(res.body.data.meta.progreso).toBe(100);
+  });
+
+  test('un usuario no puede ver ni tocar las metas de otro', async () => {
+    const otro = { Authorization: `Bearer ${await registrar('gabi@test.com')}` };
+    expect((await request(app).get(`/api/metas/${metaId}`).set(otro)).status).toBe(404);
+    expect((await request(app).post(`/api/metas/${metaId}/pasos`).set(otro).send({ texto: 'X' })).status).toBe(404);
+    expect((await request(app).get('/api/metas').set(otro)).body.data).toEqual([]);
+  });
+});
+
+describe('Lista de deseos y precios', () => {
+  let auth;
+  let deseoId;
+
+  beforeAll(async () => {
+    auth = { Authorization: `Bearer ${await registrar('hugo@test.com')}` };
+  });
+
+  test('agrega un deseo con su precio de hoy', async () => {
+    const res = await request(app).post('/api/deseos').set(auth).send({
+      nombre: 'Audífonos',
+      enlace: 'https://tienda.example.com/audifonos',
+      precioObjetivo: 150000,
+      precioActual: 200000,
+      tienda: 'Tienda X',
+    });
+    expect(res.status).toBe(201);
+    expect(res.body.data.deseo.precio_actual).toBe(200000);
+    expect(res.body.data.deseo.historial).toHaveLength(1);
+    expect(res.body.data.deseo.enObjetivo).toBe(false);
+    deseoId = res.body.data.deseo.id;
+  });
+
+  test('rechaza enlaces que no son web y precios negativos', async () => {
+    const res = await request(app)
+      .post('/api/deseos')
+      .set(auth)
+      .send({ nombre: 'Malo', enlace: 'javascript:alert(1)', precioObjetivo: -5 });
+    expect(res.status).toBe(422);
+    expect(Object.keys(res.body.data.errores).sort()).toEqual(['enlace', 'precioObjetivo']);
+  });
+
+  test('al anotar un precio que llega al objetivo avisa una sola vez y da el logro "Paciente"', async () => {
+    const baja = await request(app).post(`/api/deseos/${deseoId}/precios`).set(auth).send({ precio: 140000 });
+    expect(baja.status).toBe(201);
+    expect(baja.body.data.deseo.tendencia).toBe('baja');
+    expect(baja.body.data.deseo.enObjetivo).toBe(true);
+    expect(baja.body.data.deseo.precio_minimo).toBe(140000);
+    expect(baja.body.data.nuevosLogros.map((l) => l.codigo)).toContain('PACIENTE');
+
+    // Otro precio bajo: no repite el aviso
+    await request(app).post(`/api/deseos/${deseoId}/precios`).set(auth).send({ precio: 130000 });
+    const notis = await request(app).get('/api/notificaciones').set(auth);
+    const avisos = notis.body.data.filter((n) => n.mensaje.includes('llegó a tu precio objetivo'));
+    expect(avisos).toHaveLength(1);
+  });
+
+  test('guarda el historial en orden y permite borrar un precio mal anotado', async () => {
+    const { body } = await request(app).get(`/api/deseos/${deseoId}`).set(auth);
+    expect(body.data.historial.map((p) => p.precio)).toEqual([200000, 140000, 130000]);
+    const ultimo = body.data.historial[2];
+    const res = await request(app).delete(`/api/deseos/${deseoId}/precios/${ultimo.id}`).set(auth);
+    expect(res.status).toBe(200);
+    expect(res.body.data.precio_actual).toBe(140000);
+  });
+
+  test('marca un deseo como comprado', async () => {
+    const res = await request(app).patch(`/api/deseos/${deseoId}/comprar`).set(auth).send({ comprado: true });
+    expect(res.status).toBe(200);
+    expect(res.body.data.comprado_en).not.toBeNull();
+  });
+
+  test('un usuario no puede ver ni anotar precios en los deseos de otro', async () => {
+    const otro = { Authorization: `Bearer ${await registrar('ines@test.com')}` };
+    expect((await request(app).get(`/api/deseos/${deseoId}`).set(otro)).status).toBe(404);
+    expect((await request(app).post(`/api/deseos/${deseoId}/precios`).set(otro).send({ precio: 1 })).status).toBe(404);
+  });
+});

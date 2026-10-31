@@ -10,6 +10,8 @@ const REGLAS = {
   TAREAS_10: (e) => e.tareasCompletadas >= 10,
   ENFOQUE_300: (e) => e.minutosEnfoque >= 300,
   MADRUGADOR: (e) => e.tareasMadrugada >= 1,
+  META_1: (e) => e.metasCumplidas >= 1,
+  PACIENTE: (e) => e.deseosEnObjetivo >= 1,
 };
 
 // Función pura: devuelve los códigos de logros cuyas condiciones se cumplen.

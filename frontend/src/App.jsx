@@ -6,6 +6,8 @@ import AvisoApp from './components/AvisoApp';
 import Acceso from './pages/Acceso';
 import Inicio from './pages/Inicio';
 import Tareas from './pages/Tareas';
+import Metas from './pages/Metas';
+import Deseos from './pages/Deseos';
 import Enfoque from './pages/Enfoque';
 import Progreso from './pages/Progreso';
 import Ajustes from './pages/Ajustes';
@@ -39,6 +41,8 @@ export default function App() {
         <Route element={<Layout />}>
           <Route index element={<Inicio />} />
           <Route path="tareas" element={<Tareas />} />
+          <Route path="metas" element={<Metas />} />
+          <Route path="deseos" element={<Deseos />} />
           <Route path="enfoque" element={<Enfoque />} />
           <Route path="progreso" element={<Progreso />} />
           <Route path="ajustes" element={<Ajustes />} />

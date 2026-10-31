@@ -3,6 +3,9 @@ const { calcularRacha } = require('../../src/services/estadisticas.service');
 const { logrosCumplidos } = require('../../src/services/logro.service');
 const { sumarDias, ultimosDias } = require('../../src/utils/fechas');
 const { escapar } = require('../../src/services/correo.service');
+const { calcularProgreso } = require('../../src/services/meta.service');
+const { analizarPrecios } = require('../../src/services/deseo.service');
+const { enlace, precio, dia } = require('../../src/utils/validar');
 
 describe('fechas', () => {
   test('sumarDias cruza meses y años', () => {
@@ -57,6 +60,32 @@ describe('logrosCumplidos', () => {
     expect(logrosCumplidos(estado).sort()).toEqual(
       ['ENFOQUE_300', 'MADRUGADOR', 'PRIMER_PASO', 'RACHA_3', 'TAREAS_10'].sort(),
     );
+  });
+});
+
+describe('metas y deseos', () => {
+  test('calcularProgreso usa los pasos hechos y da 100 si la meta está cumplida', () => {
+    expect(calcularProgreso({ total_pasos: 0, pasos_hechos: 0, cumplida_en: null })).toBe(0);
+    expect(calcularProgreso({ total_pasos: 3, pasos_hechos: 1, cumplida_en: null })).toBe(33);
+    expect(calcularProgreso({ total_pasos: 0, pasos_hechos: 0, cumplida_en: '2026-10-31' })).toBe(100);
+  });
+
+  test('analizarPrecios detecta si el precio baja, sube o llega al objetivo', () => {
+    const p = (precios) => precios.map((v) => ({ precio: v }));
+    expect(analizarPrecios([], 100)).toEqual({ tendencia: null, diferencia: 0, enObjetivo: false });
+    expect(analizarPrecios(p([200]), null).tendencia).toBeNull();
+    expect(analizarPrecios(p([200, 150]), 160)).toEqual({ tendencia: 'baja', diferencia: -50, enObjetivo: true });
+    expect(analizarPrecios(p([150, 180]), 160)).toEqual({ tendencia: 'sube', diferencia: 30, enObjetivo: false });
+  });
+
+  test('valida enlaces, precios y fechas sin hora', () => {
+    expect(enlace('')).toBeNull();
+    expect(enlace('https://a.co/x')).toBe('https://a.co/x');
+    expect(enlace('javascript:alert(1)')).toBeUndefined();
+    expect(precio('125000')).toBe(125000);
+    expect(precio('0')).toBeUndefined();
+    expect(dia('2027-02-28')).toBe('2027-02-28');
+    expect(dia('2027-02-30')).toBeUndefined();
   });
 });
 

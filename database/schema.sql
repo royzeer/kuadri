@@ -1,4 +1,4 @@
--- Kuadri - Esquema de base de datos (Fases 1, 2 y 3)
+-- Kuadri - Esquema de base de datos (Fases 1, 2 y 3, y campus virtuales)
 -- Motor: MySQL 8 / MariaDB 10.6+
 
 DROP DATABASE IF EXISTS kuadri;
@@ -241,3 +241,34 @@ CREATE TABLE IF NOT EXISTS ocio_ratos (
 INSERT IGNORE INTO logros (codigo, nombre, descripcion, icono) VALUES
   ('CREATIVO',    'Creativo',    'Guardaste tu primera paleta de colores',    'pincel'),
   ('EQUILIBRADO', 'Equilibrado', 'Terminaste algo de tu lista de ocio',      'control');
+
+-- ===== Campus virtuales (igual a database/migraciones/003-campus-virtual.sql) =====
+
+-- Campus conectados por cada usuario. El enlace se guarda cifrado, nunca en texto plano.
+CREATE TABLE IF NOT EXISTS campus_conexiones (
+  id                    INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id            INT          NOT NULL,
+  nombre                VARCHAR(40)  NOT NULL,
+  enlace_cifrado        TEXT         NOT NULL,
+  dominio               VARCHAR(120) NOT NULL,
+  categoria_id          INT          NULL,
+  ultima_sincronizacion DATETIME     NULL,
+  ultimo_error          VARCHAR(255) NULL,
+  creado_en             DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_campus_usuario   FOREIGN KEY (usuario_id)   REFERENCES usuarios(id)   ON DELETE CASCADE,
+  CONSTRAINT fk_campus_categoria FOREIGN KEY (categoria_id) REFERENCES categorias(id) ON DELETE SET NULL,
+  CONSTRAINT uq_campus_nombre UNIQUE (usuario_id, nombre)
+);
+
+-- Actividades del campus que ya se trajeron, para no repetirlas.
+-- Si el usuario borra la tarea, el registro queda (tarea_id NULL) y no se vuelve a traer.
+CREATE TABLE IF NOT EXISTS campus_eventos (
+  id        INT AUTO_INCREMENT PRIMARY KEY,
+  campus_id INT          NOT NULL,
+  uid       VARCHAR(255) NOT NULL,
+  tarea_id  INT          NULL,
+  creado_en DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_eventos_campus FOREIGN KEY (campus_id) REFERENCES campus_conexiones(id) ON DELETE CASCADE,
+  CONSTRAINT fk_eventos_tarea  FOREIGN KEY (tarea_id)  REFERENCES tareas(id)            ON DELETE SET NULL,
+  CONSTRAINT uq_evento UNIQUE (campus_id, uid)
+);

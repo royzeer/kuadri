@@ -9,6 +9,7 @@ import Modal from '../components/Modal';
 import TareaForm from '../components/TareaForm';
 import TareaItem from '../components/TareaItem';
 import Calendario from '../components/Calendario';
+import { EVENTO_CAMPUS } from '../utils/campus';
 
 export default function Tareas() {
   const mostrarAviso = useAviso();
@@ -40,6 +41,9 @@ export default function Tareas() {
 
   useEffect(() => {
     cargar();
+    // Si llegan actividades del campus mientras la página está abierta, se recarga la lista
+    window.addEventListener(EVENTO_CAMPUS, cargar);
+    return () => window.removeEventListener(EVENTO_CAMPUS, cargar);
   }, [cargar]);
 
   useEffect(() => {

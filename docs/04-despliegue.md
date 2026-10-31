@@ -73,7 +73,15 @@ npm run db:init
 
 Límites del plan gratis (revisados en octubre de 2026): 100 correos al día y 3.000 al mes. Sin dominio propio el remitente es `onboarding@resend.dev` y Resend solo entrega al correo de la cuenta de Resend; a cualquier otro destino responde con error 403. Si eso pasa, Kuadri igual deja el aviso dentro de la app y no lo repite. Para enviar a otras personas hay que verificar un dominio propio y cambiar `RESEND_FROM`.
 
-## 5. Actualizaciones
+## 5. Campus virtuales
+
+1. En Render, abrir el servicio, ir a Environment y agregar dos variables con frases largas y aleatorias distintas:
+   - `CAMPUS_SECRET`: cifra los enlaces de calendario. Si se cambia después, cada usuario debe volver a pegar su enlace.
+   - `CRON_SECRET`: clave para que GitHub Actions pueda pedir la sincronización.
+2. En GitHub, abrir el repositorio, ir a Settings, luego Secrets and variables, luego Actions, y crear `CRON_SECRET` con el mismo valor.
+3. El flujo `.github/workflows/sincronizar-campus.yml` corre cada 3 horas, despierta a Render y trae las actividades nuevas de todos los usuarios. Se puede correr a mano desde la pestaña Actions con "Run workflow". GitHub pausa los flujos programados si el repositorio pasa 60 días sin cambios.
+
+## 6. Actualizaciones
 
 ### Cambios en la base de datos (migraciones)
 
@@ -88,7 +96,7 @@ cd backend
 npm run db:migrar
 ```
 
-4. Debe aparecer una línea `Migración aplicada: ...` por cada archivo (por ejemplo `001-fase-2-metas-deseos.sql` y `002-fase-3-estudio-ocio.sql`) y al final `Base de datos "kuadri" al día.` Las migraciones anteriores se vuelven a pasar sin cambiar nada.
+4. Debe aparecer una línea `Migración aplicada: ...` por cada archivo (por ejemplo `001-fase-2-metas-deseos.sql`, `002-fase-3-estudio-ocio.sql` y `003-campus-virtual.sql`) y al final `Base de datos "kuadri" al día.` Las migraciones anteriores se vuelven a pasar sin cambiar nada.
 5. Volver a dejar el `.env` apuntando a la base local.
 
 Las migraciones están en `database/migraciones/`. El archivo `database/schema.sql` ya trae todo para instalaciones nuevas.

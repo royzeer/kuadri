@@ -450,3 +450,139 @@ describe('Registro de ocio y equilibrio', () => {
     expect((await request(app).post(`/api/ocio/${ocioId}/ratos`).set(otro).send({ minutos: 10 })).status).toBe(404);
   });
 });
+
+describe('Campus virtuales', () => {
+  const ENLACE = 'https://campus.prueba.edu.co/calendar/export_execute.php?userid=9&authtoken=secreto123';
+  let auth;
+  let campusId;
+  let calendario;
+  let campusJob;
+  let ics;
+
+  // Fecha iCal en UTC a N días de hoy, para que siempre sean entregas futuras.
+  const enDias = (n) =>
+    new Date(Date.now() + n * 86400000)
+      .toISOString()
+      .replace(/[-:]/g, '')
+      .replace(/\.\d{3}/, '');
+  const evento = (uid, titulo, dias) =>
+    ['BEGIN:VEVENT', `UID:${uid}`, `SUMMARY:${titulo}`, 'CATEGORIES:Programación web', `DTSTART:${enDias(dias)}`, 'END:VEVENT'];
+  const calendarioCon = (...eventos) => ['BEGIN:VCALENDAR', ...eventos.flat(), 'END:VCALENDAR'].join('\r\n');
+
+  beforeAll(async () => {
+    auth = { Authorization: `Bearer ${await registrar('pepe@test.com')}` };
+    calendario = require('../../src/services/calendario.service');
+    campusJob = require('../../src/jobs/campus.job');
+    ics = calendarioCon(evento('a1', 'Vencimiento de Taller 1', 2), evento('a2', 'Se abre Foro 2', 3));
+    // No se sale a internet: el "campus" devuelve el calendario de prueba
+    jest.spyOn(calendario, 'descargar').mockImplementation(async () => ics);
+  });
+
+  afterAll(() => jest.restoreAllMocks());
+
+  test('conecta un campus, prueba el enlace y trae las entregas pendientes', async () => {
+    const cats = await request(app).get('/api/categorias').set(auth);
+    const universidad = cats.body.data.find((c) => c.nombre === 'Universidad');
+    const res = await request(app)
+      .post('/api/campus')
+      .set(auth)
+      .send({ nombre: 'Unimagdalena', enlace: ENLACE, categoriaId: universidad.id });
+    expect(res.status).toBe(201);
+    expect(res.body.data.sincronizacion.nuevas).toBe(1);
+    expect(res.body.data.campus.dominio).toBe('campus.prueba.edu.co');
+    expect(res.body.data.campus.importadas).toBe(1);
+    campusId = res.body.data.campus.id;
+
+    const tareas = await request(app).get('/api/tareas').set(auth);
+    expect(tareas.body.data).toHaveLength(1);
+    expect(tareas.body.data[0].titulo).toBe('Taller 1');
+    expect(tareas.body.data[0].categoria_nombre).toBe('Universidad');
+    expect(tareas.body.data[0].prioridad).toBe('alta');
+    expect(tareas.body.data[0].descripcion).toContain('Curso: Programación web');
+  });
+
+  test('nunca devuelve el enlace y lo guarda cifrado', async () => {
+    const res = await request(app).get('/api/campus').set(auth);
+    expect(JSON.stringify(res.body)).not.toContain('secreto123');
+    const [fila] = await pool.query('SELECT enlace_cifrado FROM campus_conexiones WHERE id = ?', [campusId]);
+    expect(fila[0].enlace_cifrado).not.toContain('secreto123');
+  });
+
+  test('al sincronizar de nuevo no repite tareas y trae solo las nuevas', async () => {
+    ics = calendarioCon(evento('a1', 'Vencimiento de Taller 1', 2), evento('a3', 'Vencimiento de Ensayo', 20));
+    const res = await request(app).post('/api/campus/sincronizar').set(auth).send({});
+    expect(res.body.data.nuevas).toBe(1);
+    const tareas = await request(app).get('/api/tareas').set(auth);
+    expect(tareas.body.data.map((t) => t.titulo).sort()).toEqual(['Ensayo', 'Taller 1']);
+  });
+
+  test('si el profesor cambia la fecha, se actualiza la tarea', async () => {
+    ics = calendarioCon(evento('a1', 'Vencimiento de Taller 1', 5), evento('a3', 'Vencimiento de Ensayo', 20));
+    const res = await request(app).post('/api/campus/sincronizar').set(auth).send({});
+    expect(res.body.data.actualizadas).toBe(1);
+    expect(res.body.data.nuevas).toBe(0);
+  });
+
+  test('una tarea borrada a mano no vuelve a aparecer', async () => {
+    const tareas = await request(app).get('/api/tareas').set(auth);
+    const ensayo = tareas.body.data.find((t) => t.titulo === 'Ensayo');
+    await request(app).delete(`/api/tareas/${ensayo.id}`).set(auth);
+    await request(app).post('/api/campus/sincronizar').set(auth).send({});
+    const despues = await request(app).get('/api/tareas').set(auth);
+    expect(despues.body.data.map((t) => t.titulo)).toEqual(['Taller 1']);
+  });
+
+  test('la sincronización al abrir la app espera unos minutos', async () => {
+    const res = await request(app).post('/api/campus/sincronizar').set(auth).send({ automatica: true });
+    expect(res.body.data.campus).toHaveLength(0);
+  });
+
+  test('avisa con una notificación cuando llegan actividades nuevas', async () => {
+    const res = await request(app).get('/api/notificaciones').set(auth);
+    expect(res.body.data.some((n) => n.mensaje.startsWith('Unimagdalena:'))).toBe(true);
+  });
+
+  test('guarda el error si el campus falla, sin romper la app', async () => {
+    calendario.descargar.mockRejectedValueOnce(new Error('No se pudo conectar con el campus'));
+    const res = await request(app).post('/api/campus/sincronizar').set(auth).send({});
+    expect(res.status).toBe(200);
+    expect(res.body.data.campus[0].error).toBe('No se pudo conectar con el campus');
+    const lista = await request(app).get('/api/campus').set(auth);
+    expect(lista.body.data[0].ultimo_error).toBe('No se pudo conectar con el campus');
+  });
+
+  test('rechaza enlaces inválidos y calendarios que no se pueden leer', async () => {
+    const malo = await request(app).post('/api/campus').set(auth).send({ nombre: 'Zajuna', enlace: 'http://127.0.0.1/x' });
+    expect(malo.status).toBe(422);
+    expect(malo.body.data.errores.enlace).toBeDefined();
+
+    calendario.descargar.mockResolvedValueOnce('<html>Inicia sesión</html>');
+    const noLee = await request(app)
+      .post('/api/campus')
+      .set(auth)
+      .send({ nombre: 'Zajuna', enlace: 'https://zajuna.prueba.co/calendar/export_execute.php?a=1' });
+    expect(noLee.status).toBe(422);
+    expect(noLee.body.data.errores.enlace).toContain('calendario');
+  });
+
+  test('un usuario no puede ver, cambiar ni borrar el campus de otro', async () => {
+    const otro = { Authorization: `Bearer ${await registrar('lola@test.com')}` };
+    expect((await request(app).get('/api/campus').set(otro)).body.data).toHaveLength(0);
+    expect((await request(app).put(`/api/campus/${campusId}`).set(otro).send({ nombre: 'X' })).status).toBe(404);
+    expect((await request(app).delete(`/api/campus/${campusId}`).set(otro)).status).toBe(404);
+  });
+
+  test('la sincronización general exige la clave del planificador', async () => {
+    const sinClave = await request(app).post('/api/campus/sincronizar-todos');
+    expect(sinClave.status).toBe(401);
+    const resultado = await campusJob.ejecutar(new Date(Date.now() + 3600000));
+    expect(resultado.revisados).toBeGreaterThanOrEqual(1);
+  });
+
+  test('al desconectar el campus las tareas que ya llegaron se quedan', async () => {
+    const res = await request(app).delete(`/api/campus/${campusId}`).set(auth);
+    expect(res.status).toBe(200);
+    const tareas = await request(app).get('/api/tareas').set(auth);
+    expect(tareas.body.data).toHaveLength(1);
+  });
+});

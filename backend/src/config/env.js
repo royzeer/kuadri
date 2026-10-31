@@ -37,6 +37,16 @@ const env = {
     // Mínimo de minutos entre revisiones cuando se disparan por uso de la app
     minutosEntreRevisiones: Number(process.env.REMINDER_MIN_INTERVAL) || 5,
   },
+  campus: {
+    // Clave para cifrar los enlaces de calendario. Si falta, se deriva de JWT_SECRET.
+    secreto: process.env.CAMPUS_SECRET || '',
+    // Clave que debe enviar GitHub Actions para sincronizar a todos los usuarios.
+    claveCron: process.env.CRON_SECRET || '',
+    // Mientras el servidor está despierto, también sincroniza solo (por defecto cada hora).
+    cron: process.env.CAMPUS_CRON || '0 * * * *',
+    // Mínimo de minutos entre sincronizaciones automáticas de un mismo campus.
+    minutosEntreSincronizaciones: Number(process.env.CAMPUS_MIN_INTERVAL) || 10,
+  },
 };
 
 // La zona horaria del proceso define cómo se interpretan las fechas.
@@ -48,5 +58,7 @@ if (!env.jwt.secreto) {
   }
   env.jwt.secreto = 'secreto-solo-para-desarrollo';
 }
+
+if (!env.campus.secreto) env.campus.secreto = env.jwt.secreto;
 
 module.exports = env;

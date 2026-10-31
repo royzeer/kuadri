@@ -38,6 +38,14 @@ Estudio en dos instituciones al mismo tiempo (Tecnólogo en Análisis y Desarrol
 - **Equilibrio de la semana** en Progreso: qué parte del tiempo fue estudio (enfoque) y qué parte fue ocio.
 - Dos logros nuevos: **Creativo** (primera paleta) y **Equilibrado** (terminar algo de tu lista de ocio).
 
+### Campus virtuales
+
+- **Conecta tu campus** (Moodle, Zajuna del SENA, Brightspace u otro que exporte su calendario) pegando una sola vez el enlace de calendario. Kuadri nunca pide la contraseña del campus.
+- Las **entregas pendientes llegan solas a Tareas**, con su fecha, la categoría que elijas y una prioridad según lo cerca que estén. Los avisos de "se abre" y las entregas vencidas se ignoran.
+- **Se actualiza solo**: al abrir la app, cada hora mientras el servidor está despierto y cada 3 horas con GitHub Actions. También hay un botón **Sincronizar**.
+- No repite tareas, actualiza la fecha si el profesor la cambia y no vuelve a traer una tarea que borraste.
+- Cada usuario conecta su propio campus y solo ve sus propias tareas.
+
 ### Diseño
 
 - **Diseño propio** en verde lima, negro y blanco, con tarjetas sólidas y píldoras: la semana se llena cuadro por cuadro y el temporizador avanza en una cuadrícula.
@@ -114,6 +122,7 @@ Más detalle en la documentación:
 - Validación de datos en el cliente y en el servidor.
 - Encabezados de seguridad con Helmet y CORS restringido al dominio del front-end.
 - Variables sensibles en archivo `.env`, fuera del repositorio.
+- El enlace de calendario del campus se guarda cifrado (AES-256-GCM) y nunca se devuelve al navegador. Solo se aceptan enlaces https a sitios públicos.
 
 ## Cómo ejecutarlo en tu computador
 
@@ -167,8 +176,8 @@ Kuadri está preparada para publicarse con planes gratuitos: la base de datos en
 ## Pruebas
 
 ```bash
-cd backend && npm test     # 59 pruebas: lógica de rachas, logros, metas, precios, estudio y ocio, correo, API completa y recordatorios
-cd frontend && npm test    # 38 pruebas: utilidades de fechas, precios, fuentes y ocio, formularios, aviso de instalación
+cd backend && npm test     # 83 pruebas: lógica de rachas, logros, metas, precios, estudio y ocio, campus virtuales, correo, API completa y recordatorios
+cd frontend && npm test    # 46 pruebas: utilidades de fechas, precios, fuentes, ocio y campus, formularios, aviso de instalación
 ```
 
 Las pruebas de la API usan una base de datos aparte (`kuadri_test`) que se crea sola. En GitHub Actions todas las pruebas se ejecutan automáticamente en cada cambio.
@@ -181,6 +190,9 @@ Las pruebas de la API usan una base de datos aparte (`kuadri_test`) que se crea 
 | POST | /api/auth/login | Iniciar sesión |
 | GET, PUT | /api/auth/perfil | Ver y actualizar perfil |
 | GET, POST, PUT, DELETE | /api/categorias | Gestionar categorías |
+| GET, POST, PUT, DELETE | /api/campus | Conectar, editar y desconectar campus virtuales |
+| POST | /api/campus/sincronizar | Traer las actividades nuevas de mis campus |
+| POST | /api/campus/sincronizar-todos | Sincronizar a todos los usuarios (solo con `CRON_SECRET`) |
 | GET, POST, PUT, DELETE | /api/tareas | Gestionar tareas (con filtros) |
 | PATCH | /api/tareas/:id/completar | Completar o reabrir una tarea |
 | GET, POST, PUT, DELETE | /api/metas | Gestionar metas con sus pasos y avance |

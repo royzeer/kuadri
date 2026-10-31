@@ -1,11 +1,13 @@
-// Perfil, preferencias de aviso y gestión de categorías (CU03, RF17).
+// Perfil, preferencias de aviso, gestión de categorías (CU03, RF17) y campus virtuales conectados.
 import { useEffect, useState } from 'react';
-import { Pencil, Plus, Trash2 } from 'lucide-react';
+import { Pencil, Plus, RefreshCw, Trash2 } from 'lucide-react';
 import { api } from '../api/cliente';
 import { useAuth } from '../context/AuthContext';
 import { Encabezado } from '../components/Layout';
 import Icono, { ICONOS_CATEGORIA } from '../components/Icono';
 import Modal from '../components/Modal';
+import CampusForm from '../components/CampusForm';
+import { EVENTO_CAMPUS, resumenSincronizacion, sincronizarCampus } from '../utils/campus';
 import { COLORES_CATEGORIA, colorTexto } from '../utils/color';
 
 const COLORES = COLORES_CATEGORIA;
@@ -97,6 +99,124 @@ function FormCategoria({ categoria, onGuardar, onCancelar }) {
         </button>
       </div>
     </form>
+  );
+}
+
+function hace(fechaIso) {
+  if (!fechaIso) return 'Aún no se ha revisado';
+  const minutos = Math.round((Date.now() - new Date(fechaIso)) / 60000);
+  if (minutos < 1) return 'Revisado ahora';
+  if (minutos < 60) return `Revisado hace ${minutos} min`;
+  if (minutos < 1440) return `Revisado hace ${Math.round(minutos / 60)} h`;
+  return `Revisado el ${new Date(fechaIso).toLocaleDateString('es-CO')}`;
+}
+
+// Campus virtuales conectados: Kuadri trae solo sus actividades pendientes.
+function SeccionCampus({ categorias }) {
+  const [lista, setLista] = useState([]);
+  const [editando, setEditando] = useState(null);
+  const [estado, setEstado] = useState('');
+  const [sincronizando, setSincronizando] = useState(false);
+
+  const cargar = () => api.get('/campus').then(setLista).catch(() => {});
+
+  useEffect(() => {
+    cargar();
+    window.addEventListener(EVENTO_CAMPUS, cargar);
+    return () => window.removeEventListener(EVENTO_CAMPUS, cargar);
+  }, []);
+
+  async function guardar(datos) {
+    if (editando.id) {
+      await api.put(`/campus/${editando.id}`, datos);
+      setEstado('Campus actualizado');
+    } else {
+      const { sincronizacion } = await api.post('/campus', datos);
+      setEstado(resumenSincronizacion({ ...sincronizacion, campus: [sincronizacion] }));
+      window.dispatchEvent(new CustomEvent(EVENTO_CAMPUS, { detail: sincronizacion }));
+    }
+    setEditando(null);
+    cargar();
+  }
+
+  async function sincronizar() {
+    setSincronizando(true);
+    try {
+      setEstado(resumenSincronizacion(await sincronizarCampus()));
+    } catch (err) {
+      setEstado(err.message);
+    } finally {
+      setSincronizando(false);
+      cargar();
+    }
+  }
+
+  async function desconectar(c) {
+    if (!window.confirm(`¿Desconectar "${c.nombre}"? Las tareas que ya llegaron se quedan.`)) return;
+    await api.delete(`/campus/${c.id}`);
+    cargar();
+  }
+
+  return (
+    <section className="seccion">
+      <div className="seccion-titulo">
+        <h2>Campus virtuales</h2>
+        <div style={{ display: 'flex', gap: 8 }}>
+          {lista.length > 0 && (
+            <button type="button" className="boton" onClick={sincronizar} disabled={sincronizando}>
+              <RefreshCw size={18} /> {sincronizando ? 'Revisando...' : 'Sincronizar'}
+            </button>
+          )}
+          <button type="button" className="boton boton-primario" onClick={() => setEditando({})}>
+            <Plus size={20} strokeWidth={3} /> Conectar
+          </button>
+        </div>
+      </div>
+      <p className="texto-suave" style={{ marginBottom: 12 }}>
+        Conecta el calendario de tu campus (Moodle, Zajuna, Brightspace...) y tus entregas pendientes llegan solas a
+        Tareas. Kuadri nunca te pide tu contraseña del campus.
+      </p>
+      {estado && (
+        <p role="status" style={{ fontWeight: 700, marginBottom: 12 }}>
+          {estado}
+        </p>
+      )}
+      <ul className="lista-tareas">
+        {lista.map((c) => (
+          <li key={c.id} className="tarea">
+            <div className="tarea-info">
+              <div className="tarea-titulo">{c.nombre}</div>
+              <div className="texto-suave" style={{ fontSize: '0.85rem' }}>
+                {c.dominio} · {c.importadas} {c.importadas === 1 ? 'tarea traída' : 'tareas traídas'}
+                {c.categoria_nombre ? ` · ${c.categoria_nombre}` : ''}
+              </div>
+              <div className={c.ultimo_error ? 'error-campo' : 'texto-suave'} style={{ fontSize: '0.85rem' }}>
+                {c.ultimo_error || hace(c.ultima_sincronizacion)}
+              </div>
+            </div>
+            <div className="tarea-acciones">
+              <button type="button" className="boton" onClick={() => setEditando(c)} aria-label={`Editar ${c.nombre}`}>
+                <Pencil size={17} />
+              </button>
+              <button type="button" className="boton" onClick={() => desconectar(c)} aria-label={`Desconectar ${c.nombre}`}>
+                <Trash2 size={17} />
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      {editando && (
+        <Modal titulo={editando.id ? 'Editar campus' : 'Conectar campus'} onCerrar={() => setEditando(null)}>
+          <CampusForm
+            campus={editando}
+            categorias={categorias}
+            onGuardar={guardar}
+            onCancelar={() => setEditando(null)}
+          />
+        </Modal>
+      )}
+    </section>
   );
 }
 
@@ -211,6 +331,8 @@ export default function Ajustes() {
           ))}
         </ul>
       </section>
+
+      <SeccionCampus categorias={categorias} />
 
       <button type="button" className="boton boton-peligro" style={{ marginTop: 28 }} onClick={cerrarSesion}>
         Cerrar sesión

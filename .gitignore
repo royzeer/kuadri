@@ -1,5 +1,8 @@
 node_modules/
 .env
+# Cualquier copia del .env (por ejemplo .env.copia) también tiene secretos
+.env.*
+!.env.example
 dist/
 coverage/
 *.log

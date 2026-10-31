@@ -8,10 +8,14 @@ const metaService = require('../services/meta.service');
 const deseoService = require('../services/deseo.service');
 const estudioService = require('../services/estudio.service');
 const ocioService = require('../services/ocio.service');
+const campusService = require('../services/campus.service');
+const crypto = require('crypto');
+const env = require('../config/env');
 const estadisticas = require('../services/estadisticas.service');
 const usuarios = require('../models/usuario.model');
 const actividad = require('../models/actividad.model');
 const recordatorios = require('../jobs/recordatorios.job');
+const campusJob = require('../jobs/campus.job');
 const { exito, AppError } = require('../utils/respuesta');
 const { idPositivo } = require('../utils/validar');
 
@@ -46,6 +50,40 @@ const categorias = {
   eliminar: async (req, res) => {
     await categoriaService.eliminar(req.usuarioId, idDeRuta(req));
     exito(res, null, 'Categoría eliminada');
+  },
+};
+
+// Compara la clave del planificador sin revelar cuántos caracteres coinciden.
+function claveCronValida(recibida) {
+  const esperada = env.campus.claveCron;
+  if (!esperada || typeof recibida !== 'string') return false;
+  const a = crypto.createHash('sha256').update(recibida).digest();
+  const b = crypto.createHash('sha256').update(esperada).digest();
+  return crypto.timingSafeEqual(a, b);
+}
+
+const campus = {
+  listar: async (req, res) => exito(res, await campusService.listar(req.usuarioId)),
+  crear: async (req, res) =>
+    exito(res, await campusService.crear(req.usuarioId, req.body || {}), 'Campus conectado', 201),
+  actualizar: async (req, res) =>
+    exito(res, await campusService.actualizar(req.usuarioId, idDeRuta(req), req.body || {}), 'Campus actualizado'),
+  eliminar: async (req, res) => {
+    await campusService.eliminar(req.usuarioId, idDeRuta(req));
+    exito(res, null, 'Campus desconectado');
+  },
+  // { automatica: true } cuando la app se abre; sin eso, es el botón "Sincronizar".
+  sincronizar: async (req, res) => {
+    const automatica = req.body?.automatica === true;
+    const resultado = await campusService.sincronizarUsuario(req.usuarioId, { automatica });
+    exito(res, resultado, resultado.nuevas > 0 ? `${resultado.nuevas} actividades nuevas` : 'Todo al día');
+  },
+  sincronizarTodos: async (req, res) => {
+    if (!claveCronValida(req.get('x-clave-cron'))) throw new AppError('No autorizado', 401);
+    const resultado = await campusJob.ejecutar();
+    // Ya que el servidor está despierto, también se revisan los recordatorios
+    await recordatorios.ejecutarSiCorresponde().catch(() => null);
+    exito(res, resultado, 'Campus sincronizados');
   },
 };
 
@@ -193,4 +231,4 @@ const notificaciones = {
   },
 };
 
-module.exports = { auth, categorias, tareas, metas, deseos, estudio, ocio, enfoque, resumen, logros, notificaciones };
+module.exports = { auth, categorias, campus, tareas, metas, deseos, estudio, ocio, enfoque, resumen, logros, notificaciones };

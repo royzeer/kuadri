@@ -9,6 +9,8 @@ const router = Router();
 router.get('/salud', (_req, res) => res.json({ ok: true, data: { estado: 'activo' }, mensaje: 'Kuadri API' }));
 router.post('/auth/registro', c.auth.registro);
 router.post('/auth/login', c.auth.login);
+// Protegida con CRON_SECRET (la usa GitHub Actions), no con el token de usuario
+router.post('/campus/sincronizar-todos', c.campus.sincronizarTodos);
 
 // Privadas
 router.use(requiereAuth);
@@ -20,6 +22,12 @@ router.get('/categorias', c.categorias.listar);
 router.post('/categorias', c.categorias.crear);
 router.put('/categorias/:id', c.categorias.actualizar);
 router.delete('/categorias/:id', c.categorias.eliminar);
+
+router.get('/campus', c.campus.listar);
+router.post('/campus', c.campus.crear);
+router.post('/campus/sincronizar', c.campus.sincronizar);
+router.put('/campus/:id', c.campus.actualizar);
+router.delete('/campus/:id', c.campus.eliminar);
 
 router.get('/tareas', c.tareas.listar);
 router.post('/tareas', c.tareas.crear);

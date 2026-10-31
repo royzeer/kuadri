@@ -1,8 +1,9 @@
-// Punto de entrada: inicia el servidor HTTP y el planificador de recordatorios.
+// Punto de entrada: inicia el servidor HTTP, el planificador de recordatorios y el de campus.
 const env = require('./config/env');
 const app = require('./app');
 const { pool } = require('./config/db');
 const recordatorios = require('./jobs/recordatorios.job');
+const campus = require('./jobs/campus.job');
 
 async function iniciar() {
   // Verifica la conexión a la base de datos antes de abrir el puerto
@@ -11,6 +12,7 @@ async function iniciar() {
     console.log(`Kuadri API escuchando en http://localhost:${env.puerto}/api`);
   });
   recordatorios.iniciar();
+  campus.iniciar();
 }
 
 iniciar().catch((error) => {

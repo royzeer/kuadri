@@ -18,6 +18,7 @@ import {
 import { api } from '../api/cliente';
 import { useAuth } from '../context/AuthContext';
 import Logo from './Logo';
+import { EVENTO_CAMPUS, sincronizarCampus } from '../utils/campus';
 
 // En el celular solo caben los principales en la barra; el resto va en el menú "Más".
 const ENLACES = [
@@ -52,7 +53,11 @@ function Notificaciones() {
   useEffect(() => {
     cargar();
     const intervalo = setInterval(cargar, 60000);
-    return () => clearInterval(intervalo);
+    window.addEventListener(EVENTO_CAMPUS, cargar);
+    return () => {
+      clearInterval(intervalo);
+      window.removeEventListener(EVENTO_CAMPUS, cargar);
+    };
   }, [cargar]);
 
   // Cerrar al hacer clic fuera del panel
@@ -161,6 +166,11 @@ function MenuMas() {
 
 export default function Layout() {
   const { cerrarSesion } = useAuth();
+
+  // Al abrir la app se traen las actividades nuevas de los campus conectados
+  useEffect(() => {
+    sincronizarCampus(true).catch(() => {});
+  }, []);
   return (
     <div className="app">
       <aside className="barra-lateral">

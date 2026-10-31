@@ -22,6 +22,7 @@ Estudio en dos instituciones al mismo tiempo (Tecnólogo en Análisis y Desarrol
 - **Notificaciones** dentro de la app.
 - **Diseño propio** en verde lima, negro y blanco, con tarjetas sólidas y píldoras: la semana se llena cuadro por cuadro y el temporizador avanza en una cuadrícula.
 - **Diseño adaptable** a celular, tableta y escritorio, con navegación inferior en celular.
+- **Se instala como app** en la pantalla principal del celular, con un aviso que explica cómo hacerlo.
 
 ## Capturas
 
@@ -36,6 +37,10 @@ Estudio en dos instituciones al mismo tiempo (Tecnólogo en Análisis y Desarrol
 | Celular: inicio | Celular: tareas | Celular: progreso |
 |---|---|---|
 | ![Celular inicio](docs/capturas/movil-inicio.png) | ![Celular tareas](docs/capturas/movil-tareas.png) | ![Celular progreso](docs/capturas/movil-progreso.png) |
+
+| Celular: nueva tarea | Celular: instalar como app |
+|---|---|
+| ![Celular nueva tarea](docs/capturas/movil-modal.png) | ![Celular instalar como app](docs/capturas/movil-instalar.png) |
 
 ## Tecnologías
 

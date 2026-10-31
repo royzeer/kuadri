@@ -222,28 +222,26 @@ Todas las respuestas usan el formato `{ ok, data, mensaje }`. Las rutas marcadas
 
 ## 8. Diseño de interfaz
 
-**Concepto: "cuaderno cuadriculado".** El nombre Kuadri viene de *cuadrícula*, así que la interfaz se inspira en el cuaderno de un estudiante: fondo de papel cuadriculado, trazos de resaltador sobre las palabras importantes, categorías como stickers cuadrados y una semana que se va llenando cuadro por cuadro. Del neo-brutalismo toma los bordes gruesos y las sombras sólidas, pero con paleta, formas y elementos propios.
+**Concepto: "degradado".** Interfaz limpia sobre fondo blanco, con tarjetas grises muy redondeadas, botones tipo píldora y barras en negro. El color aparece solo en degradados (durazno, rojo, vino y azul noche), y se usa para marcar lo más importante: la racha, el día de hoy, los logros y un resplandor suave en la parte de arriba de cada página. El nombre Kuadri sigue viniendo de *cuadrícula*: la semana y el temporizador se llenan cuadro por cuadro.
 
 | Token | Valor | Uso |
 |---|---|---|
-| Papel | #FFFDF6 | Fondo con cuadrícula de 26 px |
-| Línea | #DFE6FB | Líneas de la cuadrícula |
-| Tinta | #161616 | Texto, bordes, sombras y barra lateral |
-| Cobalto | #3359FF | Color principal y acciones |
-| Mandarina | #FF7438 | Racha, día actual y acentos |
-| Menta | #46D9A0 | Completado |
-| Lavanda | #C7B8FF | Acento suave |
-| Resaltador | #EEFF5C | Trazo de resaltador y elemento activo del menú |
-| Títulos | Bricolage Grotesque | Encabezados y números grandes |
-| Texto | DM Sans | Todo el contenido |
+| Blanco | #FFFFFF | Fondo de la página |
+| Gris | #F4F4F5 | Fondo de tarjetas, campos y botones secundarios |
+| Negro | #111111 | Texto, barra lateral, botón principal y barra del día actual |
+| Durazno | #FFA586 | Inicio del degradado |
+| Rojo | #B51A2B | Centro del degradado |
+| Vino | #541A2E | Final del degradado |
+| Azul noche | #161E2F, #242F49, #384358 | Parte baja del degradado de la pantalla de acceso |
+| Fuente | Inter | Títulos y texto |
 
 **Elementos propios del sistema**
 
-- **Logo:** cuatro cuadritos de colores, uno marcado con un chulo: completar la cuadrícula.
-- **Tu semana en cuadros:** siete casillas que se colorean según los minutos de enfoque de cada día.
-- **Categorías como stickers:** cuadros de color sólido, levemente girados, con el número de pendientes en grande.
-- **Temporizador en cuadrícula:** 50 cuadritos que se llenan a medida que avanza la sesión.
-- **Logros como stickers redondos** que se ven rayados y punteados mientras están bloqueados.
-- **Renglones de tareas** con casilla cuadrada, como una lista escrita en el cuaderno.
+- **Logo:** cuatro cuadritos, tres con el degradado y uno marcado con un chulo: completar la cuadrícula.
+- **Tu semana en cuadros:** siete círculos que se llenan con el degradado según los minutos de enfoque de cada día.
+- **Categorías:** tarjetas con un tono suave del color de cada categoría y el número de pendientes en grande.
+- **Temporizador en cuadrícula:** 50 cuadritos que se llenan en negro a medida que avanza la sesión.
+- **Gráficos de barras:** barras rayadas para los días anteriores y la del día actual en negro.
+- **Logros** como círculos con degradado, rayados en gris mientras están bloqueados.
 
 **Pantallas de la Fase 1:** inicio de sesión y registro (pantalla dividida), inicio, tareas (lista y calendario), enfoque, progreso y ajustes.

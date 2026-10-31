@@ -6,7 +6,6 @@ import { Encabezado } from '../components/Layout';
 import Icono from '../components/Icono';
 import { diaCorto, formatearMinutos } from '../utils/fechas';
 
-const COLORES_LOGRO = ['#46D9A0', '#FF7438', '#EEFF5C', '#C7B8FF', '#7FD8FF', '#FF9EC4'];
 
 function GraficoBarras({ semana, campo, sufijo }) {
   const maximo = Math.max(1, ...semana.map((d) => d[campo]));
@@ -50,19 +49,19 @@ export default function Progreso() {
       <Encabezado titulo="Tu progreso" subtitulo="Los últimos 7 días, tu racha y tus logros." />
 
       <section className="metricas">
-        <div className="metrica" style={{ '--color': 'var(--mandarina)' }}>
+        <div className="metrica">
           <span className="metrica-valor">{resumen.racha.actual}</span>
           <span className="metrica-etiqueta">días de racha actual</span>
         </div>
-        <div className="metrica" style={{ '--color': 'var(--resaltador)' }}>
+        <div className="metrica">
           <span className="metrica-valor">{resumen.racha.mejor}</span>
           <span className="metrica-etiqueta">días en tu mejor racha</span>
         </div>
-        <div className="metrica" style={{ '--color': 'var(--cobalto)' }}>
+        <div className="metrica">
           <span className="metrica-valor">{formatearMinutos(resumen.minutosSemana)}</span>
           <span className="metrica-etiqueta">de enfoque esta semana</span>
         </div>
-        <div className="metrica" style={{ '--color': 'var(--menta)' }}>
+        <div className="metrica">
           <span className="metrica-valor">{resumen.tareasSemana}</span>
           <span className="metrica-etiqueta">tareas completadas esta semana</span>
         </div>
@@ -86,9 +85,9 @@ export default function Progreso() {
           </span>
         </div>
         <div className="logros">
-          {logros.map((l, i) => (
+          {logros.map((l) => (
             <div key={l.id} className={`logro ${l.obtenido_en ? '' : 'bloqueado'}`}>
-              <span className="logro-sticker" style={{ '--color': COLORES_LOGRO[i % COLORES_LOGRO.length] }}>
+              <span className="logro-sticker">
                 {l.obtenido_en ? <Icono nombre={l.icono} size={36} /> : <Lock size={28} />}
               </span>
               <h3>{l.nombre}</h3>

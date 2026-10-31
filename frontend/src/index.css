@@ -1,37 +1,49 @@
 /* =========================================================
-   Kuadri - Sistema de diseño "Cuaderno cuadriculado"
-   Idea: Kuadri viene de "cuadrícula". La interfaz se inspira en un
-   cuaderno de estudiante: papel cuadriculado, resaltador, stickers y
-   cuadritos que se van llenando. Toma del neo-brutalismo los bordes
-   gruesos y las sombras sólidas, pero con paleta y formas propias.
+   Kuadri - Sistema de diseño "Degradado"
+   Idea: una interfaz limpia sobre fondo blanco, con tarjetas grises
+   redondeadas y barras negras. El color aparece solo en degradados
+   (durazno, rojo, vino y azul noche), que marcan lo más importante:
+   la racha, el día de hoy, los logros y la cabecera de la página.
    ========================================================= */
 
 :root {
-  /* Papel y tinta */
-  --papel: #fffdf6;
-  --linea: #dfe6fb; /* líneas de la cuadrícula */
-  --tinta: #161616;
-  --tinta-suave: #5b5a57;
+  /* Base */
   --blanco: #ffffff;
+  --negro: #111111;
+  --tinta: #111111;
+  --tinta-suave: #6b6b70;
+  --gris: #f4f4f5; /* fondo de tarjetas */
+  --gris-medio: #e7e7ea;
+  --linea: #ececee;
+  --peligro: #d92d20;
 
-  /* Paleta propia */
-  --cobalto: #3359ff;
-  --cobalto-claro: #a9bbff;
-  --mandarina: #ff7438;
-  --menta: #46d9a0;
-  --lavanda: #c7b8ff;
-  --resaltador: #eeff5c;
-  --peligro: #e5383b;
+  /* Paleta del degradado */
+  --durazno: #ffa586;
+  --rojo: #b51a2b;
+  --vino: #541a2e;
+  --noche: #161e2f;
+  --azul: #242f49;
+  --pizarra: #384358;
 
-  --borde: 2.5px solid var(--tinta);
-  --radio: 16px;
-  --radio-sm: 10px;
-  --sombra: 4px 4px 0 var(--tinta);
-  --sombra-sm: 2px 2px 0 var(--tinta);
+  --degradado: linear-gradient(135deg, var(--durazno) 0%, var(--rojo) 55%, var(--vino) 100%);
+  --degradado-suave: linear-gradient(160deg, rgba(255, 165, 134, 0.45) 0%, rgba(181, 26, 43, 0.12) 55%, var(--gris) 100%);
+  --degradado-noche: linear-gradient(
+    180deg,
+    var(--vino) 0%,
+    var(--rojo) 28%,
+    var(--durazno) 50%,
+    var(--pizarra) 74%,
+    var(--noche) 100%
+  );
 
-  --fuente-titulos: 'Bricolage Grotesque', system-ui, sans-serif;
-  --fuente: 'DM Sans', system-ui, sans-serif;
-  --cuadro: 26px; /* tamaño de la cuadrícula del fondo */
+  --radio: 24px;
+  --radio-sm: 14px;
+  --pildora: 999px;
+  --sombra: 0 1px 2px rgba(17, 17, 17, 0.04);
+  --sombra-flotante: 0 18px 50px rgba(17, 17, 17, 0.14);
+
+  --fuente-titulos: 'Inter', system-ui, sans-serif;
+  --fuente: 'Inter', system-ui, sans-serif;
 }
 
 * {
@@ -44,17 +56,17 @@ body,
   min-height: 100%;
 }
 
-/* Fondo de cuaderno cuadriculado */
+/* Fondo blanco con un resplandor de degradado arriba, como la cabecera de una app */
 body {
   margin: 0;
   font-family: var(--fuente);
   font-size: 16px;
   color: var(--tinta);
-  background-color: var(--papel);
+  background-color: var(--blanco);
   background-image:
-    linear-gradient(var(--linea) 1px, transparent 1px),
-    linear-gradient(90deg, var(--linea) 1px, transparent 1px);
-  background-size: var(--cuadro) var(--cuadro);
+    radial-gradient(ellipse 60% 420px at 12% -60px, rgba(255, 165, 134, 0.55), transparent 70%),
+    radial-gradient(ellipse 55% 380px at 88% -80px, rgba(181, 26, 43, 0.18), transparent 70%);
+  background-repeat: no-repeat;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -70,19 +82,20 @@ h2,
 h3,
 .titulo-fuente {
   font-family: var(--fuente-titulos);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 h1 {
   font-size: clamp(2rem, 4.5vw, 2.9rem);
-  line-height: 1.02;
+  line-height: 1.05;
   font-weight: 800;
+  letter-spacing: -0.045em;
 }
 h2 {
-  font-size: 1.35rem;
+  font-size: 1.3rem;
   font-weight: 700;
 }
 h3 {
-  font-size: 1.05rem;
+  font-size: 1.02rem;
   font-weight: 700;
 }
 
@@ -91,7 +104,7 @@ a {
 }
 
 :focus-visible {
-  outline: 3px solid var(--cobalto);
+  outline: 2.5px solid var(--negro);
   outline-offset: 3px;
 }
 
@@ -108,48 +121,52 @@ a {
   color: var(--tinta-suave);
 }
 
-/* Trazo de resaltador detrás del texto */
+/* Texto con el degradado de la marca */
 .resaltado {
-  background: linear-gradient(transparent 52%, var(--resaltador) 52%, var(--resaltador) 92%, transparent 92%);
-  padding: 0 4px;
-  margin: 0 -2px;
+  background: var(--degradado);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .enlace {
-  font-weight: 700;
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-decoration: none;
+  padding: 6px 14px;
+  background: var(--gris);
+  border-radius: var(--pildora);
+}
+.enlace:hover {
+  background: var(--gris-medio);
 }
 
 /* ---------- Superficies ---------- */
 
 .tarjeta {
   background: var(--blanco);
-  border: var(--borde);
+  border: 1px solid var(--linea);
   border-radius: var(--radio);
   box-shadow: var(--sombra);
-  padding: 20px;
+  padding: 22px;
 }
 
 .chip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 2px 9px;
-  border: 2px solid var(--tinta);
-  border-radius: 6px;
+  padding: 4px 12px;
+  border-radius: var(--pildora);
   font-size: 0.78rem;
-  font-weight: 700;
-  background: var(--blanco);
+  font-weight: 600;
+  background: var(--gris);
   white-space: nowrap;
 }
 .punto {
   width: 10px;
   height: 10px;
-  border: 2px solid var(--tinta);
-  border-radius: 3px;
-  background: var(--color, var(--lavanda));
+  border-radius: 50%;
+  background: var(--color, var(--durazno));
   flex-shrink: 0;
 }
 
@@ -161,43 +178,50 @@ a {
   justify-content: center;
   gap: 8px;
   min-height: 44px;
-  padding: 0 18px;
-  font: 700 0.98rem var(--fuente);
+  padding: 0 20px;
+  font: 600 0.95rem var(--fuente);
   color: var(--tinta);
-  background: var(--blanco);
-  border: var(--borde);
-  border-radius: var(--radio-sm);
-  box-shadow: var(--sombra-sm);
+  background: var(--gris);
+  border: none;
+  border-radius: var(--pildora);
   cursor: pointer;
   text-decoration: none;
-  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  transition: transform 0.12s ease, background 0.12s ease, opacity 0.12s ease;
 }
 .boton:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0 var(--tinta);
+  background: var(--gris-medio);
 }
 .boton:active {
-  transform: translate(2px, 2px);
-  box-shadow: 0 0 0 var(--tinta);
+  transform: scale(0.97);
 }
 .boton:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
   transform: none;
 }
 .boton-primario {
-  background: var(--cobalto);
+  background: var(--negro);
   color: var(--blanco);
 }
-.boton-acento {
-  background: var(--mandarina);
+.boton-primario:hover {
+  background: #2a2a2e;
+}
+.boton-acento,
+.boton-verde {
+  background: var(--degradado);
+  color: var(--blanco);
+}
+.boton-acento:hover,
+.boton-verde:hover {
+  background: var(--degradado);
+  opacity: 0.9;
 }
 .boton-peligro {
-  background: var(--peligro);
-  color: var(--blanco);
+  background: #fdecea;
+  color: var(--peligro);
 }
-.boton-verde {
-  background: var(--menta);
+.boton-peligro:hover {
+  background: #fbd9d5;
 }
 .boton-icono {
   width: 44px;
@@ -216,22 +240,24 @@ a {
 }
 .campo label,
 .etiqueta {
-  font-weight: 700;
-  font-size: 0.9rem;
+  font-weight: 600;
+  font-size: 0.88rem;
 }
 .entrada {
   width: 100%;
-  min-height: 44px;
-  padding: 10px 12px;
+  min-height: 46px;
+  padding: 10px 14px;
   font: 500 1rem var(--fuente);
   color: var(--tinta);
-  background: var(--blanco);
-  border: var(--borde);
+  background: var(--gris);
+  border: 1.5px solid transparent;
   border-radius: var(--radio-sm);
+  transition: border-color 0.12s ease, background 0.12s ease;
 }
 .entrada:focus {
   outline: none;
-  box-shadow: 0 0 0 3px var(--cobalto-claro);
+  background: var(--blanco);
+  border-color: var(--negro);
 }
 textarea.entrada {
   min-height: 90px;
@@ -240,13 +266,13 @@ textarea.entrada {
 .error-campo {
   color: var(--peligro);
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 .alerta {
-  padding: 12px 14px;
-  border: var(--borde);
+  padding: 12px 16px;
   border-radius: var(--radio-sm);
-  background: #ffe1d6;
+  background: #fdecea;
+  color: #8a1c13;
   font-weight: 600;
 }
 .form {
@@ -265,40 +291,40 @@ textarea.entrada {
 .app {
   display: grid;
   grid-template-columns: 236px 1fr;
-  gap: 36px;
+  gap: 40px;
   max-width: 1180px;
   margin: 0 auto;
-  padding: 26px;
+  padding: 24px;
   min-height: 100vh;
 }
 
-/* Barra lateral oscura, como el lomo de un cuaderno */
+/* Barra lateral negra */
 .barra-lateral {
   position: sticky;
-  top: 26px;
+  top: 24px;
   align-self: start;
   display: flex;
   flex-direction: column;
-  gap: 26px;
-  padding: 22px 16px;
-  min-height: calc(100vh - 52px);
-  background: var(--tinta);
-  color: var(--papel);
-  border-radius: 22px;
+  gap: 28px;
+  padding: 22px 14px;
+  min-height: calc(100vh - 48px);
+  background: var(--negro);
+  color: var(--blanco);
+  border-radius: 28px;
 }
 
 .logo {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 6px;
-  font: 800 1.7rem var(--fuente-titulos);
-  letter-spacing: -0.03em;
+  padding: 0 8px;
+  font: 800 1.6rem var(--fuente-titulos);
+  letter-spacing: -0.05em;
   text-decoration: none;
 }
 .logo svg {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   flex-shrink: 0;
 }
 
@@ -311,20 +337,20 @@ textarea.entrada {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 11px 12px;
-  font-weight: 600;
+  padding: 11px 14px;
+  font-weight: 500;
   text-decoration: none;
-  border-radius: 10px;
-  color: #cfcdc6;
+  border-radius: var(--pildora);
+  color: #a1a1a6;
 }
 .nav a:hover {
-  color: var(--papel);
-  background: #2a2a2a;
+  color: var(--blanco);
+  background: #1f1f22;
 }
 .nav a.active {
-  color: var(--tinta);
-  background: var(--resaltador);
-  font-weight: 700;
+  color: var(--negro);
+  background: var(--blanco);
+  font-weight: 600;
 }
 
 .lateral-pie {
@@ -335,22 +361,22 @@ textarea.entrada {
   align-items: center;
   gap: 10px;
   width: 100%;
-  padding: 10px 12px;
-  font: 600 0.95rem var(--fuente);
-  color: #cfcdc6;
-  background: none;
-  border: 2px dashed #444;
-  border-radius: 10px;
+  padding: 11px 14px;
+  font: 500 0.95rem var(--fuente);
+  color: #a1a1a6;
+  background: #1c1c1f;
+  border: none;
+  border-radius: var(--pildora);
   cursor: pointer;
 }
 .lateral-pie button:hover {
-  color: var(--papel);
-  border-color: var(--papel);
+  color: var(--blanco);
+  background: #2a2a2e;
 }
 
 .contenido {
   min-width: 0;
-  padding-top: 6px;
+  padding-top: 10px;
 }
 
 .encabezado {
@@ -358,16 +384,20 @@ textarea.entrada {
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 26px;
+  margin-bottom: 28px;
 }
 .encabezado-acciones {
   display: flex;
   gap: 10px;
   position: relative;
 }
+.encabezado-acciones .boton-icono {
+  background: var(--blanco);
+  box-shadow: 0 2px 10px rgba(17, 17, 17, 0.08);
+}
 
 .seccion {
-  margin-top: 34px;
+  margin-top: 36px;
 }
 .seccion-titulo {
   display: flex;
@@ -377,61 +407,62 @@ textarea.entrada {
   margin-bottom: 14px;
 }
 
-/* ---------- Creación rápida (renglón de cuaderno) ---------- */
+/* ---------- Creación rápida ---------- */
 
 .rapida {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 8px 8px 14px;
+  padding: 7px 7px 7px 18px;
   background: var(--blanco);
-  border: var(--borde);
-  border-radius: var(--radio);
-  box-shadow: var(--sombra);
+  border: 1px solid var(--linea);
+  border-radius: var(--pildora);
+  box-shadow: 0 6px 24px rgba(17, 17, 17, 0.06);
 }
 .rapida-casilla {
   width: 22px;
   height: 22px;
   flex-shrink: 0;
-  border: 2.5px dashed var(--tinta-suave);
-  border-radius: 6px;
+  border: 2px solid #c9c9ce;
+  border-radius: 50%;
 }
 .rapida input {
   flex: 1;
   min-width: 0;
   padding: 8px 0;
-  font: 500 1.05rem var(--fuente);
+  font: 500 1.02rem var(--fuente);
   color: var(--tinta);
   background: transparent;
   border: none;
   outline: none;
 }
 
-/* ---------- Tu semana en cuadros ---------- */
+/* ---------- Tu semana ---------- */
 
 .semana {
   display: flex;
   align-items: stretch;
-  gap: 18px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 .racha {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-width: 128px;
-  padding: 14px 18px;
-  background: var(--mandarina);
-  border: var(--borde);
+  min-width: 136px;
+  padding: 16px 20px;
+  color: var(--blanco);
+  background: var(--degradado);
   border-radius: var(--radio);
-  box-shadow: var(--sombra);
 }
 .racha-numero {
-  font: 800 2.6rem/1 var(--fuente-titulos);
+  font: 800 2.7rem/1 var(--fuente-titulos);
+  letter-spacing: -0.05em;
 }
 .racha-texto {
-  font-weight: 700;
+  font-weight: 600;
   font-size: 0.88rem;
+  opacity: 0.9;
 }
 .semana-cuadros {
   flex: 1;
@@ -439,6 +470,9 @@ textarea.entrada {
   grid-template-columns: repeat(7, minmax(36px, 1fr));
   gap: 8px;
   min-width: 260px;
+  padding: 14px;
+  background: var(--gris);
+  border-radius: var(--radio);
 }
 .cuadro-dia {
   display: flex;
@@ -451,37 +485,39 @@ textarea.entrada {
   place-items: center;
   width: 100%;
   aspect-ratio: 1;
-  max-width: 64px;
+  max-width: 60px;
   background: var(--blanco);
-  border: var(--borde);
-  border-radius: 10px;
+  border-radius: 50%;
   color: var(--blanco);
 }
 .cuadro-dia .caja[data-nivel='1'] {
-  background: var(--cobalto-claro);
+  background: rgba(255, 165, 134, 0.55);
 }
 .cuadro-dia .caja[data-nivel='2'] {
-  background: #6f8bff;
+  background: linear-gradient(135deg, var(--durazno), var(--rojo));
 }
 .cuadro-dia .caja[data-nivel='3'] {
-  background: var(--cobalto);
+  background: var(--degradado);
 }
 .cuadro-dia.hoy .caja {
-  box-shadow: var(--sombra-sm);
-  outline: 3px solid var(--resaltador);
+  outline: 2.5px solid var(--negro);
   outline-offset: 2px;
 }
 .cuadro-dia small {
-  font-weight: 700;
-  font-size: 0.78rem;
+  font-weight: 600;
+  font-size: 0.76rem;
+  color: var(--tinta-suave);
+}
+.cuadro-dia.hoy small {
+  color: var(--tinta);
 }
 
-/* ---------- Categorías como stickers cuadrados ---------- */
+/* ---------- Categorías ---------- */
 
 .cuadros-categorias {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: 18px;
+  gap: 14px;
 }
 .cuadro-cat {
   position: relative;
@@ -489,63 +525,53 @@ textarea.entrada {
   flex-direction: column;
   justify-content: space-between;
   aspect-ratio: 1 / 0.82;
-  padding: 16px;
+  padding: 18px;
   font: inherit;
   text-align: left;
-  color: var(--texto-cat, var(--tinta));
-  background: var(--color-cat, var(--lavanda));
-  border: var(--borde);
+  color: var(--tinta);
+  background: color-mix(in srgb, var(--color-cat, var(--durazno)) 22%, var(--blanco));
+  border: none;
   border-radius: var(--radio);
-  box-shadow: var(--sombra);
   cursor: pointer;
-  transform: rotate(var(--giro, 0deg));
   transition: transform 0.15s ease;
 }
-.cuadro-cat:nth-child(3n + 1) {
-  --giro: -1.2deg;
-}
-.cuadro-cat:nth-child(3n + 2) {
-  --giro: 0.8deg;
-}
-.cuadro-cat:nth-child(3n) {
-  --giro: -0.4deg;
-}
 .cuadro-cat:hover {
-  transform: rotate(0deg) translateY(-3px);
+  transform: translateY(-3px);
 }
 .cuadro-cat-icono {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 14px;
+  right: 14px;
   display: grid;
   place-items: center;
   width: 40px;
   height: 40px;
-  color: var(--tinta);
-  background: var(--blanco);
-  border: var(--borde);
+  color: var(--blanco);
+  background: var(--negro);
   border-radius: 50%;
 }
 .cuadro-cat-numero {
-  font: 800 2.8rem/1 var(--fuente-titulos);
+  font: 800 2.7rem/1 var(--fuente-titulos);
+  letter-spacing: -0.05em;
 }
 .cuadro-cat-pendientes {
+  margin-left: 4px;
   font-size: 0.82rem;
-  font-weight: 700;
-  opacity: 0.85;
+  font-weight: 600;
+  color: var(--tinta-suave);
 }
 .cuadro-cat-nombre {
-  font: 700 1.1rem var(--fuente-titulos);
+  font: 700 1.05rem var(--fuente-titulos);
+  letter-spacing: -0.02em;
 }
 .cuadro-cat-nuevo {
   display: grid;
   place-items: center;
   gap: 6px;
   color: var(--tinta-suave);
-  font-weight: 700;
+  font-weight: 600;
   background: transparent;
-  border-style: dashed;
-  box-shadow: none;
+  border: 2px dashed #d4d4d8;
   text-align: center;
 }
 
@@ -559,24 +585,29 @@ textarea.entrada {
 .metrica {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 16px;
-  background: var(--blanco);
-  border: var(--borde);
+  gap: 8px;
+  padding: 18px;
+  background: var(--gris);
   border-radius: var(--radio);
-  box-shadow: var(--sombra);
-  border-top: 10px solid var(--color, var(--cobalto));
+}
+.metrica:first-child {
+  color: var(--blanco);
+  background: var(--degradado);
+}
+.metrica:first-child .metrica-etiqueta {
+  color: rgba(255, 255, 255, 0.85);
 }
 .metrica-valor {
-  font: 800 1.9rem/1 var(--fuente-titulos);
+  font: 800 2rem/1 var(--fuente-titulos);
+  letter-spacing: -0.05em;
 }
 .metrica-etiqueta {
-  font-weight: 600;
-  font-size: 0.88rem;
+  font-weight: 500;
+  font-size: 0.86rem;
   color: var(--tinta-suave);
 }
 
-/* ---------- Tareas (renglones) ---------- */
+/* ---------- Tareas ---------- */
 
 .lista-tareas {
   display: flex;
@@ -590,11 +621,9 @@ textarea.entrada {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 12px 14px;
-  background: var(--blanco);
-  border: var(--borde);
-  border-radius: var(--radio-sm);
-  box-shadow: var(--sombra-sm);
+  padding: 14px 16px;
+  background: var(--gris);
+  border-radius: 20px;
 }
 .tarea-check {
   display: grid;
@@ -602,21 +631,21 @@ textarea.entrada {
   width: 28px;
   height: 28px;
   flex-shrink: 0;
-  color: var(--tinta);
+  color: var(--blanco);
   background: var(--blanco);
-  border: var(--borde);
-  border-radius: 7px;
+  border: 2px solid #c9c9ce;
+  border-radius: 50%;
   cursor: pointer;
 }
 .tarea-check:hover {
-  background: #eefdf6;
+  border-color: var(--negro);
 }
 .tarea.completada .tarea-check {
-  background: var(--menta);
+  background: var(--negro);
+  border-color: var(--negro);
 }
 .tarea.completada .tarea-titulo {
   text-decoration: line-through;
-  text-decoration-thickness: 2px;
   color: var(--tinta-suave);
 }
 .tarea-info {
@@ -624,7 +653,7 @@ textarea.entrada {
   min-width: 0;
 }
 .tarea-titulo {
-  font-weight: 700;
+  font-weight: 600;
   overflow-wrap: anywhere;
 }
 .tarea-meta {
@@ -641,22 +670,26 @@ textarea.entrada {
   gap: 6px;
 }
 .prioridad-alta {
-  color: var(--peligro);
-  font-weight: 700;
+  color: var(--rojo);
+  font-weight: 600;
 }
 .tarea-acciones {
   display: flex;
   gap: 6px;
 }
 .tarea-acciones .boton {
-  width: 36px;
-  min-height: 36px;
+  width: 38px;
+  min-height: 38px;
   padding: 0;
-  box-shadow: none;
+  background: var(--blanco);
+}
+.tarea-acciones .boton:hover {
+  color: var(--blanco);
+  background: var(--negro);
 }
 .vencida {
   color: var(--peligro);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .filtros {
@@ -670,40 +703,40 @@ textarea.entrada {
   flex: 1 1 160px;
   max-width: 230px;
   min-height: 42px;
+  border-radius: var(--pildora);
 }
 
 .pestanas {
   display: inline-flex;
-  padding: 3px;
-  gap: 3px;
-  background: var(--blanco);
-  border: var(--borde);
-  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+  background: var(--gris);
+  border-radius: var(--pildora);
 }
 .pestanas button {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 0 14px;
+  padding: 0 16px;
   min-height: 36px;
-  font: 700 0.92rem var(--fuente);
-  color: var(--tinta);
+  font: 600 0.9rem var(--fuente);
+  color: var(--tinta-suave);
   background: transparent;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--pildora);
   cursor: pointer;
 }
 .pestanas button[aria-pressed='true'] {
-  background: var(--tinta);
-  color: var(--papel);
+  background: var(--negro);
+  color: var(--blanco);
 }
 
 .vacio {
-  padding: 26px;
+  padding: 28px;
   text-align: center;
-  font-weight: 600;
-  background: rgba(255, 255, 255, 0.7);
-  border: 2.5px dashed var(--tinta-suave);
+  font-weight: 500;
+  color: var(--tinta-suave);
+  background: var(--gris);
   border-radius: var(--radio);
 }
 
@@ -711,30 +744,36 @@ textarea.entrada {
 
 .calendario {
   background: var(--blanco);
-  border: var(--borde);
+  border: 1px solid var(--linea);
   border-radius: var(--radio);
-  box-shadow: var(--sombra);
   overflow: hidden;
 }
 .calendario-cabeza {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px;
+  padding: 14px;
   color: var(--blanco);
-  background: var(--cobalto);
-  border-bottom: var(--borde);
+  background: var(--degradado);
+}
+.calendario-cabeza .boton {
+  color: var(--blanco);
+  background: rgba(255, 255, 255, 0.18);
+}
+.calendario-cabeza .boton:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 .calendario-rejilla {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 }
 .calendario-dia-semana {
-  padding: 8px 4px;
+  padding: 10px 4px;
   text-align: center;
-  font-weight: 700;
-  font-size: 0.8rem;
-  border-bottom: 2px solid var(--tinta);
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: var(--tinta-suave);
+  border-bottom: 1px solid var(--linea);
 }
 .calendario-dia {
   min-height: 92px;
@@ -744,21 +783,21 @@ textarea.entrada {
   overflow: hidden;
 }
 .calendario-dia.otro-mes {
-  background: #f7f7f2;
-  color: #b4b2aa;
+  background: #fafafa;
+  color: #b8b8bd;
 }
 .numero-dia {
   display: inline-grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 7px;
-  font-weight: 700;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-weight: 600;
   font-size: 0.85rem;
 }
 .calendario-dia.hoy .numero-dia {
-  background: var(--mandarina);
-  border: 2px solid var(--tinta);
+  color: var(--blanco);
+  background: var(--negro);
 }
 .evento {
   display: flex;
@@ -766,17 +805,17 @@ textarea.entrada {
   gap: 4px;
   width: 100%;
   margin-top: 4px;
-  padding: 2px 5px;
-  font: 600 0.72rem var(--fuente);
+  padding: 3px 6px;
+  font: 500 0.72rem var(--fuente);
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--tinta);
-  background: #f3f5ff;
+  background: var(--gris);
   border: none;
-  border-left: 4px solid var(--color, var(--cobalto));
-  border-radius: 4px;
+  border-left: 3px solid var(--color, var(--rojo));
+  border-radius: 6px;
   cursor: pointer;
 }
 .evento span {
@@ -793,21 +832,23 @@ textarea.entrada {
 .enfoque {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 280px;
-  gap: 26px;
+  gap: 24px;
   align-items: start;
 }
 .panel-reloj {
-  padding: 26px;
+  padding: 28px;
   text-align: center;
+  background: var(--degradado-suave);
+  border: none;
 }
 .reloj-tiempo {
   font: 800 clamp(3.4rem, 10vw, 5.4rem) / 1 var(--fuente-titulos);
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.05em;
 }
 .reloj-estado {
   margin: 8px 0 20px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--tinta-suave);
 }
 .rejilla-enfoque {
@@ -819,16 +860,15 @@ textarea.entrada {
 }
 .celda {
   aspect-ratio: 1;
-  background: var(--blanco);
-  border: 2px solid var(--tinta);
-  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 7px;
   transition: background 0.3s ease;
 }
 .celda.llena {
-  background: var(--cobalto);
+  background: var(--negro);
 }
 .celda.actual {
-  background: var(--resaltador);
+  background: var(--degradado);
   animation: latido 1.2s ease-in-out infinite;
 }
 @keyframes latido {
@@ -842,8 +882,8 @@ textarea.entrada {
   gap: 10px;
 }
 .duraciones .boton[aria-pressed='true'] {
-  background: var(--tinta);
-  color: var(--papel);
+  background: var(--negro);
+  color: var(--blanco);
 }
 .controles-reloj {
   display: flex;
@@ -852,7 +892,7 @@ textarea.entrada {
   gap: 12px;
 }
 
-/* ---------- Gráfico de barras ---------- */
+/* ---------- Gráfico de barras: rayadas, la de hoy en negro ---------- */
 
 .grafico {
   display: grid;
@@ -860,11 +900,9 @@ textarea.entrada {
   align-items: end;
   gap: 10px;
   height: 220px;
-  padding: 16px 12px 0;
-  background: var(--blanco);
-  border: var(--borde);
+  padding: 16px 14px 0;
+  background: var(--degradado-suave);
   border-radius: var(--radio);
-  box-shadow: var(--sombra);
 }
 .barra-columna {
   display: flex;
@@ -877,26 +915,26 @@ textarea.entrada {
 .barra {
   width: 100%;
   max-width: 44px;
-  min-height: 3px;
-  background: var(--cobalto);
-  border: var(--borde);
-  border-bottom: none;
-  border-radius: 6px 6px 0 0;
+  min-height: 4px;
+  background: repeating-linear-gradient(135deg, rgba(17, 17, 17, 0.28) 0 1.5px, transparent 1.5px 6px),
+    rgba(255, 255, 255, 0.55);
+  border-radius: 14px;
 }
 .barra.hoy {
-  background: var(--mandarina);
+  background: var(--negro);
 }
 .barra-valor {
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 .barra-dia {
-  padding: 6px 0 8px;
-  font-size: 0.8rem;
-  font-weight: 700;
+  padding: 6px 0 10px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--tinta-suave);
 }
 
-/* ---------- Logros como stickers redondos ---------- */
+/* ---------- Logros ---------- */
 
 .logros {
   display: grid;
@@ -913,23 +951,24 @@ textarea.entrada {
 .logro-sticker {
   display: grid;
   place-items: center;
-  width: 92px;
-  height: 92px;
+  width: 88px;
+  height: 88px;
   margin-bottom: 6px;
-  background: var(--color, var(--menta));
-  border: var(--borde);
+  color: var(--blanco);
+  background: var(--degradado);
   border-radius: 50%;
-  box-shadow: var(--sombra);
-  transform: rotate(-6deg);
+  box-shadow: 0 10px 24px rgba(181, 26, 43, 0.22);
 }
-.logro:nth-child(even) .logro-sticker {
-  transform: rotate(5deg);
+.logro:nth-child(3n + 2) .logro-sticker {
+  background: linear-gradient(135deg, var(--durazno), var(--rojo));
+}
+.logro:nth-child(3n) .logro-sticker {
+  background: linear-gradient(135deg, var(--rojo), var(--vino) 60%, var(--azul));
 }
 .logro.bloqueado .logro-sticker {
-  background: repeating-linear-gradient(45deg, #f1f0ea, #f1f0ea 6px, #e4e2da 6px, #e4e2da 12px);
-  border-style: dashed;
+  background: repeating-linear-gradient(135deg, #e4e4e7 0 1.5px, var(--gris) 1.5px 7px);
   box-shadow: none;
-  color: var(--tinta-suave);
+  color: #a1a1a6;
 }
 .logro p {
   font-size: 0.86rem;
@@ -940,19 +979,19 @@ textarea.entrada {
 
 .contador {
   position: absolute;
-  top: -8px;
-  right: -8px;
-  min-width: 22px;
-  height: 22px;
+  top: -5px;
+  right: -5px;
+  min-width: 20px;
+  height: 20px;
   padding: 0 5px;
   display: grid;
   place-items: center;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  color: var(--tinta);
-  background: var(--mandarina);
-  border: 2px solid var(--tinta);
-  border-radius: 6px;
+  color: var(--blanco);
+  background: var(--degradado);
+  border: 2px solid var(--blanco);
+  border-radius: var(--pildora);
 }
 .panel-notificaciones {
   position: absolute;
@@ -962,7 +1001,8 @@ textarea.entrada {
   width: min(340px, 86vw);
   max-height: 420px;
   overflow-y: auto;
-  padding: 14px;
+  padding: 16px;
+  box-shadow: var(--sombra-flotante);
 }
 .notificacion {
   padding: 10px 0;
@@ -970,12 +1010,12 @@ textarea.entrada {
   font-size: 0.92rem;
 }
 .notificacion.nueva {
-  font-weight: 700;
+  font-weight: 600;
 }
 .notificacion small {
   display: block;
   margin-top: 4px;
-  font-weight: 500;
+  font-weight: 400;
   color: var(--tinta-suave);
 }
 
@@ -988,12 +1028,15 @@ textarea.entrada {
   display: grid;
   place-items: center;
   padding: 16px;
-  background: rgba(22, 22, 22, 0.5);
+  background: rgba(17, 17, 17, 0.4);
+  backdrop-filter: blur(4px);
 }
 .modal {
   width: min(520px, 100%);
   max-height: 92vh;
   overflow-y: auto;
+  border-radius: 28px;
+  box-shadow: var(--sombra-flotante);
 }
 .modal-cabeza {
   display: flex;
@@ -1011,12 +1054,12 @@ textarea.entrada {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 18px;
-  font-weight: 700;
-  background: var(--resaltador);
-  border: var(--borde);
-  border-radius: var(--radio);
-  box-shadow: var(--sombra);
+  padding: 14px 22px;
+  font-weight: 600;
+  color: var(--blanco);
+  background: var(--negro);
+  border-radius: var(--pildora);
+  box-shadow: var(--sombra-flotante);
   animation: entrar 0.25s ease-out;
 }
 @keyframes entrar {
@@ -1032,27 +1075,31 @@ textarea.entrada {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   min-height: 100vh;
+  background: var(--blanco);
 }
 .acceso-marca {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 32px;
-  padding: 44px;
+  margin: 14px;
+  padding: 40px;
   color: var(--blanco);
-  background-color: var(--cobalto);
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.14) 1px, transparent 1px);
-  background-size: var(--cuadro) var(--cuadro);
-  border-right: var(--borde);
+  background: var(--degradado-noche);
+  border-radius: 32px;
 }
 .acceso-marca h1 {
   font-size: clamp(2.4rem, 5vw, 3.8rem);
   max-width: 12ch;
 }
 .acceso-marca .resaltado {
-  color: var(--tinta);
+  color: var(--blanco);
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 6px;
 }
 .muestra {
   display: grid;
@@ -1063,21 +1110,14 @@ textarea.entrada {
   display: grid;
   place-items: center;
   aspect-ratio: 1;
-  background: rgba(255, 255, 255, 0.12);
-  border: 2.5px solid var(--tinta);
-  border-radius: 9px;
-  color: var(--tinta);
+  color: var(--blanco);
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 50%;
+  backdrop-filter: blur(6px);
 }
-.muestra span:nth-child(1),
-.muestra span:nth-child(2),
-.muestra span:nth-child(4) {
-  background: var(--resaltador);
-}
-.muestra span:nth-child(5) {
-  background: var(--menta);
-}
-.muestra span:nth-child(3) {
-  background: var(--mandarina);
+.muestra span:nth-child(-n + 5) {
+  color: var(--negro);
+  background: var(--blanco);
 }
 .acceso-formulario {
   display: grid;
@@ -1088,7 +1128,9 @@ textarea.entrada {
   width: min(420px, 100%);
 }
 .acceso-caja h2 {
-  font-size: 1.9rem;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.045em;
   margin-bottom: 6px;
 }
 
@@ -1115,8 +1157,8 @@ textarea.entrada {
     z-index: 30;
     min-height: 0;
     padding: 8px;
-    border-radius: 18px;
-    box-shadow: 3px 3px 0 var(--mandarina);
+    border-radius: 26px;
+    box-shadow: 0 10px 30px rgba(17, 17, 17, 0.25);
   }
   .barra-lateral .logo,
   .lateral-pie {
@@ -1131,7 +1173,8 @@ textarea.entrada {
     flex-direction: column;
     gap: 3px;
     padding: 8px 2px;
-    font-size: 0.7rem;
+    font-size: 0.68rem;
+    border-radius: 20px;
   }
   .fila-2 {
     grid-template-columns: 1fr;
@@ -1148,10 +1191,10 @@ textarea.entrada {
   }
   .cuadros-categorias {
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    gap: 12px;
   }
   .cuadro-cat {
-    padding: 12px;
+    padding: 14px;
   }
   .cuadro-cat-numero {
     font-size: 2.2rem;
@@ -1163,6 +1206,7 @@ textarea.entrada {
   .semana-cuadros {
     min-width: 0;
     gap: 6px;
+    padding: 12px 10px;
   }
   .racha {
     flex-direction: row;
@@ -1189,9 +1233,9 @@ textarea.entrada {
     grid-template-columns: 1fr;
   }
   .acceso-marca {
+    margin: 10px;
     padding: 28px 22px;
-    border-right: none;
-    border-bottom: var(--borde);
+    border-radius: 26px;
   }
   .muestra {
     grid-template-columns: repeat(7, 1fr);
@@ -1213,9 +1257,9 @@ a.cuadro-cat-nuevo {
   text-decoration: none;
 }
 .acceso-marca .logo svg {
-  padding: 3px;
-  background: var(--papel);
-  border-radius: 10px;
+  padding: 5px;
+  background: var(--negro);
+  border-radius: 12px;
   width: 44px;
   height: 44px;
 }

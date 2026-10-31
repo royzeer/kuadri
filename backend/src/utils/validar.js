@@ -28,6 +28,33 @@ function fecha(valor) {
   return Number.isNaN(f.getTime()) ? undefined : f;
 }
 
+// Enlace web opcional: vacío da null; si no empieza por http(s) da undefined (inválido).
+function enlace(valor) {
+  const t = texto(valor);
+  if (!t) return null;
+  try {
+    const u = new URL(t);
+    return ['http:', 'https:'].includes(u.protocol) && t.length <= 500 ? t : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+// Precio opcional en pesos: vacío da null; si no es un número positivo da undefined (inválido).
+function precio(valor) {
+  if (valor === null || valor === undefined || valor === '') return null;
+  const n = Number(valor);
+  return Number.isFinite(n) && n > 0 && n < 1e10 ? Math.round(n * 100) / 100 : undefined;
+}
+
+// Fecha sin hora 'YYYY-MM-DD' opcional: vacío da null; formato incorrecto da undefined.
+function dia(valor) {
+  if (valor === null || valor === undefined || valor === '') return null;
+  if (typeof valor !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(valor)) return undefined;
+  const f = new Date(`${valor}T00:00:00Z`);
+  return !Number.isNaN(f.getTime()) && f.toISOString().startsWith(valor) ? valor : undefined;
+}
+
 module.exports = {
   CORREO_REGEX,
   COLOR_REGEX,
@@ -36,4 +63,7 @@ module.exports = {
   texto,
   idPositivo,
   fecha,
+  enlace,
+  precio,
+  dia,
 };

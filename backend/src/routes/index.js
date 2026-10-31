@@ -28,6 +28,25 @@ router.put('/tareas/:id', c.tareas.actualizar);
 router.patch('/tareas/:id/completar', c.tareas.completar);
 router.delete('/tareas/:id', c.tareas.eliminar);
 
+router.get('/metas', c.metas.listar);
+router.post('/metas', c.metas.crear);
+router.get('/metas/:id', c.metas.obtener);
+router.put('/metas/:id', c.metas.actualizar);
+router.patch('/metas/:id/cumplir', c.metas.cumplir);
+router.delete('/metas/:id', c.metas.eliminar);
+router.post('/metas/:id/pasos', c.metas.agregarPaso);
+router.patch('/metas/:id/pasos/:subId', c.metas.cambiarPaso);
+router.delete('/metas/:id/pasos/:subId', c.metas.eliminarPaso);
+
+router.get('/deseos', c.deseos.listar);
+router.post('/deseos', c.deseos.crear);
+router.get('/deseos/:id', c.deseos.obtener);
+router.put('/deseos/:id', c.deseos.actualizar);
+router.patch('/deseos/:id/comprar', c.deseos.comprar);
+router.delete('/deseos/:id', c.deseos.eliminar);
+router.post('/deseos/:id/precios', c.deseos.registrarPrecio);
+router.delete('/deseos/:id/precios/:subId', c.deseos.eliminarPrecio);
+
 router.post('/enfoque', c.enfoque.registrar);
 router.get('/estadisticas/resumen', c.resumen.semanal);
 router.get('/logros', c.logros.listar);

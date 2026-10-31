@@ -46,14 +46,20 @@ async function totales(usuarioId) {
        (SELECT COUNT(*) FROM tareas WHERE usuario_id = ? AND completada = FALSE) AS tareas_pendientes,
        (SELECT COALESCE(SUM(minutos), 0) FROM sesiones_enfoque WHERE usuario_id = ?) AS minutos_enfoque,
        (SELECT COUNT(*) FROM tareas
-          WHERE usuario_id = ? AND completada = TRUE AND HOUR(completada_en) < 8) AS tareas_madrugada`,
-    [usuarioId, usuarioId, usuarioId, usuarioId],
+          WHERE usuario_id = ? AND completada = TRUE AND HOUR(completada_en) < 8) AS tareas_madrugada,
+       (SELECT COUNT(*) FROM metas WHERE usuario_id = ? AND cumplida_en IS NOT NULL) AS metas_cumplidas,
+       (SELECT COUNT(DISTINCT d.id) FROM deseos d
+          JOIN precios_deseo p ON p.deseo_id = d.id
+         WHERE d.usuario_id = ? AND p.precio <= d.precio_objetivo) AS deseos_en_objetivo`,
+    [usuarioId, usuarioId, usuarioId, usuarioId, usuarioId, usuarioId],
   );
   return {
     tareasCompletadas: Number(fila.tareas_completadas),
     tareasPendientes: Number(fila.tareas_pendientes),
     minutosEnfoque: Number(fila.minutos_enfoque),
     tareasMadrugada: Number(fila.tareas_madrugada),
+    metasCumplidas: Number(fila.metas_cumplidas),
+    deseosEnObjetivo: Number(fila.deseos_en_objetivo),
   };
 }
 

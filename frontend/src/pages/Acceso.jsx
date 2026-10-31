@@ -42,7 +42,7 @@ export default function Acceso({ modo }) {
   return (
     <main className="acceso">
       <section className="acceso-marca">
-        <div className="logo" style={{ color: '#fff' }}>
+        <div className="logo">
           <Logo />
         </div>
         <h1>

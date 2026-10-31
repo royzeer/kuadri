@@ -13,9 +13,9 @@ export default function TareaItem({ tarea, onCompletar, onEditar, onEliminar }) 
         className="tarea-check"
         onClick={() => onCompletar(tarea)}
         aria-label={tarea.completada ? `Marcar "${tarea.titulo}" como pendiente` : `Completar "${tarea.titulo}"`}
-        aria-pressed={tarea.completada}
+        aria-pressed={Boolean(tarea.completada)}
       >
-        {tarea.completada && <Check size={18} strokeWidth={3.2} />}
+        {Boolean(tarea.completada) && <Check size={18} strokeWidth={3.2} />}
       </button>
       <div className="tarea-info">
         <div className="tarea-titulo">{tarea.titulo}</div>

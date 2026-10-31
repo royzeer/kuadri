@@ -2,6 +2,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Layout from './components/Layout';
+import AvisoApp from './components/AvisoApp';
 import Acceso from './pages/Acceso';
 import Inicio from './pages/Inicio';
 import Tareas from './pages/Tareas';
@@ -22,23 +23,29 @@ export default function App() {
 
   if (!usuario) {
     return (
-      <Routes>
-        <Route path="/registro" element={<Acceso modo="registro" />} />
-        <Route path="*" element={<Acceso modo="login" />} />
-      </Routes>
+      <>
+        <Routes>
+          <Route path="/registro" element={<Acceso modo="registro" />} />
+          <Route path="*" element={<Acceso modo="login" />} />
+        </Routes>
+        <AvisoApp />
+      </>
     );
   }
 
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route index element={<Inicio />} />
-        <Route path="tareas" element={<Tareas />} />
-        <Route path="enfoque" element={<Enfoque />} />
-        <Route path="progreso" element={<Progreso />} />
-        <Route path="ajustes" element={<Ajustes />} />
-      </Route>
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route index element={<Inicio />} />
+          <Route path="tareas" element={<Tareas />} />
+          <Route path="enfoque" element={<Enfoque />} />
+          <Route path="progreso" element={<Progreso />} />
+          <Route path="ajustes" element={<Ajustes />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      <AvisoApp conBarra />
+    </>
   );
 }

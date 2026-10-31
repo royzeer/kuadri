@@ -5,6 +5,8 @@ const { sumarDias, ultimosDias } = require('../../src/utils/fechas');
 const { escapar } = require('../../src/services/correo.service');
 const { calcularProgreso } = require('../../src/services/meta.service');
 const { analizarPrecios } = require('../../src/services/deseo.service');
+const { normalizarColores, limpiarFuente } = require('../../src/services/estudio.service');
+const { calificacion, fechaRato } = require('../../src/services/ocio.service');
 const { enlace, precio, dia } = require('../../src/utils/validar');
 
 describe('fechas', () => {
@@ -86,6 +88,39 @@ describe('metas y deseos', () => {
     expect(precio('0')).toBeUndefined();
     expect(dia('2027-02-28')).toBe('2027-02-28');
     expect(dia('2027-02-30')).toBeUndefined();
+  });
+});
+
+describe('estudio y ocio', () => {
+  test('normalizarColores pasa a mayúsculas y rechaza colores mal escritos', () => {
+    expect(normalizarColores(['#b1cb5a', ' #141414 '])).toEqual(['#B1CB5A', '#141414']);
+    expect(normalizarColores(['#B1CB5A', 'rojo'])).toBeNull();
+    expect(normalizarColores('#B1CB5A')).toBeNull();
+  });
+
+  test('limpiarFuente junta los espacios repetidos', () => {
+    expect(limpiarFuente('  Space   Grotesk ')).toBe('Space Grotesk');
+  });
+
+  test('la calificación es opcional y va de 1 a 5', () => {
+    expect(calificacion('')).toBeNull();
+    expect(calificacion('4')).toBe(4);
+    expect(calificacion(6)).toBeUndefined();
+    expect(calificacion(2.5)).toBeUndefined();
+  });
+
+  test('fechaRato usa ahora para hoy, mediodía para días pasados y rechaza el futuro', () => {
+    const ahora = new Date(2026, 9, 31, 21, 15);
+    expect(fechaRato(undefined, ahora)).toBe(ahora);
+    expect(fechaRato('2026-10-31', ahora)).toBe(ahora);
+    expect(fechaRato('2026-10-29', ahora)).toEqual(new Date(2026, 9, 29, 12));
+    expect(fechaRato('2026-11-01', ahora)).toBeUndefined();
+    expect(fechaRato('29/10/2026', ahora)).toBeUndefined();
+  });
+
+  test('da los logros "Creativo" y "Equilibrado"', () => {
+    const base = { tareasCompletadas: 0, mejorRacha: 0, minutosEnfoque: 0, tareasMadrugada: 0 };
+    expect(logrosCumplidos({ ...base, paletas: 1, ocioTerminado: 1 }).sort()).toEqual(['CREATIVO', 'EQUILIBRADO']);
   });
 });
 

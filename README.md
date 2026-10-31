@@ -29,13 +29,30 @@ Estudio en dos instituciones al mismo tiempo (Tecnólogo en Análisis y Desarrol
 - **Seguimiento de precios**: anotas el precio cada vez que lo ves y la app guarda el historial, muestra una gráfica, dice si bajó o subió y avisa en las notificaciones cuando llega a tu precio objetivo.
 - Dos logros nuevos: **Soñador** (cumplir una meta) y **Paciente** (un deseo llega a tu precio).
 
+### Fase 3: estudio creativo y registro de ocio
+
+- **Paletas de colores** de 2 a 6 colores. Al tocar un color se copia su código.
+- **Tipografías** de Google Fonts con vista previa dentro de la app y el uso de cada una (títulos, texto o ambos).
+- **Plantillas** que juntan una paleta con una fuente para títulos y otra para texto, con una tarjeta de ejemplo.
+- **Registro de ocio** para videojuegos, series, películas, libros y música, con estado, nota de 1 a 5 estrellas y los ratos que les dedicas.
+- **Equilibrio de la semana** en Progreso: qué parte del tiempo fue estudio (enfoque) y qué parte fue ocio.
+- Dos logros nuevos: **Creativo** (primera paleta) y **Equilibrado** (terminar algo de tu lista de ocio).
+
 ### Diseño
 
 - **Diseño propio** en verde lima, negro y blanco, con tarjetas sólidas y píldoras: la semana se llena cuadro por cuadro y el temporizador avanza en una cuadrícula.
-- **Diseño adaptable** a celular, tableta y escritorio, con navegación inferior en celular.
+- **Diseño adaptable** a celular, tableta y escritorio, con navegación inferior en celular y un menú "Más" para las demás secciones.
 - **Se instala como app** en la pantalla principal del celular, con un aviso que explica cómo hacerlo.
 
 ## Capturas
+
+| Estudio: paletas | Estudio: plantillas |
+|---|---|
+| ![Paletas](docs/capturas/escritorio-estudio.png) | ![Plantillas](docs/capturas/escritorio-plantillas.png) |
+
+| Registro de ocio | Celular: paletas | Celular: menú Más |
+|---|---|---|
+| ![Ocio](docs/capturas/escritorio-ocio.png) | ![Celular paletas](docs/capturas/movil-estudio.png) | ![Celular menú Más](docs/capturas/movil-mas.png) |
 
 | Metas con pasos | Deseo con historial de precios |
 |---|---|
@@ -150,8 +167,8 @@ Kuadri está preparada para publicarse con planes gratuitos: la base de datos en
 ## Pruebas
 
 ```bash
-cd backend && npm test     # 42 pruebas: lógica de rachas, logros, metas y precios, correo, API completa y recordatorios
-cd frontend && npm test    # 25 pruebas: utilidades de fechas y precios, formularios de tareas, metas y deseos, aviso de instalación
+cd backend && npm test     # 59 pruebas: lógica de rachas, logros, metas, precios, estudio y ocio, correo, API completa y recordatorios
+cd frontend && npm test    # 38 pruebas: utilidades de fechas, precios, fuentes y ocio, formularios, aviso de instalación
 ```
 
 Las pruebas de la API usan una base de datos aparte (`kuadri_test`) que se crea sola. En GitHub Actions todas las pruebas se ejecutan automáticamente en cada cambio.
@@ -172,8 +189,13 @@ Las pruebas de la API usan una base de datos aparte (`kuadri_test`) que se crea 
 | GET, POST, PUT, DELETE | /api/deseos | Gestionar la lista de deseos |
 | PATCH | /api/deseos/:id/comprar | Marcar un deseo como comprado |
 | POST, DELETE | /api/deseos/:id/precios | Anotar o borrar un precio del historial |
+| GET, POST, PUT, DELETE | /api/estudio/paletas | Gestionar paletas de colores |
+| GET, POST, PUT, DELETE | /api/estudio/tipografias | Gestionar tipografías de Google Fonts |
+| GET, POST, PUT, DELETE | /api/estudio/plantillas | Gestionar plantillas (paleta y fuentes) |
+| GET, POST, PUT, DELETE | /api/ocio | Gestionar el registro de ocio |
+| POST, DELETE | /api/ocio/:id/ratos | Anotar o borrar un rato de ocio |
 | POST | /api/enfoque | Registrar una sesión de enfoque |
-| GET | /api/estadisticas/resumen | Resumen semanal, racha y totales |
+| GET | /api/estadisticas/resumen | Resumen semanal (estudio y ocio), racha y totales |
 | GET | /api/logros | Logros obtenidos y bloqueados |
 | GET, PATCH | /api/notificaciones | Ver y marcar notificaciones |
 
@@ -199,8 +221,10 @@ kuadri/
 │       ├── context/       # sesión del usuario
 │       ├── components/    # componentes reutilizables
 │       ├── pages/         # pantallas
-│       └── utils/         # utilidades de fechas
-├── database/schema.sql    # esquema de la base de datos
+│       └── utils/         # utilidades de fechas, precios, fuentes y ocio
+├── database/
+│   ├── schema.sql         # esquema completo de la base de datos
+│   └── migraciones/       # cambios para bases que ya tienen datos
 ├── docs/                  # análisis, diseño, pruebas y capturas
 └── .github/workflows/     # integración continua
 ```
@@ -209,7 +233,7 @@ kuadri/
 
 - **Fase 1 (lista):** organización y estudio, recordatorios, enfoque, estadísticas, rachas y logros.
 - **Fase 2 (lista):** metas personales con pasos y lista de deseos con historial de precios.
-- **Fase 3:** estudio creativo (paletas, tipografías y plantillas) y registro de ocio (juegos, series y libros).
+- **Fase 3 (lista):** estudio creativo (paletas, tipografías y plantillas) y registro de ocio (juegos, series, películas, libros y música).
 
 ## Metodología
 

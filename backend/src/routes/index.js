@@ -47,6 +47,27 @@ router.delete('/deseos/:id', c.deseos.eliminar);
 router.post('/deseos/:id/precios', c.deseos.registrarPrecio);
 router.delete('/deseos/:id/precios/:subId', c.deseos.eliminarPrecio);
 
+router.get('/estudio/paletas', c.estudio.paletas);
+router.post('/estudio/paletas', c.estudio.crearPaleta);
+router.put('/estudio/paletas/:id', c.estudio.actualizarPaleta);
+router.delete('/estudio/paletas/:id', c.estudio.eliminarPaleta);
+router.get('/estudio/tipografias', c.estudio.tipografias);
+router.post('/estudio/tipografias', c.estudio.crearTipografia);
+router.put('/estudio/tipografias/:id', c.estudio.actualizarTipografia);
+router.delete('/estudio/tipografias/:id', c.estudio.eliminarTipografia);
+router.get('/estudio/plantillas', c.estudio.plantillas);
+router.post('/estudio/plantillas', c.estudio.crearPlantilla);
+router.put('/estudio/plantillas/:id', c.estudio.actualizarPlantilla);
+router.delete('/estudio/plantillas/:id', c.estudio.eliminarPlantilla);
+
+router.get('/ocio', c.ocio.listar);
+router.post('/ocio', c.ocio.crear);
+router.get('/ocio/:id', c.ocio.obtener);
+router.put('/ocio/:id', c.ocio.actualizar);
+router.delete('/ocio/:id', c.ocio.eliminar);
+router.post('/ocio/:id/ratos', c.ocio.registrarRato);
+router.delete('/ocio/:id/ratos/:subId', c.ocio.eliminarRato);
+
 router.post('/enfoque', c.enfoque.registrar);
 router.get('/estadisticas/resumen', c.resumen.semanal);
 router.get('/logros', c.logros.listar);

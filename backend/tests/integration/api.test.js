@@ -314,3 +314,139 @@ describe('Lista de deseos y precios', () => {
     expect((await request(app).post(`/api/deseos/${deseoId}/precios`).set(otro).send({ precio: 1 })).status).toBe(404);
   });
 });
+
+describe('Estudio creativo', () => {
+  let auth;
+  let paletaId;
+  let fuenteId;
+
+  beforeAll(async () => {
+    auth = { Authorization: `Bearer ${await registrar('juli@test.com')}` };
+  });
+
+  test('guarda una paleta con sus colores en mayúscula y da el logro "Creativo"', async () => {
+    const res = await request(app)
+      .post('/api/estudio/paletas')
+      .set(auth)
+      .send({ nombre: 'Lima', colores: ['#b1cb5a', '#141414', '#D6E6A1'] });
+    expect(res.status).toBe(201);
+    expect(res.body.data.paleta.colores).toEqual(['#B1CB5A', '#141414', '#D6E6A1']);
+    expect(res.body.data.nuevosLogros.map((l) => l.codigo)).toContain('CREATIVO');
+    paletaId = res.body.data.paleta.id;
+  });
+
+  test('rechaza paletas con un solo color o con colores mal escritos', async () => {
+    const uno = await request(app).post('/api/estudio/paletas').set(auth).send({ nombre: 'X', colores: ['#FFFFFF'] });
+    expect(uno.status).toBe(422);
+    const malo = await request(app).post('/api/estudio/paletas').set(auth).send({ nombre: '', colores: ['#FFF', 'azul'] });
+    expect(Object.keys(malo.body.data.errores).sort()).toEqual(['colores', 'nombre']);
+  });
+
+  test('guarda una tipografía y rechaza nombres con símbolos raros', async () => {
+    const res = await request(app)
+      .post('/api/estudio/tipografias')
+      .set(auth)
+      .send({ nombre: '  Space   Grotesk ', uso: 'titulos', muestra: 'Hola mundo' });
+    expect(res.status).toBe(201);
+    expect(res.body.data.nombre).toBe('Space Grotesk');
+    fuenteId = res.body.data.id;
+
+    const mal = await request(app).post('/api/estudio/tipografias').set(auth).send({ nombre: 'Roboto&family=x', uso: 'otro' });
+    expect(mal.status).toBe(422);
+    expect(Object.keys(mal.body.data.errores).sort()).toEqual(['nombre', 'uso']);
+  });
+
+  test('una plantilla junta la paleta y las fuentes', async () => {
+    const res = await request(app)
+      .post('/api/estudio/plantillas')
+      .set(auth)
+      .send({ nombre: 'Portafolio', paletaId, fuenteTitulosId: fuenteId, fuenteTextoId: fuenteId, nota: 'Para mi web' });
+    expect(res.status).toBe(201);
+    expect(res.body.data.colores).toEqual(['#B1CB5A', '#141414', '#D6E6A1']);
+    expect(res.body.data.fuente_titulos).toBe('Space Grotesk');
+
+    // Si se borra la paleta, la plantilla sigue pero sin colores
+    await request(app).delete(`/api/estudio/paletas/${paletaId}`).set(auth);
+    const lista = await request(app).get('/api/estudio/plantillas').set(auth);
+    expect(lista.body.data[0].paleta_id).toBeNull();
+    expect(lista.body.data[0].colores).toEqual([]);
+  });
+
+  test('un usuario no puede usar ni tocar el estudio de otro', async () => {
+    const otro = { Authorization: `Bearer ${await registrar('kike@test.com')}` };
+    const res = await request(app).post('/api/estudio/plantillas').set(otro).send({ nombre: 'Copia', fuenteTitulosId: fuenteId });
+    expect(res.status).toBe(422);
+    expect(res.body.data.errores.fuenteTitulosId).toBeDefined();
+    expect((await request(app).delete(`/api/estudio/tipografias/${fuenteId}`).set(otro)).status).toBe(404);
+    expect((await request(app).get('/api/estudio/tipografias').set(otro)).body.data).toEqual([]);
+  });
+});
+
+describe('Registro de ocio y equilibrio', () => {
+  let auth;
+  let ocioId;
+
+  beforeAll(async () => {
+    auth = { Authorization: `Bearer ${await registrar('luna@test.com')}` };
+  });
+
+  test('agrega un videojuego pendiente', async () => {
+    const res = await request(app)
+      .post('/api/ocio')
+      .set(auth)
+      .send({ titulo: 'Hollow Knight', tipo: 'videojuego', plataforma: 'PC' });
+    expect(res.status).toBe(201);
+    expect(res.body.data.ocio.estado).toBe('pendiente');
+    expect(res.body.data.ocio.minutos_total).toBe(0);
+    ocioId = res.body.data.ocio.id;
+  });
+
+  test('valida tipo, estado y nota', async () => {
+    const res = await request(app).post('/api/ocio').set(auth).send({ titulo: ' ', tipo: 'anime', estado: 'x', calificacion: 7 });
+    expect(res.status).toBe(422);
+    expect(Object.keys(res.body.data.errores).sort()).toEqual(['calificacion', 'estado', 'tipo', 'titulo']);
+  });
+
+  test('anotar un rato lo pasa a "en curso" y suma minutos', async () => {
+    const res = await request(app).post(`/api/ocio/${ocioId}/ratos`).set(auth).send({ minutos: 45 });
+    expect(res.status).toBe(201);
+    expect(res.body.data.estado).toBe('en_curso');
+    expect(res.body.data.minutos_total).toBe(45);
+    expect(res.body.data.ratos).toHaveLength(1);
+
+    const futuro = await request(app).post(`/api/ocio/${ocioId}/ratos`).set(auth).send({ minutos: 30, fecha: '2999-01-01' });
+    expect(futuro.status).toBe(422);
+  });
+
+  test('el resumen semanal muestra los minutos de ocio junto a los de estudio', async () => {
+    await request(app).post('/api/enfoque').set(auth).send({ minutos: 25 });
+    const res = await request(app).get('/api/estadisticas/resumen').set(auth);
+    expect(res.body.data.ocioSemana).toBe(45);
+    expect(res.body.data.minutosSemana).toBe(25);
+    expect(res.body.data.semana[6].ocio).toBe(45);
+  });
+
+  test('al terminarlo guarda la fecha y da el logro "Equilibrado"', async () => {
+    const res = await request(app)
+      .put(`/api/ocio/${ocioId}`)
+      .set(auth)
+      .send({ titulo: 'Hollow Knight', tipo: 'videojuego', estado: 'terminado', calificacion: 5, plataforma: 'PC' });
+    expect(res.status).toBe(200);
+    expect(res.body.data.ocio.terminado_en).not.toBeNull();
+    expect(res.body.data.ocio.calificacion).toBe(5);
+    expect(res.body.data.nuevosLogros.map((l) => l.codigo)).toContain('EQUILIBRADO');
+  });
+
+  test('permite borrar un rato mal anotado', async () => {
+    const { body } = await request(app).get(`/api/ocio/${ocioId}`).set(auth);
+    const res = await request(app).delete(`/api/ocio/${ocioId}/ratos/${body.data.ratos[0].id}`).set(auth);
+    expect(res.status).toBe(200);
+    expect(res.body.data.minutos_total).toBe(0);
+  });
+
+  test('un usuario no puede ver ni anotar ratos en el ocio de otro', async () => {
+    const otro = { Authorization: `Bearer ${await registrar('mono@test.com')}` };
+    expect((await request(app).get(`/api/ocio/${ocioId}`).set(otro)).status).toBe(404);
+    expect((await request(app).post(`/api/ocio/${ocioId}/ratos`).set(otro).send({ minutos: 10 })).status).toBe(404);
+  });
+});

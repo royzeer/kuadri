@@ -50,8 +50,10 @@ async function totales(usuarioId) {
        (SELECT COUNT(*) FROM metas WHERE usuario_id = ? AND cumplida_en IS NOT NULL) AS metas_cumplidas,
        (SELECT COUNT(DISTINCT d.id) FROM deseos d
           JOIN precios_deseo p ON p.deseo_id = d.id
-         WHERE d.usuario_id = ? AND p.precio <= d.precio_objetivo) AS deseos_en_objetivo`,
-    [usuarioId, usuarioId, usuarioId, usuarioId, usuarioId, usuarioId],
+         WHERE d.usuario_id = ? AND p.precio <= d.precio_objetivo) AS deseos_en_objetivo,
+       (SELECT COUNT(*) FROM paletas WHERE usuario_id = ?) AS paletas,
+       (SELECT COUNT(*) FROM ocio WHERE usuario_id = ? AND estado = 'terminado') AS ocio_terminado`,
+    Array(8).fill(usuarioId),
   );
   return {
     tareasCompletadas: Number(fila.tareas_completadas),
@@ -60,6 +62,8 @@ async function totales(usuarioId) {
     tareasMadrugada: Number(fila.tareas_madrugada),
     metasCumplidas: Number(fila.metas_cumplidas),
     deseosEnObjetivo: Number(fila.deseos_en_objetivo),
+    paletas: Number(fila.paletas),
+    ocioTerminado: Number(fila.ocio_terminado),
   };
 }
 

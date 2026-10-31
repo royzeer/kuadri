@@ -1,20 +1,37 @@
 // Estructura principal: barra lateral oscura (barra inferior en celular), encabezado y notificaciones.
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
-import { Bell, ChartColumn, Gift, House, ListChecks, LogOut, Settings, Target, Timer } from 'lucide-react';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import {
+  Bell,
+  ChartColumn,
+  Ellipsis,
+  Gamepad2,
+  Gift,
+  House,
+  ListChecks,
+  LogOut,
+  Palette,
+  Settings,
+  Target,
+  Timer,
+} from 'lucide-react';
 import { api } from '../api/cliente';
 import { useAuth } from '../context/AuthContext';
 import Logo from './Logo';
 
+// En el celular solo caben los principales en la barra; el resto va en el menú "Más".
 const ENLACES = [
-  { a: '/', texto: 'Inicio', Icono: House },
-  { a: '/tareas', texto: 'Tareas', Icono: ListChecks },
+  { a: '/', texto: 'Inicio', Icono: House, principal: true },
+  { a: '/tareas', texto: 'Tareas', Icono: ListChecks, principal: true },
   { a: '/metas', texto: 'Metas', Icono: Target },
   { a: '/deseos', texto: 'Deseos', Icono: Gift },
-  { a: '/enfoque', texto: 'Enfoque', Icono: Timer },
-  { a: '/progreso', texto: 'Progreso', Icono: ChartColumn },
+  { a: '/estudio', texto: 'Estudio', Icono: Palette },
+  { a: '/ocio', texto: 'Ocio', Icono: Gamepad2 },
+  { a: '/enfoque', texto: 'Enfoque', Icono: Timer, principal: true },
+  { a: '/progreso', texto: 'Progreso', Icono: ChartColumn, principal: true },
   { a: '/ajustes', texto: 'Ajustes', Icono: Settings },
 ];
+const SECUNDARIOS = ENLACES.filter((e) => !e.principal);
 
 function hace(fechaIso) {
   const minutos = Math.round((Date.now() - new Date(fechaIso)) / 60000);
@@ -106,6 +123,42 @@ export function Encabezado({ titulo, subtitulo, children }) {
   );
 }
 
+// Botón "Más" de la barra inferior del celular, con las páginas que no caben.
+function MenuMas() {
+  const [abierto, setAbierto] = useState(false);
+  const caja = useRef(null);
+  const { pathname } = useLocation();
+  const activo = SECUNDARIOS.some((e) => pathname.startsWith(e.a));
+
+  // Se cierra al cambiar de página o al tocar fuera
+  useEffect(() => setAbierto(false), [pathname]);
+  useEffect(() => {
+    if (!abierto) return undefined;
+    const fuera = (e) => caja.current && !caja.current.contains(e.target) && setAbierto(false);
+    document.addEventListener('mousedown', fuera);
+    return () => document.removeEventListener('mousedown', fuera);
+  }, [abierto]);
+
+  return (
+    <div ref={caja} className="nav-mas">
+      <button type="button" className={activo ? 'active' : ''} onClick={() => setAbierto(!abierto)} aria-expanded={abierto}>
+        <Ellipsis size={21} aria-hidden="true" />
+        Más
+      </button>
+      {abierto && (
+        <div className="menu-mas">
+          {SECUNDARIOS.map(({ a, texto, Icono }) => (
+            <NavLink key={a} to={a}>
+              <Icono size={20} aria-hidden="true" />
+              {texto}
+            </NavLink>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Layout() {
   const { cerrarSesion } = useAuth();
   return (
@@ -115,12 +168,13 @@ export default function Layout() {
           <Logo />
         </NavLink>
         <nav className="nav" aria-label="Principal">
-          {ENLACES.map(({ a, texto, Icono }) => (
-            <NavLink key={a} to={a} end={a === '/'}>
+          {ENLACES.map(({ a, texto, Icono, principal }) => (
+            <NavLink key={a} to={a} end={a === '/'} className={principal ? '' : 'solo-escritorio'}>
               <Icono size={21} aria-hidden="true" />
               {texto}
             </NavLink>
           ))}
+          <MenuMas />
         </nav>
         <div className="lateral-pie">
           <button type="button" onClick={cerrarSesion}>

@@ -79,16 +79,17 @@ Límites del plan gratis (revisados en octubre de 2026): 100 correos al día y 3
 
 Cuando una versión nueva trae tablas nuevas (por ejemplo, la Fase 2: metas y deseos), **no** se usa `npm run db:init`, porque ese comando borra la base y todos los datos. Se usa `npm run db:migrar`, que solo agrega lo que falta y se puede correr más de una vez sin problema.
 
-1. Poner en `backend/.env` los datos de Aiven (los mismos del paso 1, con `DB_SSL=true`).
-2. Ejecutar:
+1. Revisar en [console.aiven.io](https://console.aiven.io) que el servicio `kuadri-db` diga **Running**. En el plan gratis se apaga si no se usa; si está apagado, encenderlo y esperar a que pase de **Rebuilding** a **Running**.
+2. Poner en `backend/.env` los datos de Aiven (los mismos de la sección 1, con `DB_SSL=true`).
+3. Ejecutar:
 
 ```bash
 cd backend
 npm run db:migrar
 ```
 
-3. Debe aparecer `Migración aplicada: 001-fase-2-metas-deseos.sql` y `Base de datos "kuadri" al día.`
-4. Volver a dejar el `.env` apuntando a la base local.
+4. Debe aparecer una línea `Migración aplicada: ...` por cada archivo (por ejemplo `001-fase-2-metas-deseos.sql` y `002-fase-3-estudio-ocio.sql`) y al final `Base de datos "kuadri" al día.` Las migraciones anteriores se vuelven a pasar sin cambiar nada.
+5. Volver a dejar el `.env` apuntando a la base local.
 
 Las migraciones están en `database/migraciones/`. El archivo `database/schema.sql` ya trae todo para instalaciones nuevas.
 

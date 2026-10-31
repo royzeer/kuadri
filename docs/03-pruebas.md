@@ -1,6 +1,6 @@
 # Kuadri - Plan de pruebas
 
-Versión: 1.0 (Fase 1)
+Versión: 3.0 (Fases 1, 2 y 3)
 
 ## 1. Estrategia
 
@@ -14,7 +14,7 @@ Versión: 1.0 (Fase 1)
 
 ## 2. Casos de prueba automatizados
 
-### API (42 pruebas)
+### API (59 pruebas)
 
 | Código | Caso | Resultado esperado | Requisito |
 |---|---|---|---|
@@ -47,8 +47,21 @@ Versión: 1.0 (Fase 1)
 | CP38 | Marcar comprado | Guarda la fecha de compra | RF24 |
 | CP39 | Deseos de otro usuario | 404 | RNF05 |
 | CP40 a CP42 | Avance de metas, análisis de precios, validar enlaces, precios y fechas | Cálculos correctos en bordes: sin pasos, un solo precio, 30 de febrero | RN05, RN06 |
+| CP43 | Crear paleta | 201, colores en mayúscula y logro "Creativo" | RF25, RN08 |
+| CP44 | Paleta con un color o colores mal escritos | 422 con error por campo | RF25 |
+| CP45 | Tipografía con espacios de más y con símbolos | Se limpia el nombre / 422 si trae símbolos o un uso inválido | RF26 |
+| CP46 | Plantilla y borrar su paleta | Trae colores y fuentes; al borrar la paleta la plantilla queda sin colores | RF27, RN08 |
+| CP47 | Estudio de otro usuario | No puede usar sus fuentes (422), ni borrarlas (404), y ve su lista vacía | RNF05 |
+| CP48 | Agregar videojuego | 201, pendiente y 0 minutos | RF28 |
+| CP49 | Ocio con tipo, estado y nota inválidos | 422 con error por campo | RF28 |
+| CP50 | Anotar rato | Pasa a "en curso" y suma minutos; un día futuro da 422 | RF29, RN09 |
+| CP51 | Resumen semanal | Muestra minutos de ocio aparte de los de enfoque | RF30, RN10 |
+| CP52 | Terminar algo del ocio | Guarda la fecha y da el logro "Equilibrado" | RF28, RF16 |
+| CP53 | Borrar rato | El total de minutos se recalcula | RF29 |
+| CP54 | Ocio de otro usuario | 404 | RNF05 |
+| CP55 a CP59 | Colores, nombres de fuentes, nota, fecha de un rato y logros nuevos | Cálculos correctos en bordes: color "rojo", nota 2.5, rato de mañana | RN08, RN09 |
 
-### Interfaz (25 pruebas)
+### Interfaz (38 pruebas)
 
 | Caso | Resultado esperado |
 |---|---|
@@ -63,6 +76,11 @@ Versión: 1.0 (Fase 1)
 | Gráfica de precios | El precio más alto queda arriba y el más bajo abajo |
 | Formulario de meta | Toma un paso por renglón y no pide pasos al editar |
 | Formulario de deseo | Envía los precios como número y rechaza enlaces que no son web |
+| Fuentes de Google | Arma el enlace correcto, rechaza nombres con símbolos y carga cada fuente una sola vez |
+| Formulario de paleta | Envía los colores en mayúscula y no deja menos de dos |
+| Formulario de plantilla | La tarjeta de ejemplo usa la fuente elegida y texto blanco sobre fondo oscuro |
+| Formulario de ocio | Envía la nota en estrellas; tocar la misma estrella la quita |
+| Equilibrio estudio / ocio | Porcentajes que suman 100 y mensaje según el reparto |
 
 ## 3. Pruebas manuales realizadas
 
@@ -75,6 +93,9 @@ Versión: 1.0 (Fase 1)
 | Estadísticas, racha y logros | Correcto | Correcto |
 | Notificaciones y recordatorio generado por el planificador | Correcto | Correcto |
 | Gestión de categorías (color e icono) | Correcto | Correcto |
+| Estudio: paletas, tipografías con vista previa y plantillas | Correcto | Correcto |
+| Ocio: agregar, anotar ratos, terminar y equilibrio en Progreso | Correcto | Correcto |
+| Menú "Más" de la barra inferior | No aplica | Correcto |
 
 ## 4. Cómo ejecutar las pruebas
 

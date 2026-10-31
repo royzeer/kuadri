@@ -2,7 +2,7 @@
 
 Autor: Roycer Stevan Cervantes Ropero
 Programa: Tecnólogo en Análisis y Desarrollo de Software (SENA)
-Versión: 1.0 (Fase 1)
+Versión: 3.0 (Fases 1, 2 y 3)
 
 ## 1. Descripción general
 
@@ -75,6 +75,12 @@ Desarrollar una aplicación web que permita a una persona registrar y organizar 
 | RF22 | El usuario puede anotar el precio de un deseo cuando lo ve; el sistema guarda el historial y muestra si bajó o subió. | Alta |
 | RF23 | El sistema avisa en las notificaciones cuando un deseo llega al precio objetivo. | Media |
 | RF24 | El usuario puede marcar un deseo como comprado. | Baja |
+| RF25 | El usuario puede crear, editar y eliminar paletas de 2 a 6 colores y copiar el código de cada color. | Media |
+| RF26 | El usuario puede guardar tipografías de Google Fonts con su uso (títulos, texto o ambos) y verlas en una vista previa. | Media |
+| RF27 | El usuario puede crear plantillas que juntan una paleta, una fuente para títulos y otra para texto, con una tarjeta de ejemplo. | Media |
+| RF28 | El usuario puede registrar actividades de ocio (videojuego, serie, película, libro, música u otro) con estado, nota de 1 a 5 y plataforma. | Media |
+| RF29 | El usuario puede anotar los minutos que dedica a cada actividad de ocio y borrar un rato mal anotado. | Media |
+| RF30 | El usuario ve en Progreso qué parte del tiempo de la semana fue estudio y qué parte fue ocio. | Baja |
 
 ## 4. Requisitos no funcionales
 
@@ -175,6 +181,9 @@ Como usuario, quiero ver mi racha de días activos y los logros que he ganado, p
 - **RN05:** El avance de una meta es el porcentaje de pasos hechos; una meta cumplida siempre está al 100 %. Si se agrega o desmarca un paso de una meta cumplida, vuelve a quedar en curso.
 - **RN06:** El aviso de precio objetivo se envía una sola vez; si el precio vuelve a subir por encima del objetivo, el aviso queda listo para la siguiente bajada.
 - **RN07:** El precio se anota a mano. No se lee automáticamente de las tiendas, porque las tiendas grandes bloquean esas lecturas y el servidor gratuito se duerme.
+- **RN08:** Los colores se guardan en formato #RRGGBB y en mayúscula. Si se borra una paleta o una fuente, las plantillas que la usaban se conservan sin ella.
+- **RN09:** Un rato de ocio dura entre 1 y 720 minutos y no puede ser de un día futuro. Anotar un rato en algo pendiente lo pasa a "en curso".
+- **RN10:** Los ratos de ocio no cuentan para la racha: la racha sigue midiendo solo el estudio (tareas y enfoque).
 
 | Logro | Condición |
 |---|---|
@@ -186,6 +195,8 @@ Como usuario, quiero ver mi racha de días activos y los logros que he ganado, p
 | Madrugador | Completar una tarea antes de las 8:00 a. m. |
 | Soñador | Cumplir la primera meta |
 | Paciente | Un deseo llega al precio objetivo |
+| Creativo | Guardar la primera paleta de colores |
+| Equilibrado | Terminar algo de la lista de ocio |
 
 ## 8. Metodología
 

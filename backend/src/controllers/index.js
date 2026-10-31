@@ -6,6 +6,8 @@ const tareaService = require('../services/tarea.service');
 const enfoqueService = require('../services/enfoque.service');
 const metaService = require('../services/meta.service');
 const deseoService = require('../services/deseo.service');
+const estudioService = require('../services/estudio.service');
+const ocioService = require('../services/ocio.service');
 const estadisticas = require('../services/estadisticas.service');
 const usuarios = require('../models/usuario.model');
 const actividad = require('../models/actividad.model');
@@ -20,7 +22,7 @@ function idDeRuta(req) {
   return id;
 }
 
-// Igual que idDeRuta, para el segundo identificador (paso o precio).
+// Igual que idDeRuta, para el segundo identificador (paso, precio o rato).
 function subIdDeRuta(req) {
   const id = idPositivo(req.params.subId);
   if (!id) throw new AppError('Identificador inválido', 400);
@@ -111,6 +113,60 @@ const deseos = {
     exito(res, await deseoService.eliminarPrecio(req.usuarioId, idDeRuta(req), subIdDeRuta(req)), 'Precio eliminado'),
 };
 
+const estudio = {
+  paletas: async (req, res) => exito(res, await estudioService.listarPaletas(req.usuarioId)),
+  crearPaleta: async (req, res) =>
+    exito(res, await estudioService.crearPaleta(req.usuarioId, req.body || {}), 'Paleta guardada', 201),
+  actualizarPaleta: async (req, res) =>
+    exito(res, await estudioService.actualizarPaleta(req.usuarioId, idDeRuta(req), req.body || {}), 'Paleta actualizada'),
+  eliminarPaleta: async (req, res) => {
+    await estudioService.eliminarPaleta(req.usuarioId, idDeRuta(req));
+    exito(res, null, 'Paleta eliminada');
+  },
+  tipografias: async (req, res) => exito(res, await estudioService.listarTipografias(req.usuarioId)),
+  crearTipografia: async (req, res) =>
+    exito(res, await estudioService.crearTipografia(req.usuarioId, req.body || {}), 'Tipografía guardada', 201),
+  actualizarTipografia: async (req, res) =>
+    exito(
+      res,
+      await estudioService.actualizarTipografia(req.usuarioId, idDeRuta(req), req.body || {}),
+      'Tipografía actualizada',
+    ),
+  eliminarTipografia: async (req, res) => {
+    await estudioService.eliminarTipografia(req.usuarioId, idDeRuta(req));
+    exito(res, null, 'Tipografía eliminada');
+  },
+  plantillas: async (req, res) => exito(res, await estudioService.listarPlantillas(req.usuarioId)),
+  crearPlantilla: async (req, res) =>
+    exito(res, await estudioService.crearPlantilla(req.usuarioId, req.body || {}), 'Plantilla guardada', 201),
+  actualizarPlantilla: async (req, res) =>
+    exito(
+      res,
+      await estudioService.actualizarPlantilla(req.usuarioId, idDeRuta(req), req.body || {}),
+      'Plantilla actualizada',
+    ),
+  eliminarPlantilla: async (req, res) => {
+    await estudioService.eliminarPlantilla(req.usuarioId, idDeRuta(req));
+    exito(res, null, 'Plantilla eliminada');
+  },
+};
+
+const ocio = {
+  listar: async (req, res) => exito(res, await ocioService.listar(req.usuarioId)),
+  obtener: async (req, res) => exito(res, await ocioService.obtener(req.usuarioId, idDeRuta(req))),
+  crear: async (req, res) => exito(res, await ocioService.crear(req.usuarioId, req.body || {}), 'Agregado a tu ocio', 201),
+  actualizar: async (req, res) =>
+    exito(res, await ocioService.actualizar(req.usuarioId, idDeRuta(req), req.body || {}), 'Ocio actualizado'),
+  eliminar: async (req, res) => {
+    await ocioService.eliminar(req.usuarioId, idDeRuta(req));
+    exito(res, null, 'Eliminado de tu ocio');
+  },
+  registrarRato: async (req, res) =>
+    exito(res, await ocioService.registrarRato(req.usuarioId, idDeRuta(req), req.body || {}), 'Rato anotado', 201),
+  eliminarRato: async (req, res) =>
+    exito(res, await ocioService.eliminarRato(req.usuarioId, idDeRuta(req), subIdDeRuta(req)), 'Rato eliminado'),
+};
+
 const enfoque = {
   registrar: async (req, res) =>
     exito(res, await enfoqueService.registrar(req.usuarioId, req.body || {}), 'Sesión registrada', 201),
@@ -137,4 +193,4 @@ const notificaciones = {
   },
 };
 
-module.exports = { auth, categorias, tareas, metas, deseos, enfoque, resumen, logros, notificaciones };
+module.exports = { auth, categorias, tareas, metas, deseos, estudio, ocio, enfoque, resumen, logros, notificaciones };

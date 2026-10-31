@@ -1,6 +1,6 @@
 # Kuadri - Documento de diseño
 
-Versión: 1.0 (Fase 1)
+Versión: 3.0 (Fases 1, 2 y 3)
 
 Los diagramas están escritos en Mermaid, por lo que GitHub los muestra como imágenes directamente en esta página.
 
@@ -70,6 +70,13 @@ erDiagram
   METAS ||--o{ META_PASOS : contiene
   USUARIOS ||--o{ DESEOS : quiere
   DESEOS ||--o{ PRECIOS_DESEO : historial
+  USUARIOS ||--o{ PALETAS : guarda
+  USUARIOS ||--o{ TIPOGRAFIAS : guarda
+  USUARIOS ||--o{ PLANTILLAS : arma
+  PALETAS |o--o{ PLANTILLAS : colorea
+  TIPOGRAFIAS |o--o{ PLANTILLAS : "titulos y texto"
+  USUARIOS ||--o{ OCIO : disfruta
+  OCIO ||--o{ OCIO_RATOS : tiempo
 
   USUARIOS {
     int id PK
@@ -157,9 +164,50 @@ erDiagram
     varchar tienda
     datetime registrado_en
   }
+  PALETAS {
+    int id PK
+    int usuario_id FK
+    varchar nombre
+    varchar colores
+  }
+  TIPOGRAFIAS {
+    int id PK
+    int usuario_id FK
+    varchar nombre
+    enum uso
+    varchar muestra
+  }
+  PLANTILLAS {
+    int id PK
+    int usuario_id FK
+    int paleta_id FK
+    int fuente_titulos_id FK
+    int fuente_texto_id FK
+    varchar nombre
+    varchar nota
+  }
+  OCIO {
+    int id PK
+    int usuario_id FK
+    varchar titulo
+    enum tipo
+    enum estado
+    tinyint calificacion
+    varchar plataforma
+    text comentario
+    datetime terminado_en
+  }
+  OCIO_RATOS {
+    int id PK
+    int ocio_id FK
+    smallint minutos
+    datetime fecha
+  }
 ```
 
 La base está normalizada hasta tercera forma normal: cada tabla describe una sola entidad, no hay grupos repetidos y los atributos dependen solo de la llave primaria. La vista `v_dias_activos` une tareas completadas y sesiones de enfoque para calcular rachas.
+
+Los colores de una paleta se guardan juntos en una columna (`#B1CB5A,#141414,#D6E6A1`) porque siempre se leen y se escriben como un todo y nunca se consultan uno por uno; así la tabla funciona igual en MySQL y en MariaDB sin depender del tipo JSON.
 
 ## 4. Diagrama de clases (servidor)
 
@@ -269,8 +317,27 @@ Todas las respuestas usan el formato `{ ok, data, mensaje }`. Las rutas marcadas
 | DELETE | /api/deseos/:id | Eliminar deseo | Sí |
 | POST | /api/deseos/:id/precios | Anotar precio | Sí |
 | DELETE | /api/deseos/:id/precios/:precioId | Borrar un precio del historial | Sí |
+| GET | /api/estudio/paletas | Listar paletas | Sí |
+| POST | /api/estudio/paletas | Crear paleta (puede dar el logro "Creativo") | Sí |
+| PUT | /api/estudio/paletas/:id | Editar paleta | Sí |
+| DELETE | /api/estudio/paletas/:id | Eliminar paleta | Sí |
+| GET | /api/estudio/tipografias | Listar tipografías | Sí |
+| POST | /api/estudio/tipografias | Guardar tipografía de Google Fonts | Sí |
+| PUT | /api/estudio/tipografias/:id | Editar tipografía | Sí |
+| DELETE | /api/estudio/tipografias/:id | Eliminar tipografía | Sí |
+| GET | /api/estudio/plantillas | Listar plantillas con colores y nombres de fuentes | Sí |
+| POST | /api/estudio/plantillas | Crear plantilla | Sí |
+| PUT | /api/estudio/plantillas/:id | Editar plantilla | Sí |
+| DELETE | /api/estudio/plantillas/:id | Eliminar plantilla | Sí |
+| GET | /api/ocio | Listar el registro de ocio con minutos totales | Sí |
+| POST | /api/ocio | Agregar algo al ocio | Sí |
+| GET | /api/ocio/:id | Ver con sus ratos | Sí |
+| PUT | /api/ocio/:id | Editar (terminarlo puede dar el logro "Equilibrado") | Sí |
+| DELETE | /api/ocio/:id | Eliminar | Sí |
+| POST | /api/ocio/:id/ratos | Anotar un rato (minutos y día) | Sí |
+| DELETE | /api/ocio/:id/ratos/:ratoId | Borrar un rato | Sí |
 | POST | /api/enfoque | Registrar sesión de enfoque | Sí |
-| GET | /api/estadisticas/resumen | Resumen semanal, racha y totales | Sí |
+| GET | /api/estadisticas/resumen | Resumen semanal (enfoque, tareas y ocio), racha y totales | Sí |
 | GET | /api/logros | Logros con estado obtenido o bloqueado | Sí |
 | GET | /api/notificaciones | Listar notificaciones | Sí |
 | PATCH | /api/notificaciones/leer-todas | Marcar todas como leídas | Sí |
@@ -296,6 +363,13 @@ Todas las respuestas usan el formato `{ ok, data, mensaje }`. Las rutas marcadas
 - **Temporizador en cuadrícula:** tarjeta negra con 50 cuadritos que se llenan en lima.
 - **Gráficos de barras:** barras lima y la del día actual en negro.
 - **Logros** como círculos lima y negros, punteados mientras están bloqueados.
-- **Barra inferior en celular:** píldora negra con el elemento activo en un círculo blanco.
+- **Barra inferior en celular:** píldora negra con el elemento activo en un círculo blanco. Muestra Inicio, Tareas, Enfoque y Progreso; las demás secciones (Metas, Deseos, Estudio, Ocio y Ajustes) van en el menú "Más".
+- **Paletas:** franjas de color con el código escrito de lado; al tocar una franja se copia el código.
+- **Tipografías:** tarjeta con "Aa" grande y una frase de muestra en la misma fuente, cargada desde Google Fonts.
+- **Plantillas:** tarjeta de ejemplo con el primer color de fondo, el segundo en el botón y el texto en blanco o negro según el contraste.
+- **Ocio:** tarjetas que alternan lima, negro y lima clara, con el icono del tipo en un círculo blanco y la nota en estrellas.
+- **Equilibrio:** barra partida en Progreso, lima para el estudio y negro para el ocio.
 
 **Pantallas de la Fase 1:** inicio de sesión y registro (pantalla dividida), inicio, tareas (lista y calendario), enfoque, progreso y ajustes.
+
+**Pantallas de las Fases 2 y 3:** metas, deseos (con detalle e historial de precios), estudio (pestañas de paletas, tipografías y plantillas) y ocio (con detalle de ratos).

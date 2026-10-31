@@ -1681,6 +1681,455 @@ textarea.entrada {
   }
 }
 
+/* ---------- Menú "Más" (solo en la barra inferior del celular) ---------- */
+.nav-mas {
+  display: none;
+  position: relative;
+}
+.nav-mas > button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  font: 500 0.66rem var(--fuente);
+  color: #a6a99e;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.nav-mas > button.active,
+.nav-mas > button[aria-expanded='true'] {
+  color: var(--negro);
+  background: var(--lima);
+}
+.menu-mas {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 14px);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 190px;
+  padding: 8px;
+  background: var(--negro);
+  border-radius: 24px;
+  box-shadow: var(--sombra-flotante);
+}
+.nav .menu-mas a {
+  flex-direction: row;
+  gap: 12px;
+  padding: 12px 16px;
+  font-size: 0.92rem;
+}
+
+/* ---------- Estudio creativo ---------- */
+.rejilla-estudio {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+.estudio-tarjeta {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px;
+  background: var(--lima-palida);
+  border-radius: var(--radio);
+}
+.estudio-pie {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 4px 4px;
+}
+.estudio-pie h3 {
+  overflow-wrap: anywhere;
+  margin-bottom: 4px;
+}
+.estudio-acciones {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.estudio-acciones .boton-icono {
+  width: 38px;
+  min-height: 38px;
+  background: transparent;
+}
+.estudio-detalle {
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+.paleta-colores {
+  display: flex;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 20px;
+}
+.paleta-colores button {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-width: 0;
+  padding: 0 0 12px;
+  font: 600 0.7rem var(--fuente);
+  letter-spacing: 0.06em;
+  border: none;
+  cursor: copy;
+  transition: flex 0.2s ease;
+}
+.paleta-colores button span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+.paleta-colores button:hover,
+.paleta-colores button:focus-visible {
+  flex: 1.8;
+}
+.fuente-tarjeta {
+  padding: 20px 18px 14px;
+}
+.fuente-letras {
+  font-size: 3.4rem;
+  line-height: 1;
+}
+.fuente-muestra {
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+}
+.fuente-previa {
+  padding: 18px;
+  font-size: 1.3rem;
+  background: var(--lima-palida);
+  border-radius: var(--radio-sm);
+  overflow-wrap: anywhere;
+}
+.colores-campo {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+.colores-campo legend {
+  margin-bottom: 6px;
+}
+.color-fila {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.color-fila input[type='color'] {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.color-fila input[type='color']::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+.color-fila input[type='color']::-webkit-color-swatch {
+  border: 1.5px solid var(--lima-borde);
+  border-radius: 50%;
+}
+.color-fila input[type='color']::-moz-color-swatch {
+  border: 1.5px solid var(--lima-borde);
+  border-radius: 50%;
+}
+.muestra-plantilla {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 22px 20px 18px;
+  border-radius: 20px;
+  overflow-wrap: anywhere;
+}
+.muestra-plantilla strong {
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+.muestra-plantilla p {
+  font-size: 0.92rem;
+  opacity: 0.85;
+}
+.muestra-plantilla-boton {
+  padding: 8px 18px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: var(--pildora);
+}
+.muestra-plantilla-colores {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+.muestra-plantilla-colores i {
+  width: 22px;
+  height: 22px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+}
+
+/* ---------- Registro de ocio ---------- */
+.rejilla-ocio {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+.ocio-tarjeta {
+  --fondo-ocio: var(--lima);
+  --texto-ocio: var(--negro);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 18px;
+  font: inherit;
+  text-align: left;
+  color: var(--texto-ocio);
+  background: var(--fondo-ocio);
+  border: none;
+  border-radius: var(--radio);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.ocio-tarjeta:hover {
+  transform: translateY(-3px);
+}
+.ocio-tarjeta:nth-child(3n + 2) {
+  --fondo-ocio: var(--negro);
+  --texto-ocio: var(--blanco);
+}
+.ocio-tarjeta:nth-child(3n) {
+  --fondo-ocio: var(--lima-clara);
+}
+.ocio-tarjeta.estado-terminado,
+.ocio-tarjeta.estado-abandonado {
+  --fondo-ocio: var(--lima-palida);
+  --texto-ocio: var(--negro);
+}
+.ocio-tarjeta .chip {
+  color: var(--blanco);
+  background: var(--negro);
+}
+.ocio-tarjeta:nth-child(3n + 2):not(.estado-terminado):not(.estado-abandonado) .chip {
+  color: var(--negro);
+  background: var(--lima);
+}
+.ocio-tarjeta:nth-child(3n + 2):not(.estado-terminado):not(.estado-abandonado) .estrellas-fijas {
+  color: var(--lima);
+}
+.ocio-icono {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 6px;
+  color: var(--negro);
+  background: var(--blanco);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.ocio-titulo {
+  font-size: 1.08rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.ocio-datos {
+  font-size: 0.82rem;
+  opacity: 0.72;
+}
+.ocio-pie {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 0.88rem;
+}
+.estrellas {
+  display: flex;
+  gap: 2px;
+  min-height: 46px;
+  align-items: center;
+}
+.estrellas button {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  color: var(--lima-fuerte);
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.estrellas button:hover {
+  background: var(--lima-palida);
+}
+.estrellas-fijas {
+  display: inline-flex;
+  gap: 2px;
+  color: var(--negro);
+}
+.ocio-resumen {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.ocio-resumen .ocio-icono {
+  margin: 0;
+  background: var(--lima);
+}
+.ocio-resumen p {
+  margin-bottom: 4px;
+  font-size: 0.86rem;
+}
+.ocio-total {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-left: auto;
+  text-align: right;
+}
+.ocio-total strong {
+  font: 700 1.4rem/1.1 var(--fuente-titulos);
+  letter-spacing: -0.03em;
+}
+.ocio-comentario {
+  padding: 14px 16px;
+  font-size: 0.9rem;
+  background: var(--lima-palida);
+  border-radius: var(--radio-sm);
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+.anotar-rato {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  align-items: end;
+  gap: 8px;
+}
+.ratos {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.ratos li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 6px 8px 14px;
+  font-size: 0.88rem;
+  background: var(--lima-palida);
+  border-radius: var(--pildora);
+}
+.ratos li span {
+  flex: 1;
+}
+
+/* ---------- Equilibrio estudio / ocio (Progreso) ---------- */
+.equilibrio-barra {
+  display: flex;
+  height: 44px;
+  margin: 14px 0 10px;
+  overflow: hidden;
+  font-size: 0.82rem;
+  font-weight: 600;
+  background: var(--lima-palida);
+  border-radius: var(--pildora);
+}
+.equilibrio-barra span {
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  white-space: nowrap;
+  transition: width 0.3s ease;
+}
+.equilibrio-estudio {
+  color: var(--negro);
+  background: var(--lima);
+}
+.equilibrio-ocio {
+  justify-content: flex-end;
+  color: var(--blanco);
+  background: var(--negro);
+}
+.equilibrio-leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px 16px;
+  font-size: 0.88rem;
+}
+
+@media (max-width: 860px) {
+  .nav a.solo-escritorio {
+    display: none;
+  }
+  .nav-mas {
+    display: block;
+    flex: 1;
+  }
+  .nav-mas > button {
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 2px;
+    border-radius: var(--pildora);
+  }
+  .nav-mas > button.active,
+  .nav-mas > button[aria-expanded='true'] {
+    background: var(--blanco);
+  }
+  .nav a {
+    font-size: 0.66rem;
+  }
+  .nav .menu-mas a.active {
+    background: var(--lima);
+  }
+  .rejilla-ocio {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .ocio-tarjeta {
+    padding: 14px;
+  }
+  .ocio-icono {
+    width: 44px;
+    height: 44px;
+  }
+  .anotar-rato {
+    grid-template-columns: 1fr 1fr;
+  }
+  .anotar-rato .boton {
+    grid-column: 1 / -1;
+  }
+  .pestanas-desliza {
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .pestanas-desliza button {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .paleta-colores {
+    height: 120px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;
@@ -1768,4 +2217,8 @@ a.cuadro-cat-nuevo {
 }
 .aviso-app-pasos strong {
   color: var(--lima);
+}
+.equilibrio-leyenda .punto {
+  display: inline-block;
+  margin-right: 4px;
 }

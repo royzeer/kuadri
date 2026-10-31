@@ -1,4 +1,5 @@
 const actividad = require('../models/actividad.model');
+const ocio = require('../models/ocio.model');
 const { aTextoDia, sumarDias, ultimosDias } = require('../utils/fechas');
 
 /**
@@ -40,20 +41,23 @@ async function resumenSemanal(usuarioId, ahora = new Date()) {
   const dias = ultimosDias(hoy, 7);
   const desde = new Date(`${dias[0]}T00:00:00`);
 
-  const [minutos, tareas, activos, tot] = await Promise.all([
+  const [minutos, tareas, activos, tot, ratos] = await Promise.all([
     actividad.minutosPorDia(usuarioId, desde),
     actividad.tareasPorDia(usuarioId, desde),
     actividad.diasActivos(usuarioId),
     actividad.totales(usuarioId),
+    ocio.minutosPorDia(usuarioId, desde),
   ]);
 
   const minutosMap = Object.fromEntries(minutos.map((f) => [f.dia, Number(f.minutos)]));
   const tareasMap = Object.fromEntries(tareas.map((f) => [f.dia, Number(f.tareas)]));
+  const ocioMap = Object.fromEntries(ratos.map((f) => [f.dia, Number(f.minutos)]));
 
   const semana = dias.map((dia) => ({
     dia,
     minutos: minutosMap[dia] || 0,
     tareas: tareasMap[dia] || 0,
+    ocio: ocioMap[dia] || 0,
   }));
 
   return {
@@ -62,6 +66,7 @@ async function resumenSemanal(usuarioId, ahora = new Date()) {
     totales: tot,
     minutosSemana: semana.reduce((s, d) => s + d.minutos, 0),
     tareasSemana: semana.reduce((s, d) => s + d.tareas, 0),
+    ocioSemana: semana.reduce((s, d) => s + d.ocio, 0),
   };
 }
 

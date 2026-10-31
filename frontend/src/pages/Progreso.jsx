@@ -5,7 +5,43 @@ import { api } from '../api/cliente';
 import { Encabezado } from '../components/Layout';
 import Icono from '../components/Icono';
 import { diaCorto, formatearMinutos } from '../utils/fechas';
+import { equilibrio } from '../utils/ocio';
 
+// Barra partida: verde para el estudio (enfoque) y negra para el ocio.
+function Equilibrio({ minutosEstudio, minutosOcio }) {
+  const e = equilibrio(minutosEstudio, minutosOcio);
+  const total = minutosEstudio + minutosOcio;
+  return (
+    <>
+      <div
+        className="equilibrio-barra"
+        role="img"
+        aria-label={`Estudio ${e.estudio} %, ocio ${e.ocio} %`}
+      >
+        {total > 0 && e.estudio > 0 && (
+          <span className="equilibrio-estudio" style={{ width: `${e.estudio}%` }}>
+            {e.estudio >= 18 ? `${e.estudio}%` : ''}
+          </span>
+        )}
+        {total > 0 && e.ocio > 0 && (
+          <span className="equilibrio-ocio" style={{ width: `${e.ocio}%` }}>
+            {e.ocio >= 18 ? `${e.ocio}%` : ''}
+          </span>
+        )}
+      </div>
+      <div className="equilibrio-leyenda">
+        <span>
+          <i className="punto" aria-hidden="true" /> Estudio: <strong>{formatearMinutos(minutosEstudio)}</strong>
+        </span>
+        <span>
+          <i className="punto" style={{ '--color': 'var(--negro)' }} aria-hidden="true" /> Ocio:{' '}
+          <strong>{formatearMinutos(minutosOcio)}</strong>
+        </span>
+      </div>
+      <p className="texto-suave" style={{ marginTop: 10 }}>{e.mensaje}</p>
+    </>
+  );
+}
 
 function GraficoBarras({ semana, campo, sufijo }) {
   const maximo = Math.max(1, ...semana.map((d) => d[campo]));
@@ -65,6 +101,11 @@ export default function Progreso() {
           <span className="metrica-valor">{resumen.tareasSemana}</span>
           <span className="metrica-etiqueta">tareas completadas esta semana</span>
         </div>
+      </section>
+
+      <section className="seccion">
+        <h2>Estudio y ocio esta semana</h2>
+        <Equilibrio minutosEstudio={resumen.minutosSemana} minutosOcio={resumen.ocioSemana ?? 0} />
       </section>
 
       <section className="seccion">

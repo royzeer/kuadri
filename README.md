@@ -33,6 +33,7 @@ Estudio en dos instituciones al mismo tiempo (Tecnólogo en Análisis y Desarrol
 
 - **Diseño propio** en verde lima, negro y blanco, con tarjetas sólidas y píldoras: la semana se llena cuadro por cuadro y el temporizador avanza en una cuadrícula.
 - **Diseño adaptable** a celular, tableta y escritorio, con navegación inferior en celular.
+- **Se instala como app** en la pantalla principal del celular, con un aviso que explica cómo hacerlo.
 
 ## Capturas
 
@@ -51,6 +52,10 @@ Estudio en dos instituciones al mismo tiempo (Tecnólogo en Análisis y Desarrol
 | Celular: inicio | Celular: tareas | Celular: progreso |
 |---|---|---|
 | ![Celular inicio](docs/capturas/movil-inicio.png) | ![Celular tareas](docs/capturas/movil-tareas.png) | ![Celular progreso](docs/capturas/movil-progreso.png) |
+
+| Celular: nueva tarea | Celular: instalar como app |
+|---|---|
+| ![Celular nueva tarea](docs/capturas/movil-modal.png) | ![Celular instalar como app](docs/capturas/movil-instalar.png) |
 
 ## Tecnologías
 
@@ -145,8 +150,8 @@ Kuadri está preparada para publicarse con planes gratuitos: la base de datos en
 ## Pruebas
 
 ```bash
-cd backend && npm test     # 41 pruebas: lógica de rachas, logros, metas y precios, correo, API completa y recordatorios
-cd frontend && npm test    # 18 pruebas: utilidades de fechas y precios, formularios de tareas, metas y deseos
+cd backend && npm test     # 42 pruebas: lógica de rachas, logros, metas y precios, correo, API completa y recordatorios
+cd frontend && npm test    # 25 pruebas: utilidades de fechas y precios, formularios de tareas, metas y deseos, aviso de instalación
 ```
 
 Las pruebas de la API usan una base de datos aparte (`kuadri_test`) que se crea sola. En GitHub Actions todas las pruebas se ejecutan automáticamente en cada cambio.

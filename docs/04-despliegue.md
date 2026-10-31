@@ -66,9 +66,12 @@ npm run db:init
 
 ## 4. Correos con Resend (opcional)
 
-1. Crear una cuenta en Resend y generar una API key.
-2. Ponerla en `RESEND_API_KEY` en Render.
-3. Sin dominio propio, Resend solo envía al correo de la cuenta de Resend. Para una app personal es suficiente; para enviar a otros usuarios hay que verificar un dominio.
+1. Crear una cuenta gratis en Resend (resend.com) con el mismo correo con el que se usa Kuadri.
+2. En Resend, ir a API Keys y crear una clave con permiso "Sending access".
+3. En Render, abrir el servicio, ir a Environment y agregar `RESEND_API_KEY` con esa clave. Render vuelve a desplegar solo.
+4. Crear en Kuadri una tarea que venza en menos de 24 horas. El correo llega en máximo 15 minutos (o al abrir las notificaciones si el servidor estaba dormido).
+
+Límites del plan gratis (revisados en octubre de 2026): 100 correos al día y 3.000 al mes. Sin dominio propio el remitente es `onboarding@resend.dev` y Resend solo entrega al correo de la cuenta de Resend; a cualquier otro destino responde con error 403. Si eso pasa, Kuadri igual deja el aviso dentro de la app y no lo repite. Para enviar a otras personas hay que verificar un dominio propio y cambiar `RESEND_FROM`.
 
 ## 5. Actualizaciones
 

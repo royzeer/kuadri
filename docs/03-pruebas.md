@@ -14,7 +14,7 @@ Versión: 1.0 (Fase 1)
 
 ## 2. Casos de prueba automatizados
 
-### API (41 pruebas)
+### API (42 pruebas)
 
 | Código | Caso | Resultado esperado | Requisito |
 |---|---|---|---|
@@ -32,22 +32,23 @@ Versión: 1.0 (Fase 1)
 | CP12 | Recordatorios automáticos | Solo avisa tareas dentro de 24 h y una sola vez | RF09, RF11 |
 | CP13 | Revisión de recordatorios al abrir notificaciones | Genera el aviso aunque el planificador no haya corrido (servidor dormido) | RF09 |
 | CP14 y CP15 | Envío de correo por la API de Resend | Petición correcta y error claro si se rechaza | RF10 |
+| CP27 | Correo rechazado por Resend | El aviso en la app se crea una sola vez y la tarea queda recordada | RF09, RF10 |
 | CP16 a CP26 | Rachas (6 casos), logros (2), fechas (2), escape de HTML (1) | Cálculos correctos en bordes: cambio de mes, año bisiesto, racha rota, mejor racha | RN01, RN02, RN04 |
-| CP27 | Crear meta con pasos | 201, avance 0 % y fecha objetivo sin cambios | RF18 |
-| CP28 | Meta sin nombre o con fecha inválida | 422 con error por campo | RF18 |
-| CP29 | Marcar todos los pasos | Avance 50 % y luego 100 %, la meta se cumple sola y da el logro "Soñador" | RF19, RF20, RN05 |
-| CP30 | Agregar paso a una meta cumplida | Vuelve a quedar en curso (67 %) | RN05 |
-| CP31 | Meta sin pasos | Se marca cumplida a mano | RF20 |
-| CP32 | Metas de otro usuario | 404 y lista vacía | RNF05 |
-| CP33 | Agregar deseo con precio de hoy | 201 con historial de 1 precio | RF21, RF22 |
-| CP34 | Enlace "javascript:" y precio negativo | 422 | RNF04 |
-| CP35 | Precio que llega al objetivo | Tendencia "baja", un solo aviso aunque siga bajando, logro "Paciente" | RF22, RF23, RN06 |
-| CP36 | Historial y borrar precio | Orden correcto y el precio actual se recalcula | RF22 |
-| CP37 | Marcar comprado | Guarda la fecha de compra | RF24 |
-| CP38 | Deseos de otro usuario | 404 | RNF05 |
-| CP39 a CP41 | Avance de metas, análisis de precios, validar enlaces, precios y fechas | Cálculos correctos en bordes: sin pasos, un solo precio, 30 de febrero | RN05, RN06 |
+| CP28 | Crear meta con pasos | 201, avance 0 % y fecha objetivo sin cambios | RF18 |
+| CP29 | Meta sin nombre o con fecha inválida | 422 con error por campo | RF18 |
+| CP30 | Marcar todos los pasos | Avance 50 % y luego 100 %, la meta se cumple sola y da el logro "Soñador" | RF19, RF20, RN05 |
+| CP31 | Agregar paso a una meta cumplida | Vuelve a quedar en curso (67 %) | RN05 |
+| CP32 | Meta sin pasos | Se marca cumplida a mano | RF20 |
+| CP33 | Metas de otro usuario | 404 y lista vacía | RNF05 |
+| CP34 | Agregar deseo con precio de hoy | 201 con historial de 1 precio | RF21, RF22 |
+| CP35 | Enlace "javascript:" y precio negativo | 422 | RNF04 |
+| CP36 | Precio que llega al objetivo | Tendencia "baja", un solo aviso aunque siga bajando, logro "Paciente" | RF22, RF23, RN06 |
+| CP37 | Historial y borrar precio | Orden correcto y el precio actual se recalcula | RF22 |
+| CP38 | Marcar comprado | Guarda la fecha de compra | RF24 |
+| CP39 | Deseos de otro usuario | 404 | RNF05 |
+| CP40 a CP42 | Avance de metas, análisis de precios, validar enlaces, precios y fechas | Cálculos correctos en bordes: sin pasos, un solo precio, 30 de febrero | RN05, RN06 |
 
-### Interfaz (18 pruebas)
+### Interfaz (25 pruebas)
 
 | Caso | Resultado esperado |
 |---|---|

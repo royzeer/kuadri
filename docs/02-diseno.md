@@ -222,28 +222,25 @@ Todas las respuestas usan el formato `{ ok, data, mensaje }`. Las rutas marcadas
 
 ## 8. Diseño de interfaz
 
-**Concepto: "cuaderno cuadriculado".** El nombre Kuadri viene de *cuadrícula*, así que la interfaz se inspira en el cuaderno de un estudiante: fondo de papel cuadriculado, trazos de resaltador sobre las palabras importantes, categorías como stickers cuadrados y una semana que se va llenando cuadro por cuadro. Del neo-brutalismo toma los bordes gruesos y las sombras sólidas, pero con paleta, formas y elementos propios.
+**Concepto: "lima".** Interfaz plana y alegre sobre fondo blanco, con tarjetas de color sólido en verde lima y negro, esquinas muy redondeadas, botones y días de la semana en forma de píldora, y barras negras. El nombre Kuadri sigue viniendo de *cuadrícula*: la semana y el temporizador se llenan cuadro por cuadro.
 
 | Token | Valor | Uso |
 |---|---|---|
-| Papel | #FFFDF6 | Fondo con cuadrícula de 26 px |
-| Línea | #DFE6FB | Líneas de la cuadrícula |
-| Tinta | #161616 | Texto, bordes, sombras y barra lateral |
-| Cobalto | #3359FF | Color principal y acciones |
-| Mandarina | #FF7438 | Racha, día actual y acentos |
-| Menta | #46D9A0 | Completado |
-| Lavanda | #C7B8FF | Acento suave |
-| Resaltador | #EEFF5C | Trazo de resaltador y elemento activo del menú |
-| Títulos | Bricolage Grotesque | Encabezados y números grandes |
-| Texto | DM Sans | Todo el contenido |
+| Blanco | #FFFFFF | Fondo de la página |
+| Negro | #141414 | Texto, barra lateral, botón principal, racha y día actual |
+| Lima | #B1CB5A | Color principal: enlace activo, tarjetas, barras y logros |
+| Lima clara | #D6E6A1 | Tarjetas y días con poco avance |
+| Lima pálida | #F1F6DF | Fondo de tareas, campos y gráficos |
+| Fuente | Poppins | Títulos y texto |
 
 **Elementos propios del sistema**
 
-- **Logo:** cuatro cuadritos de colores, uno marcado con un chulo: completar la cuadrícula.
-- **Tu semana en cuadros:** siete casillas que se colorean según los minutos de enfoque de cada día.
-- **Categorías como stickers:** cuadros de color sólido, levemente girados, con el número de pendientes en grande.
-- **Temporizador en cuadrícula:** 50 cuadritos que se llenan a medida que avanza la sesión.
-- **Logros como stickers redondos** que se ven rayados y punteados mientras están bloqueados.
-- **Renglones de tareas** con casilla cuadrada, como una lista escrita en el cuaderno.
+- **Logo:** cuatro cuadritos en tonos de lima, uno marcado con un chulo: completar la cuadrícula.
+- **Tu semana en cuadros:** siete píldoras con borde negro; el día se marca en lima según los minutos de enfoque y el día de hoy va en negro.
+- **Categorías:** bloques de color sólido que alternan lima, negro y lima clara, con el número de pendientes en grande.
+- **Temporizador en cuadrícula:** tarjeta negra con 50 cuadritos que se llenan en lima.
+- **Gráficos de barras:** barras lima y la del día actual en negro.
+- **Logros** como círculos lima y negros, punteados mientras están bloqueados.
+- **Barra inferior en celular:** píldora negra con el elemento activo en un círculo blanco.
 
 **Pantallas de la Fase 1:** inicio de sesión y registro (pantalla dividida), inicio, tareas (lista y calendario), enfoque, progreso y ajustes.

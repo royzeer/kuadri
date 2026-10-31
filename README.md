@@ -2,7 +2,7 @@
 
 **Tu panel personal para organizar estudio, tiempo y metas.**
 
-Kuadri es una aplicación web full stack para organizar tareas y entregas, recibir recordatorios automáticos, medir el tiempo de estudio con un temporizador de enfoque y mantener la constancia con rachas y logros. Su diseño propio se inspira en un cuaderno cuadriculado de estudiante (el nombre viene de *cuadrícula*) y funciona en celular y escritorio.
+Kuadri es una aplicación web full stack para organizar tareas y entregas, recibir recordatorios automáticos, medir el tiempo de estudio con un temporizador de enfoque y mantener la constancia con rachas y logros. Su diseño propio es plano y alegre, en verde lima, negro y blanco, y funciona en celular y escritorio.
 
 ![Panel principal](docs/capturas/escritorio-inicio.png)
 
@@ -20,7 +20,7 @@ Estudio en dos instituciones al mismo tiempo (Tecnólogo en Análisis y Desarrol
 - **Estadísticas de los últimos 7 días**: minutos de enfoque y tareas completadas por día.
 - **Rachas y logros** que se calculan y otorgan automáticamente.
 - **Notificaciones** dentro de la app.
-- **Diseño propio** inspirado en un cuaderno cuadriculado: la semana se llena cuadro por cuadro, las categorías son stickers y el temporizador avanza en una cuadrícula.
+- **Diseño propio** en verde lima, negro y blanco, con tarjetas sólidas y píldoras: la semana se llena cuadro por cuadro y el temporizador avanza en una cuadrícula.
 - **Diseño adaptable** a celular, tableta y escritorio, con navegación inferior en celular.
 
 ## Capturas
@@ -41,7 +41,7 @@ Estudio en dos instituciones al mismo tiempo (Tecnólogo en Análisis y Desarrol
 
 | Capa | Tecnologías |
 |---|---|
-| Front-end | React 19, Vite, React Router, CSS propio (sistema de diseño "cuaderno cuadriculado"), Lucide Icons |
+| Front-end | React 19, Vite, React Router, CSS propio (sistema de diseño "lima"), Lucide Icons |
 | Back-end | Node.js, Express 5, JWT, bcrypt, Helmet, node-cron, Resend / Nodemailer |
 | Base de datos | MySQL 8 (compatible con MariaDB) |
 | Pruebas | Jest y Supertest (API), Vitest y Testing Library (interfaz) |

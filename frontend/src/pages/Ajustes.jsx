@@ -59,10 +59,10 @@ function FormCategoria({ categoria, onGuardar, onCancelar }) {
                 width: 40,
                 height: 40,
                 background: c,
-                border: '2.5px solid #161616',
-                borderRadius: 10,
+                border: '1px solid rgba(17, 17, 17, 0.08)',
+                borderRadius: '50%',
                 cursor: 'pointer',
-                boxShadow: datos.color === c ? '0 0 0 3px #fff, 0 0 0 6px #161616' : 'none',
+                boxShadow: datos.color === c ? '0 0 0 3px #fff, 0 0 0 5px #111111' : 'none',
               }}
             />
           ))}
@@ -187,8 +187,8 @@ export default function Ajustes() {
                   flexShrink: 0,
                   background: c.color,
                   color: colorTexto(c.color),
-                  border: '2.5px solid #161616',
-                  borderRadius: 10,
+                  border: '1px solid rgba(17, 17, 17, 0.08)',
+                  borderRadius: '50%',
                 }}
               >
                 <Icono nombre={c.icono} size={20} />

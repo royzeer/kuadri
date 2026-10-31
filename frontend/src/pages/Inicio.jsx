@@ -124,7 +124,7 @@ export default function Inicio() {
                       data-nivel={nivel}
                       title={`${formatearMinutos(d.minutos)} de enfoque, ${d.tareas} tareas`}
                     >
-                      {nivel > 0 && <Check size={20} strokeWidth={3.2} color={nivel === 1 ? '#161616' : '#fff'} />}
+                      {nivel > 0 && <Check size={20} strokeWidth={3.2} color="#141414" />}
                     </span>
                     <small>{esHoy ? 'Hoy' : diaCorto(d.dia)}</small>
                   </div>

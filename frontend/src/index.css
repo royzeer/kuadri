@@ -1,37 +1,35 @@
 /* =========================================================
-   Kuadri - Sistema de diseño "Cuaderno cuadriculado"
-   Idea: Kuadri viene de "cuadrícula". La interfaz se inspira en un
-   cuaderno de estudiante: papel cuadriculado, resaltador, stickers y
-   cuadritos que se van llenando. Toma del neo-brutalismo los bordes
-   gruesos y las sombras sólidas, pero con paleta y formas propias.
+   Kuadri - Sistema de diseño "Lima"
+   Idea: una interfaz plana y alegre sobre fondo blanco. Tarjetas de
+   color sólido en verde lima y negro, esquinas muy redondeadas,
+   días de la semana en píldoras y barras negras. El nombre sigue
+   viniendo de "cuadrícula": la semana y el temporizador se llenan
+   cuadro por cuadro.
    ========================================================= */
 
 :root {
-  /* Papel y tinta */
-  --papel: #fffdf6;
-  --linea: #dfe6fb; /* líneas de la cuadrícula */
-  --tinta: #161616;
-  --tinta-suave: #5b5a57;
+  /* Base */
   --blanco: #ffffff;
+  --negro: #141414;
+  --tinta: #141414;
+  --tinta-suave: #6a6f5e;
+  --gris-oscuro: #2a2a2a;
+  --peligro: #d92d20;
 
-  /* Paleta propia */
-  --cobalto: #3359ff;
-  --cobalto-claro: #a9bbff;
-  --mandarina: #ff7438;
-  --menta: #46d9a0;
-  --lavanda: #c7b8ff;
-  --resaltador: #eeff5c;
-  --peligro: #e5383b;
+  /* Paleta lima */
+  --lima: #b1cb5a; /* color principal */
+  --lima-fuerte: #95b23c;
+  --lima-clara: #d6e6a1;
+  --lima-palida: #f1f6df; /* fondo de tarjetas suaves */
+  --lima-borde: #e1ebc0;
 
-  --borde: 2.5px solid var(--tinta);
-  --radio: 16px;
-  --radio-sm: 10px;
-  --sombra: 4px 4px 0 var(--tinta);
-  --sombra-sm: 2px 2px 0 var(--tinta);
+  --radio: 28px;
+  --radio-sm: 16px;
+  --pildora: 999px;
+  --sombra-flotante: 0 18px 50px rgba(20, 20, 20, 0.16);
 
-  --fuente-titulos: 'Bricolage Grotesque', system-ui, sans-serif;
-  --fuente: 'DM Sans', system-ui, sans-serif;
-  --cuadro: 26px; /* tamaño de la cuadrícula del fondo */
+  --fuente-titulos: 'Poppins', system-ui, sans-serif;
+  --fuente: 'Poppins', system-ui, sans-serif;
 }
 
 * {
@@ -44,17 +42,12 @@ body,
   min-height: 100%;
 }
 
-/* Fondo de cuaderno cuadriculado */
 body {
   margin: 0;
   font-family: var(--fuente);
-  font-size: 16px;
+  font-size: 15px;
   color: var(--tinta);
-  background-color: var(--papel);
-  background-image:
-    linear-gradient(var(--linea) 1px, transparent 1px),
-    linear-gradient(90deg, var(--linea) 1px, transparent 1px);
-  background-size: var(--cuadro) var(--cuadro);
+  background: var(--blanco);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -70,20 +63,20 @@ h2,
 h3,
 .titulo-fuente {
   font-family: var(--fuente-titulos);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 h1 {
-  font-size: clamp(2rem, 4.5vw, 2.9rem);
-  line-height: 1.02;
-  font-weight: 800;
+  font-size: clamp(1.9rem, 4.2vw, 2.7rem);
+  line-height: 1.08;
+  font-weight: 700;
 }
 h2 {
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 700;
 }
 h3 {
-  font-size: 1.05rem;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 a {
@@ -91,7 +84,7 @@ a {
 }
 
 :focus-visible {
-  outline: 3px solid var(--cobalto);
+  outline: 2.5px solid var(--negro);
   outline-offset: 3px;
 }
 
@@ -108,48 +101,54 @@ a {
   color: var(--tinta-suave);
 }
 
-/* Trazo de resaltador detrás del texto */
+/* Palabra destacada sobre una píldora lima */
 .resaltado {
-  background: linear-gradient(transparent 52%, var(--resaltador) 52%, var(--resaltador) 92%, transparent 92%);
-  padding: 0 4px;
-  margin: 0 -2px;
+  padding: 0 0.28em;
+  background: var(--lima);
+  border-radius: 0.4em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 .enlace {
-  font-weight: 700;
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
+  font-weight: 500;
+  font-size: 0.88rem;
+  text-decoration: none;
+  padding: 6px 16px;
+  border: 1.5px solid var(--negro);
+  border-radius: var(--pildora);
+}
+.enlace:hover {
+  color: var(--blanco);
+  background: var(--negro);
 }
 
 /* ---------- Superficies ---------- */
 
 .tarjeta {
   background: var(--blanco);
-  border: var(--borde);
+  border: 1.5px solid var(--lima-borde);
   border-radius: var(--radio);
-  box-shadow: var(--sombra);
-  padding: 20px;
+  padding: 22px;
 }
 
 .chip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 2px 9px;
-  border: 2px solid var(--tinta);
-  border-radius: 6px;
+  padding: 4px 12px;
+  border-radius: var(--pildora);
   font-size: 0.78rem;
-  font-weight: 700;
-  background: var(--blanco);
+  font-weight: 600;
+  color: var(--negro);
+  background: var(--lima);
   white-space: nowrap;
 }
 .punto {
   width: 10px;
   height: 10px;
-  border: 2px solid var(--tinta);
-  border-radius: 3px;
-  background: var(--color, var(--lavanda));
+  border-radius: 50%;
+  background: var(--color, var(--lima));
   flex-shrink: 0;
 }
 
@@ -161,43 +160,51 @@ a {
   justify-content: center;
   gap: 8px;
   min-height: 44px;
-  padding: 0 18px;
-  font: 700 0.98rem var(--fuente);
+  padding: 0 20px;
+  font: 500 0.94rem var(--fuente);
   color: var(--tinta);
   background: var(--blanco);
-  border: var(--borde);
-  border-radius: var(--radio-sm);
-  box-shadow: var(--sombra-sm);
+  border: 1.5px solid var(--negro);
+  border-radius: var(--pildora);
   cursor: pointer;
   text-decoration: none;
-  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  transition: transform 0.12s ease, background 0.12s ease, color 0.12s ease;
 }
 .boton:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0 var(--tinta);
+  background: var(--lima-palida);
 }
 .boton:active {
-  transform: translate(2px, 2px);
-  box-shadow: 0 0 0 var(--tinta);
+  transform: scale(0.97);
 }
 .boton:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
   transform: none;
 }
 .boton-primario {
-  background: var(--cobalto);
   color: var(--blanco);
+  background: var(--negro);
 }
-.boton-acento {
-  background: var(--mandarina);
+.boton-primario:hover {
+  background: var(--gris-oscuro);
+}
+.boton-acento,
+.boton-verde {
+  background: var(--lima);
+  border-color: var(--lima);
+}
+.boton-acento:hover,
+.boton-verde:hover {
+  background: var(--lima-fuerte);
+  border-color: var(--lima-fuerte);
 }
 .boton-peligro {
-  background: var(--peligro);
-  color: var(--blanco);
+  color: var(--peligro);
+  background: #fdecea;
+  border-color: #fdecea;
 }
-.boton-verde {
-  background: var(--menta);
+.boton-peligro:hover {
+  background: #fbd9d5;
 }
 .boton-icono {
   width: 44px;
@@ -216,22 +223,24 @@ a {
 }
 .campo label,
 .etiqueta {
-  font-weight: 700;
-  font-size: 0.9rem;
+  font-weight: 500;
+  font-size: 0.86rem;
 }
 .entrada {
   width: 100%;
-  min-height: 44px;
-  padding: 10px 12px;
-  font: 500 1rem var(--fuente);
+  min-height: 46px;
+  padding: 10px 16px;
+  font: 400 0.98rem var(--fuente);
   color: var(--tinta);
-  background: var(--blanco);
-  border: var(--borde);
+  background: var(--lima-palida);
+  border: 1.5px solid transparent;
   border-radius: var(--radio-sm);
+  transition: border-color 0.12s ease, background 0.12s ease;
 }
 .entrada:focus {
   outline: none;
-  box-shadow: 0 0 0 3px var(--cobalto-claro);
+  background: var(--blanco);
+  border-color: var(--negro);
 }
 textarea.entrada {
   min-height: 90px;
@@ -239,15 +248,15 @@ textarea.entrada {
 }
 .error-campo {
   color: var(--peligro);
-  font-size: 0.85rem;
-  font-weight: 700;
+  font-size: 0.84rem;
+  font-weight: 500;
 }
 .alerta {
-  padding: 12px 14px;
-  border: var(--borde);
+  padding: 12px 16px;
   border-radius: var(--radio-sm);
-  background: #ffe1d6;
-  font-weight: 600;
+  background: #fdecea;
+  color: #8a1c13;
+  font-weight: 500;
 }
 .form {
   display: flex;
@@ -264,41 +273,41 @@ textarea.entrada {
 
 .app {
   display: grid;
-  grid-template-columns: 236px 1fr;
-  gap: 36px;
+  grid-template-columns: 232px 1fr;
+  gap: 40px;
   max-width: 1180px;
   margin: 0 auto;
-  padding: 26px;
+  padding: 24px;
   min-height: 100vh;
 }
 
-/* Barra lateral oscura, como el lomo de un cuaderno */
+/* Barra lateral negra; el enlace activo va en lima */
 .barra-lateral {
   position: sticky;
-  top: 26px;
+  top: 24px;
   align-self: start;
   display: flex;
   flex-direction: column;
-  gap: 26px;
-  padding: 22px 16px;
-  min-height: calc(100vh - 52px);
-  background: var(--tinta);
-  color: var(--papel);
-  border-radius: 22px;
+  gap: 28px;
+  padding: 22px 14px;
+  min-height: calc(100vh - 48px);
+  background: var(--negro);
+  color: var(--blanco);
+  border-radius: 32px;
 }
 
 .logo {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 6px;
-  font: 800 1.7rem var(--fuente-titulos);
-  letter-spacing: -0.03em;
+  padding: 0 8px;
+  font: 700 1.55rem var(--fuente-titulos);
+  letter-spacing: -0.04em;
   text-decoration: none;
 }
 .logo svg {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   flex-shrink: 0;
 }
 
@@ -311,20 +320,20 @@ textarea.entrada {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 11px 12px;
-  font-weight: 600;
+  padding: 11px 14px;
+  font-weight: 500;
   text-decoration: none;
-  border-radius: 10px;
-  color: #cfcdc6;
+  border-radius: var(--pildora);
+  color: #a6a99e;
 }
 .nav a:hover {
-  color: var(--papel);
-  background: #2a2a2a;
+  color: var(--blanco);
+  background: #222;
 }
 .nav a.active {
-  color: var(--tinta);
-  background: var(--resaltador);
-  font-weight: 700;
+  color: var(--negro);
+  background: var(--lima);
+  font-weight: 600;
 }
 
 .lateral-pie {
@@ -335,22 +344,22 @@ textarea.entrada {
   align-items: center;
   gap: 10px;
   width: 100%;
-  padding: 10px 12px;
-  font: 600 0.95rem var(--fuente);
-  color: #cfcdc6;
+  padding: 11px 14px;
+  font: 500 0.92rem var(--fuente);
+  color: #a6a99e;
   background: none;
-  border: 2px dashed #444;
-  border-radius: 10px;
+  border: 1.5px solid #333;
+  border-radius: var(--pildora);
   cursor: pointer;
 }
 .lateral-pie button:hover {
-  color: var(--papel);
-  border-color: var(--papel);
+  color: var(--blanco);
+  border-color: var(--blanco);
 }
 
 .contenido {
   min-width: 0;
-  padding-top: 6px;
+  padding-top: 10px;
 }
 
 .encabezado {
@@ -358,7 +367,7 @@ textarea.entrada {
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 26px;
+  margin-bottom: 28px;
 }
 .encabezado-acciones {
   display: flex;
@@ -367,7 +376,7 @@ textarea.entrada {
 }
 
 .seccion {
-  margin-top: 34px;
+  margin-top: 36px;
 }
 .seccion-titulo {
   display: flex;
@@ -377,61 +386,60 @@ textarea.entrada {
   margin-bottom: 14px;
 }
 
-/* ---------- Creación rápida (renglón de cuaderno) ---------- */
+/* ---------- Creación rápida ---------- */
 
 .rapida {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 8px 8px 14px;
-  background: var(--blanco);
-  border: var(--borde);
-  border-radius: var(--radio);
-  box-shadow: var(--sombra);
+  padding: 7px 7px 7px 18px;
+  background: var(--lima-palida);
+  border-radius: var(--pildora);
 }
 .rapida-casilla {
   width: 22px;
   height: 22px;
   flex-shrink: 0;
-  border: 2.5px dashed var(--tinta-suave);
-  border-radius: 6px;
+  border: 1.5px solid var(--negro);
+  border-radius: 50%;
 }
 .rapida input {
   flex: 1;
   min-width: 0;
   padding: 8px 0;
-  font: 500 1.05rem var(--fuente);
+  font: 400 1rem var(--fuente);
   color: var(--tinta);
   background: transparent;
   border: none;
   outline: none;
 }
 
-/* ---------- Tu semana en cuadros ---------- */
+/* ---------- Tu semana: racha negra y días en píldoras ---------- */
 
 .semana {
   display: flex;
   align-items: stretch;
-  gap: 18px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 .racha {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-width: 128px;
-  padding: 14px 18px;
-  background: var(--mandarina);
-  border: var(--borde);
+  min-width: 140px;
+  padding: 18px 22px;
+  color: var(--blanco);
+  background: var(--negro);
   border-radius: var(--radio);
-  box-shadow: var(--sombra);
 }
 .racha-numero {
-  font: 800 2.6rem/1 var(--fuente-titulos);
+  font: 700 2.8rem/1 var(--fuente-titulos);
+  letter-spacing: -0.04em;
+  color: var(--lima);
 }
 .racha-texto {
-  font-weight: 700;
-  font-size: 0.88rem;
+  font-weight: 500;
+  font-size: 0.86rem;
 }
 .semana-cuadros {
   flex: 1;
@@ -441,111 +449,120 @@ textarea.entrada {
   min-width: 260px;
 }
 .cuadro-dia {
+  position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   align-items: center;
+  justify-content: space-between;
   gap: 6px;
+  padding: 12px 4px;
+  border: 1.5px solid var(--negro);
+  border-radius: var(--pildora);
 }
 .cuadro-dia .caja {
   display: grid;
   place-items: center;
-  width: 100%;
-  aspect-ratio: 1;
-  max-width: 64px;
-  background: var(--blanco);
-  border: var(--borde);
-  border-radius: 10px;
-  color: var(--blanco);
+  width: 34px;
+  height: 34px;
+  background: transparent;
+  border: 1.5px dashed #b9bdaf;
+  border-radius: 50%;
+  color: var(--negro);
 }
 .cuadro-dia .caja[data-nivel='1'] {
-  background: var(--cobalto-claro);
+  background: var(--lima-clara);
+  border: none;
 }
-.cuadro-dia .caja[data-nivel='2'] {
-  background: #6f8bff;
-}
+.cuadro-dia .caja[data-nivel='2'],
 .cuadro-dia .caja[data-nivel='3'] {
-  background: var(--cobalto);
+  background: var(--lima);
+  border: none;
+}
+.cuadro-dia.hoy {
+  color: var(--blanco);
+  background: var(--negro);
 }
 .cuadro-dia.hoy .caja {
-  box-shadow: var(--sombra-sm);
-  outline: 3px solid var(--resaltador);
-  outline-offset: 2px;
+  border-color: #555;
 }
 .cuadro-dia small {
-  font-weight: 700;
-  font-size: 0.78rem;
+  font-weight: 500;
+  font-size: 0.76rem;
 }
 
-/* ---------- Categorías como stickers cuadrados ---------- */
+/* ---------- Categorías: bloques de color sólido ---------- */
 
 .cuadros-categorias {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: 18px;
+  gap: 14px;
 }
 .cuadro-cat {
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  aspect-ratio: 1 / 0.82;
-  padding: 16px;
+  aspect-ratio: 1 / 0.85;
+  padding: 18px;
   font: inherit;
   text-align: left;
-  color: var(--texto-cat, var(--tinta));
-  background: var(--color-cat, var(--lavanda));
-  border: var(--borde);
+  color: var(--negro);
+  background: var(--lima);
+  border: none;
   border-radius: var(--radio);
-  box-shadow: var(--sombra);
   cursor: pointer;
-  transform: rotate(var(--giro, 0deg));
   transition: transform 0.15s ease;
 }
-.cuadro-cat:nth-child(3n + 1) {
-  --giro: -1.2deg;
-}
 .cuadro-cat:nth-child(3n + 2) {
-  --giro: 0.8deg;
+  color: var(--blanco);
+  background: var(--negro);
+}
+.cuadro-cat:nth-child(3n + 2) .cuadro-cat-numero {
+  color: var(--lima);
+}
+.cuadro-cat:nth-child(3n + 2) .cuadro-cat-pendientes {
+  color: #b9bdaf;
 }
 .cuadro-cat:nth-child(3n) {
-  --giro: -0.4deg;
+  background: var(--lima-clara);
 }
 .cuadro-cat:hover {
-  transform: rotate(0deg) translateY(-3px);
+  transform: translateY(-3px);
 }
 .cuadro-cat-icono {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 14px;
+  right: 14px;
   display: grid;
   place-items: center;
   width: 40px;
   height: 40px;
-  color: var(--tinta);
+  color: var(--negro);
   background: var(--blanco);
-  border: var(--borde);
   border-radius: 50%;
 }
 .cuadro-cat-numero {
-  font: 800 2.8rem/1 var(--fuente-titulos);
+  font: 700 2.7rem/1 var(--fuente-titulos);
+  letter-spacing: -0.04em;
 }
 .cuadro-cat-pendientes {
-  font-size: 0.82rem;
-  font-weight: 700;
-  opacity: 0.85;
+  margin-left: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(20, 20, 20, 0.7);
 }
 .cuadro-cat-nombre {
-  font: 700 1.1rem var(--fuente-titulos);
+  font: 600 1.05rem var(--fuente-titulos);
+  letter-spacing: -0.02em;
 }
-.cuadro-cat-nuevo {
+.cuadros-categorias .cuadro-cat-nuevo {
   display: grid;
   place-items: center;
   gap: 6px;
   color: var(--tinta-suave);
-  font-weight: 700;
+  font-weight: 500;
   background: transparent;
-  border-style: dashed;
-  box-shadow: none;
+  border: 1.5px dashed #b9bdaf;
   text-align: center;
 }
 
@@ -559,24 +576,38 @@ textarea.entrada {
 .metrica {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 16px;
-  background: var(--blanco);
-  border: var(--borde);
+  gap: 8px;
+  padding: 18px 20px;
+  background: var(--lima-palida);
   border-radius: var(--radio);
-  box-shadow: var(--sombra);
-  border-top: 10px solid var(--color, var(--cobalto));
+}
+.metrica:nth-child(1) {
+  color: var(--blanco);
+  background: var(--negro);
+}
+.metrica:nth-child(1) .metrica-valor {
+  color: var(--lima);
+}
+.metrica:nth-child(1) .metrica-etiqueta {
+  color: #b9bdaf;
+}
+.metrica:nth-child(2) {
+  background: var(--lima);
+}
+.metrica:nth-child(2) .metrica-etiqueta {
+  color: rgba(20, 20, 20, 0.7);
 }
 .metrica-valor {
-  font: 800 1.9rem/1 var(--fuente-titulos);
+  font: 700 2rem/1 var(--fuente-titulos);
+  letter-spacing: -0.04em;
 }
 .metrica-etiqueta {
-  font-weight: 600;
-  font-size: 0.88rem;
+  font-weight: 500;
+  font-size: 0.84rem;
   color: var(--tinta-suave);
 }
 
-/* ---------- Tareas (renglones) ---------- */
+/* ---------- Tareas ---------- */
 
 .lista-tareas {
   display: flex;
@@ -590,11 +621,9 @@ textarea.entrada {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 12px 14px;
-  background: var(--blanco);
-  border: var(--borde);
-  border-radius: var(--radio-sm);
-  box-shadow: var(--sombra-sm);
+  padding: 14px 16px;
+  background: var(--lima-palida);
+  border-radius: 22px;
 }
 .tarea-check {
   display: grid;
@@ -602,21 +631,21 @@ textarea.entrada {
   width: 28px;
   height: 28px;
   flex-shrink: 0;
-  color: var(--tinta);
+  color: var(--negro);
   background: var(--blanco);
-  border: var(--borde);
-  border-radius: 7px;
+  border: 1.5px solid var(--negro);
+  border-radius: 50%;
   cursor: pointer;
 }
 .tarea-check:hover {
-  background: #eefdf6;
+  background: var(--lima-clara);
 }
 .tarea.completada .tarea-check {
-  background: var(--menta);
+  background: var(--lima);
+  border-color: var(--lima);
 }
 .tarea.completada .tarea-titulo {
   text-decoration: line-through;
-  text-decoration-thickness: 2px;
   color: var(--tinta-suave);
 }
 .tarea-info {
@@ -624,7 +653,7 @@ textarea.entrada {
   min-width: 0;
 }
 .tarea-titulo {
-  font-weight: 700;
+  font-weight: 600;
   overflow-wrap: anywhere;
 }
 .tarea-meta {
@@ -632,8 +661,8 @@ textarea.entrada {
   flex-wrap: wrap;
   align-items: center;
   gap: 6px 14px;
-  margin-top: 5px;
-  font-size: 0.84rem;
+  margin-top: 4px;
+  font-size: 0.82rem;
 }
 .tarea-meta span {
   display: inline-flex;
@@ -642,21 +671,26 @@ textarea.entrada {
 }
 .prioridad-alta {
   color: var(--peligro);
-  font-weight: 700;
+  font-weight: 600;
 }
 .tarea-acciones {
   display: flex;
   gap: 6px;
 }
 .tarea-acciones .boton {
-  width: 36px;
-  min-height: 36px;
+  width: 38px;
+  min-height: 38px;
   padding: 0;
-  box-shadow: none;
+  background: var(--blanco);
+  border-color: transparent;
+}
+.tarea-acciones .boton:hover {
+  color: var(--blanco);
+  background: var(--negro);
 }
 .vencida {
   color: var(--peligro);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .filtros {
@@ -670,40 +704,41 @@ textarea.entrada {
   flex: 1 1 160px;
   max-width: 230px;
   min-height: 42px;
+  border-radius: var(--pildora);
 }
 
+/* Pestañas: píldoras, la activa en negro */
 .pestanas {
   display: inline-flex;
-  padding: 3px;
-  gap: 3px;
-  background: var(--blanco);
-  border: var(--borde);
-  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+  border: 1.5px solid var(--negro);
+  border-radius: var(--pildora);
 }
 .pestanas button {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 0 14px;
-  min-height: 36px;
-  font: 700 0.92rem var(--fuente);
+  padding: 0 16px;
+  min-height: 34px;
+  font: 500 0.88rem var(--fuente);
   color: var(--tinta);
   background: transparent;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--pildora);
   cursor: pointer;
 }
 .pestanas button[aria-pressed='true'] {
-  background: var(--tinta);
-  color: var(--papel);
+  background: var(--negro);
+  color: var(--blanco);
 }
 
 .vacio {
-  padding: 26px;
+  padding: 28px;
   text-align: center;
-  font-weight: 600;
-  background: rgba(255, 255, 255, 0.7);
-  border: 2.5px dashed var(--tinta-suave);
+  font-weight: 500;
+  color: var(--tinta-suave);
+  background: var(--lima-palida);
   border-radius: var(--radio);
 }
 
@@ -711,54 +746,58 @@ textarea.entrada {
 
 .calendario {
   background: var(--blanco);
-  border: var(--borde);
+  border: 1.5px solid var(--lima-borde);
   border-radius: var(--radio);
-  box-shadow: var(--sombra);
   overflow: hidden;
 }
 .calendario-cabeza {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px;
+  padding: 14px;
   color: var(--blanco);
-  background: var(--cobalto);
-  border-bottom: var(--borde);
+  background: var(--negro);
+}
+.calendario-cabeza .boton {
+  color: var(--negro);
+  background: var(--lima);
+  border-color: var(--lima);
 }
 .calendario-rejilla {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 }
 .calendario-dia-semana {
-  padding: 8px 4px;
+  padding: 10px 4px;
   text-align: center;
-  font-weight: 700;
-  font-size: 0.8rem;
-  border-bottom: 2px solid var(--tinta);
+  font-weight: 500;
+  font-size: 0.78rem;
+  color: var(--tinta-suave);
+  border-bottom: 1px solid var(--lima-borde);
 }
 .calendario-dia {
   min-height: 92px;
   padding: 6px;
-  border-right: 1px solid var(--linea);
-  border-bottom: 1px solid var(--linea);
+  border-right: 1px solid var(--lima-borde);
+  border-bottom: 1px solid var(--lima-borde);
   overflow: hidden;
 }
 .calendario-dia.otro-mes {
-  background: #f7f7f2;
-  color: #b4b2aa;
+  background: #fafbf6;
+  color: #b9bdaf;
 }
 .numero-dia {
   display: inline-grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 7px;
-  font-weight: 700;
-  font-size: 0.85rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-weight: 500;
+  font-size: 0.84rem;
 }
 .calendario-dia.hoy .numero-dia {
-  background: var(--mandarina);
-  border: 2px solid var(--tinta);
+  font-weight: 700;
+  background: var(--lima);
 }
 .evento {
   display: flex;
@@ -766,18 +805,25 @@ textarea.entrada {
   gap: 4px;
   width: 100%;
   margin-top: 4px;
-  padding: 2px 5px;
-  font: 600 0.72rem var(--fuente);
+  padding: 3px 7px;
+  font: 500 0.7rem var(--fuente);
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: var(--tinta);
-  background: #f3f5ff;
+  color: var(--blanco);
+  background: var(--negro);
   border: none;
-  border-left: 4px solid var(--color, var(--cobalto));
-  border-radius: 4px;
+  border-radius: var(--pildora);
   cursor: pointer;
+}
+.evento::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color, var(--lima));
 }
 .evento span {
   overflow: hidden;
@@ -785,7 +831,7 @@ textarea.entrada {
 }
 .evento.hecho {
   text-decoration: line-through;
-  opacity: 0.55;
+  opacity: 0.5;
 }
 
 /* ---------- Enfoque: el tiempo se llena en cuadritos ---------- */
@@ -793,22 +839,26 @@ textarea.entrada {
 .enfoque {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 280px;
-  gap: 26px;
+  gap: 24px;
   align-items: start;
 }
 .panel-reloj {
-  padding: 26px;
+  padding: 28px;
   text-align: center;
+  color: var(--blanco);
+  background: var(--negro);
+  border: none;
 }
 .reloj-tiempo {
-  font: 800 clamp(3.4rem, 10vw, 5.4rem) / 1 var(--fuente-titulos);
+  font: 700 clamp(3.4rem, 10vw, 5.4rem) / 1 var(--fuente-titulos);
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
+  color: var(--lima);
 }
 .reloj-estado {
   margin: 8px 0 20px;
-  font-weight: 700;
-  color: var(--tinta-suave);
+  font-weight: 500;
+  color: #b9bdaf;
 }
 .rejilla-enfoque {
   display: grid;
@@ -819,16 +869,15 @@ textarea.entrada {
 }
 .celda {
   aspect-ratio: 1;
-  background: var(--blanco);
-  border: 2px solid var(--tinta);
-  border-radius: 5px;
+  background: var(--gris-oscuro);
+  border-radius: 8px;
   transition: background 0.3s ease;
 }
 .celda.llena {
-  background: var(--cobalto);
+  background: var(--lima);
 }
 .celda.actual {
-  background: var(--resaltador);
+  background: var(--blanco);
   animation: latido 1.2s ease-in-out infinite;
 }
 @keyframes latido {
@@ -836,14 +885,25 @@ textarea.entrada {
     transform: scale(0.82);
   }
 }
+.panel-reloj .boton {
+  color: var(--blanco);
+  background: transparent;
+  border-color: #555;
+}
+.panel-reloj .boton-primario,
+.panel-reloj .boton-verde {
+  color: var(--negro);
+  background: var(--lima);
+  border-color: var(--lima);
+}
 .duraciones {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
 .duraciones .boton[aria-pressed='true'] {
-  background: var(--tinta);
-  color: var(--papel);
+  background: var(--negro);
+  color: var(--blanco);
 }
 .controles-reloj {
   display: flex;
@@ -852,7 +912,7 @@ textarea.entrada {
   gap: 12px;
 }
 
-/* ---------- Gráfico de barras ---------- */
+/* ---------- Gráfico de barras: lima, la de hoy en negro ---------- */
 
 .grafico {
   display: grid;
@@ -860,11 +920,9 @@ textarea.entrada {
   align-items: end;
   gap: 10px;
   height: 220px;
-  padding: 16px 12px 0;
-  background: var(--blanco);
-  border: var(--borde);
+  padding: 16px 14px 0;
+  background: var(--lima-palida);
   border-radius: var(--radio);
-  box-shadow: var(--sombra);
 }
 .barra-columna {
   display: flex;
@@ -877,26 +935,25 @@ textarea.entrada {
 .barra {
   width: 100%;
   max-width: 44px;
-  min-height: 3px;
-  background: var(--cobalto);
-  border: var(--borde);
-  border-bottom: none;
-  border-radius: 6px 6px 0 0;
+  min-height: 4px;
+  background: var(--lima);
+  border-radius: 14px;
 }
 .barra.hoy {
-  background: var(--mandarina);
+  background: var(--negro);
 }
 .barra-valor {
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.74rem;
+  font-weight: 600;
 }
 .barra-dia {
-  padding: 6px 0 8px;
-  font-size: 0.8rem;
-  font-weight: 700;
+  padding: 6px 0 10px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--tinta-suave);
 }
 
-/* ---------- Logros como stickers redondos ---------- */
+/* ---------- Logros ---------- */
 
 .logros {
   display: grid;
@@ -913,26 +970,24 @@ textarea.entrada {
 .logro-sticker {
   display: grid;
   place-items: center;
-  width: 92px;
-  height: 92px;
+  width: 88px;
+  height: 88px;
   margin-bottom: 6px;
-  background: var(--color, var(--menta));
-  border: var(--borde);
+  color: var(--negro);
+  background: var(--lima);
   border-radius: 50%;
-  box-shadow: var(--sombra);
-  transform: rotate(-6deg);
 }
 .logro:nth-child(even) .logro-sticker {
-  transform: rotate(5deg);
+  color: var(--lima);
+  background: var(--negro);
 }
 .logro.bloqueado .logro-sticker {
-  background: repeating-linear-gradient(45deg, #f1f0ea, #f1f0ea 6px, #e4e2da 6px, #e4e2da 12px);
-  border-style: dashed;
-  box-shadow: none;
-  color: var(--tinta-suave);
+  color: #b9bdaf;
+  background: transparent;
+  border: 1.5px dashed #b9bdaf;
 }
 .logro p {
-  font-size: 0.86rem;
+  font-size: 0.84rem;
   color: var(--tinta-suave);
 }
 
@@ -940,19 +995,19 @@ textarea.entrada {
 
 .contador {
   position: absolute;
-  top: -8px;
-  right: -8px;
-  min-width: 22px;
-  height: 22px;
+  top: -5px;
+  right: -5px;
+  min-width: 20px;
+  height: 20px;
   padding: 0 5px;
   display: grid;
   place-items: center;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  color: var(--tinta);
-  background: var(--mandarina);
-  border: 2px solid var(--tinta);
-  border-radius: 6px;
+  color: var(--negro);
+  background: var(--lima);
+  border: 2px solid var(--blanco);
+  border-radius: var(--pildora);
 }
 .panel-notificaciones {
   position: absolute;
@@ -962,20 +1017,21 @@ textarea.entrada {
   width: min(340px, 86vw);
   max-height: 420px;
   overflow-y: auto;
-  padding: 14px;
+  padding: 16px;
+  box-shadow: var(--sombra-flotante);
 }
 .notificacion {
   padding: 10px 0;
-  border-bottom: 1px solid var(--linea);
-  font-size: 0.92rem;
+  border-bottom: 1px solid var(--lima-borde);
+  font-size: 0.9rem;
 }
 .notificacion.nueva {
-  font-weight: 700;
+  font-weight: 600;
 }
 .notificacion small {
   display: block;
   margin-top: 4px;
-  font-weight: 500;
+  font-weight: 400;
   color: var(--tinta-suave);
 }
 
@@ -988,12 +1044,15 @@ textarea.entrada {
   display: grid;
   place-items: center;
   padding: 16px;
-  background: rgba(22, 22, 22, 0.5);
+  background: rgba(20, 20, 20, 0.45);
+  backdrop-filter: blur(4px);
 }
 .modal {
   width: min(520px, 100%);
   max-height: 92vh;
   overflow-y: auto;
+  border-radius: 32px;
+  box-shadow: var(--sombra-flotante);
 }
 .modal-cabeza {
   display: flex;
@@ -1011,12 +1070,12 @@ textarea.entrada {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 18px;
-  font-weight: 700;
-  background: var(--resaltador);
-  border: var(--borde);
-  border-radius: var(--radio);
-  box-shadow: var(--sombra);
+  padding: 14px 22px;
+  font-weight: 500;
+  color: var(--negro);
+  background: var(--lima);
+  border-radius: var(--pildora);
+  box-shadow: var(--sombra-flotante);
   animation: entrar 0.25s ease-out;
 }
 @keyframes entrar {
@@ -1032,27 +1091,26 @@ textarea.entrada {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   min-height: 100vh;
+  background: var(--blanco);
 }
 .acceso-marca {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 32px;
-  padding: 44px;
-  color: var(--blanco);
-  background-color: var(--cobalto);
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.14) 1px, transparent 1px);
-  background-size: var(--cuadro) var(--cuadro);
-  border-right: var(--borde);
+  margin: 14px;
+  padding: 40px;
+  color: var(--negro);
+  background: var(--lima);
+  border-radius: 36px;
 }
 .acceso-marca h1 {
-  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
   max-width: 12ch;
 }
 .acceso-marca .resaltado {
-  color: var(--tinta);
+  color: var(--lima);
+  background: var(--negro);
 }
 .muestra {
   display: grid;
@@ -1062,22 +1120,15 @@ textarea.entrada {
 .muestra span {
   display: grid;
   place-items: center;
-  aspect-ratio: 1;
-  background: rgba(255, 255, 255, 0.12);
-  border: 2.5px solid var(--tinta);
-  border-radius: 9px;
-  color: var(--tinta);
+  height: 64px;
+  font-weight: 500;
+  color: var(--negro);
+  border: 1.5px solid var(--negro);
+  border-radius: var(--pildora);
 }
-.muestra span:nth-child(1),
-.muestra span:nth-child(2),
-.muestra span:nth-child(4) {
-  background: var(--resaltador);
-}
-.muestra span:nth-child(5) {
-  background: var(--menta);
-}
-.muestra span:nth-child(3) {
-  background: var(--mandarina);
+.muestra span:nth-child(-n + 5) {
+  color: var(--lima);
+  background: var(--negro);
 }
 .acceso-formulario {
   display: grid;
@@ -1088,7 +1139,8 @@ textarea.entrada {
   width: min(420px, 100%);
 }
 .acceso-caja h2 {
-  font-size: 1.9rem;
+  font-size: 2rem;
+  font-weight: 700;
   margin-bottom: 6px;
 }
 
@@ -1106,6 +1158,7 @@ textarea.entrada {
     padding: 18px 16px 110px;
     gap: 0;
   }
+  /* Barra inferior negra en forma de píldora; el activo es un círculo blanco */
   .barra-lateral {
     position: fixed;
     top: auto;
@@ -1115,8 +1168,8 @@ textarea.entrada {
     z-index: 30;
     min-height: 0;
     padding: 8px;
-    border-radius: 18px;
-    box-shadow: 3px 3px 0 var(--mandarina);
+    border-radius: var(--pildora);
+    box-shadow: 0 10px 30px rgba(20, 20, 20, 0.25);
   }
   .barra-lateral .logo,
   .lateral-pie {
@@ -1129,9 +1182,13 @@ textarea.entrada {
   .nav a {
     flex: 1;
     flex-direction: column;
-    gap: 3px;
+    gap: 2px;
     padding: 8px 2px;
-    font-size: 0.7rem;
+    font-size: 0.66rem;
+    border-radius: var(--pildora);
+  }
+  .nav a.active {
+    background: var(--blanco);
   }
   .fila-2 {
     grid-template-columns: 1fr;
@@ -1148,10 +1205,10 @@ textarea.entrada {
   }
   .cuadros-categorias {
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    gap: 12px;
   }
   .cuadro-cat {
-    padding: 12px;
+    padding: 14px;
   }
   .cuadro-cat-numero {
     font-size: 2.2rem;
@@ -1162,7 +1219,14 @@ textarea.entrada {
   }
   .semana-cuadros {
     min-width: 0;
-    gap: 6px;
+    gap: 5px;
+  }
+  .cuadro-dia {
+    padding: 10px 2px;
+  }
+  .cuadro-dia .caja {
+    width: 28px;
+    height: 28px;
   }
   .racha {
     flex-direction: row;
@@ -1181,17 +1245,16 @@ textarea.entrada {
     padding: 3px;
   }
   .evento {
-    font-size: 0.62rem;
-    padding: 1px 3px;
-    border-left-width: 3px;
+    font-size: 0.6rem;
+    padding: 1px 4px;
   }
   .acceso {
     grid-template-columns: 1fr;
   }
   .acceso-marca {
+    margin: 10px;
     padding: 28px 22px;
-    border-right: none;
-    border-bottom: var(--borde);
+    border-radius: 30px;
   }
   .muestra {
     grid-template-columns: repeat(7, 1fr);
@@ -1213,9 +1276,9 @@ a.cuadro-cat-nuevo {
   text-decoration: none;
 }
 .acceso-marca .logo svg {
-  padding: 3px;
-  background: var(--papel);
-  border-radius: 10px;
+  padding: 5px;
+  background: var(--negro);
+  border-radius: 12px;
   width: 44px;
   height: 44px;
 }

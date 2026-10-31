@@ -148,6 +148,30 @@ describe('Recordatorios automáticos', () => {
     expect(segunda.enviados).toBe(0);
   });
 
+  test('si el correo falla, el aviso en la app se crea una sola vez', async () => {
+    const correo = require('../../src/services/correo.service');
+    const espia = jest.spyOn(correo, 'enviar').mockRejectedValue(new Error('Resend respondió 403'));
+    const errorOriginal = console.error;
+    console.error = () => {};
+    try {
+      const token = await registrar('fer@test.com');
+      const auth = { Authorization: `Bearer ${token}` };
+      const pronto = new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString();
+      await request(app).post('/api/tareas').set(auth).send({ titulo: 'Entrega con correo fallido', fechaLimite: pronto });
+
+      await recordatorios.ejecutar();
+      await recordatorios.ejecutar();
+
+      expect(espia).toHaveBeenCalled();
+      const notis = await request(app).get('/api/notificaciones').set(auth);
+      const avisos = notis.body.data.filter((n) => n.mensaje === 'Se acerca la entrega: Entrega con correo fallido');
+      expect(avisos).toHaveLength(1);
+    } finally {
+      espia.mockRestore();
+      console.error = errorOriginal;
+    }
+  });
+
   test('al abrir las notificaciones se revisan los recordatorios (servidor que estuvo dormido)', async () => {
     const token = await registrar('eva@test.com');
     const auth = { Authorization: `Bearer ${token}` };

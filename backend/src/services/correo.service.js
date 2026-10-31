@@ -50,13 +50,16 @@ function plantillaRecordatorio(nombre, titulo, fechaLimite) {
     minute: '2-digit',
   });
   return `
-  <div style="font-family:Arial,sans-serif;background:#FFD02B;padding:24px">
-    <div style="background:#FBF8F1;border:3px solid #111;border-radius:16px;padding:24px;box-shadow:6px 6px 0 #111;max-width:480px;margin:auto">
-      <h1 style="margin:0 0 8px;font-size:24px;color:#111">Hola, ${escapar(nombre)}</h1>
-      <p style="font-size:16px;color:#111">Tienes una entrega cerca:</p>
-      <p style="font-size:20px;font-weight:bold;color:#111;margin:8px 0">${escapar(titulo)}</p>
-      <p style="font-size:16px;color:#111">Fecha límite: <strong>${fechaTexto}</strong></p>
-      <p style="font-size:14px;color:#555;margin-top:24px">Kuadri - tu panel personal</p>
+  <div style="font-family:Poppins,Arial,sans-serif;background:#FFFFFF;padding:24px">
+    <div style="background:#B1CB5A;border-radius:24px;padding:24px;max-width:480px;margin:auto">
+      <h1 style="margin:0 0 8px;font-size:24px;color:#141414">Hola, ${escapar(nombre)}</h1>
+      <p style="font-size:16px;color:#141414">Tienes una entrega cerca:</p>
+      <div style="background:#D6E6A1;border-radius:16px;padding:16px;margin:12px 0">
+        <p style="font-size:20px;font-weight:bold;color:#141414;margin:0 0 8px">${escapar(titulo)}</p>
+        <p style="font-size:16px;color:#141414;margin:0">Fecha límite: <strong>${fechaTexto}</strong></p>
+      </div>
+      <a href="${escapar(env.frontendUrl.split(',')[0].trim())}" style="display:inline-block;background:#141414;color:#FFFFFF;text-decoration:none;font-size:15px;padding:12px 24px;border-radius:999px;margin-top:8px">Abrir Kuadri</a>
+      <p style="font-size:13px;color:#141414;margin-top:24px">Kuadri - tu panel personal</p>
     </div>
   </div>`;
 }

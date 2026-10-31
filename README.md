@@ -130,7 +130,7 @@ Kuadri está preparada para publicarse con planes gratuitos: la base de datos en
 ## Pruebas
 
 ```bash
-cd backend && npm test     # 26 pruebas: lógica de rachas y logros, correo, API completa y recordatorios
+cd backend && npm test     # 27 pruebas: lógica de rachas y logros, correo, API completa y recordatorios
 cd frontend && npm test    # 9 pruebas: utilidades de fechas y formulario de tareas
 ```
 

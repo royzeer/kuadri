@@ -14,11 +14,17 @@ async function ejecutar(ahora = new Date()) {
     try {
       await actividad.crearNotificacion(t.usuario_id, 'recordatorio', `Se acerca la entrega: ${t.titulo}`);
       if (t.avisos_correo) {
-        await correo.enviar(
-          t.correo,
-          `Recordatorio: ${t.titulo}`,
-          correo.plantillaRecordatorio(t.nombre, t.titulo, t.fecha_limite),
-        );
+        // Si el correo falla (por ejemplo, Resend lo rechaza), el aviso dentro de la app ya quedó
+        // creado. Se marca la tarea como recordada igual, para no repetir el aviso cada 15 minutos.
+        try {
+          await correo.enviar(
+            t.correo,
+            `Recordatorio: ${t.titulo}`,
+            correo.plantillaRecordatorio(t.nombre, t.titulo, t.fecha_limite),
+          );
+        } catch (error) {
+          console.error(`No se pudo enviar el correo de la tarea ${t.id}:`, error.message);
+        }
       }
       await tareas.marcarRecordada(t.id);
       enviados += 1;

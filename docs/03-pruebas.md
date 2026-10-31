@@ -14,7 +14,7 @@ Versión: 1.0 (Fase 1)
 
 ## 2. Casos de prueba automatizados
 
-### API (26 pruebas)
+### API (27 pruebas)
 
 | Código | Caso | Resultado esperado | Requisito |
 |---|---|---|---|
@@ -32,6 +32,7 @@ Versión: 1.0 (Fase 1)
 | CP12 | Recordatorios automáticos | Solo avisa tareas dentro de 24 h y una sola vez | RF09, RF11 |
 | CP13 | Revisión de recordatorios al abrir notificaciones | Genera el aviso aunque el planificador no haya corrido (servidor dormido) | RF09 |
 | CP14 y CP15 | Envío de correo por la API de Resend | Petición correcta y error claro si se rechaza | RF10 |
+| CP27 | Correo rechazado por Resend | El aviso en la app se crea una sola vez y la tarea queda recordada | RF09, RF10 |
 | CP16 a CP26 | Rachas (6 casos), logros (2), fechas (2), escape de HTML (1) | Cálculos correctos en bordes: cambio de mes, año bisiesto, racha rota, mejor racha | RN01, RN02, RN04 |
 
 ### Interfaz (9 pruebas)

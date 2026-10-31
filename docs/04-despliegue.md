@@ -72,4 +72,22 @@ npm run db:init
 
 ## 5. Actualizaciones
 
+### Cambios en la base de datos (migraciones)
+
+Cuando una versión nueva trae tablas nuevas (por ejemplo, la Fase 2: metas y deseos), **no** se usa `npm run db:init`, porque ese comando borra la base y todos los datos. Se usa `npm run db:migrar`, que solo agrega lo que falta y se puede correr más de una vez sin problema.
+
+1. Poner en `backend/.env` los datos de Aiven (los mismos del paso 1, con `DB_SSL=true`).
+2. Ejecutar:
+
+```bash
+cd backend
+npm run db:migrar
+```
+
+3. Debe aparecer `Migración aplicada: 001-fase-2-metas-deseos.sql` y `Base de datos "kuadri" al día.`
+4. Volver a dejar el `.env` apuntando a la base local.
+
+Las migraciones están en `database/migraciones/`. El archivo `database/schema.sql` ya trae todo para instalaciones nuevas.
+
+
 Render y Vercel quedan conectados al repositorio: cada commit nuevo en `main` vuelve a publicar la app automáticamente.

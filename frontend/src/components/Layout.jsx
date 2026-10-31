@@ -1,7 +1,7 @@
 // Estructura principal: barra lateral oscura (barra inferior en celular), encabezado y notificaciones.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { Bell, ChartColumn, House, ListChecks, LogOut, Settings, Timer } from 'lucide-react';
+import { Bell, ChartColumn, Gift, House, ListChecks, LogOut, Settings, Target, Timer } from 'lucide-react';
 import { api } from '../api/cliente';
 import { useAuth } from '../context/AuthContext';
 import Logo from './Logo';
@@ -9,6 +9,8 @@ import Logo from './Logo';
 const ENLACES = [
   { a: '/', texto: 'Inicio', Icono: House },
   { a: '/tareas', texto: 'Tareas', Icono: ListChecks },
+  { a: '/metas', texto: 'Metas', Icono: Target },
+  { a: '/deseos', texto: 'Deseos', Icono: Gift },
   { a: '/enfoque', texto: 'Enfoque', Icono: Timer },
   { a: '/progreso', texto: 'Progreso', Icono: ChartColumn },
   { a: '/ajustes', texto: 'Ajustes', Icono: Settings },

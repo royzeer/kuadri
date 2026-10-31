@@ -10,7 +10,9 @@ Kuadri es una aplicación web full stack para organizar tareas y entregas, recib
 
 Estudio en dos instituciones al mismo tiempo (Tecnólogo en Análisis y Desarrollo de Software en el SENA e Ingeniería en la Universidad del Magdalena) y tenía mis entregas repartidas entre mensajes, correos y notas. Kuadri nace de ese problema real: un solo lugar para ver qué viene, recibir avisos antes de cada fecha y saber cuánto estudio de verdad cada semana.
 
-## Funcionalidades (Fase 1)
+## Funcionalidades
+
+### Fase 1: organización y estudio
 
 - **Cuentas de usuario** con registro, inicio de sesión y contraseñas cifradas.
 - **Categorías personalizables** (nombre, color e icono). Al registrarse se crean Universidad, SENA y Personal.
@@ -20,10 +22,23 @@ Estudio en dos instituciones al mismo tiempo (Tecnólogo en Análisis y Desarrol
 - **Estadísticas de los últimos 7 días**: minutos de enfoque y tareas completadas por día.
 - **Rachas y logros** que se calculan y otorgan automáticamente.
 - **Notificaciones** dentro de la app.
+### Fase 2: metas y lista de deseos
+
+- **Metas personales** con fecha objetivo, categoría y pasos. La barra de avance se llena sola a medida que marcas los pasos, y la meta se cumple cuando terminas todos.
+- **Lista de deseos** con enlace de la tienda, foto, prioridad y el precio que quieres pagar.
+- **Seguimiento de precios**: anotas el precio cada vez que lo ves y la app guarda el historial, muestra una gráfica, dice si bajó o subió y avisa en las notificaciones cuando llega a tu precio objetivo.
+- Dos logros nuevos: **Soñador** (cumplir una meta) y **Paciente** (un deseo llega a tu precio).
+
+### Diseño
+
 - **Diseño propio** en verde lima, negro y blanco, con tarjetas sólidas y píldoras: la semana se llena cuadro por cuadro y el temporizador avanza en una cuadrícula.
 - **Diseño adaptable** a celular, tableta y escritorio, con navegación inferior en celular.
 
 ## Capturas
+
+| Metas con pasos | Deseo con historial de precios |
+|---|---|
+| ![Metas](docs/capturas/escritorio-metas.png) | ![Deseos](docs/capturas/escritorio-deseos.png) |
 
 | Tareas en calendario | Progreso y logros |
 |---|---|
@@ -130,8 +145,8 @@ Kuadri está preparada para publicarse con planes gratuitos: la base de datos en
 ## Pruebas
 
 ```bash
-cd backend && npm test     # 26 pruebas: lógica de rachas y logros, correo, API completa y recordatorios
-cd frontend && npm test    # 9 pruebas: utilidades de fechas y formulario de tareas
+cd backend && npm test     # 41 pruebas: lógica de rachas, logros, metas y precios, correo, API completa y recordatorios
+cd frontend && npm test    # 18 pruebas: utilidades de fechas y precios, formularios de tareas, metas y deseos
 ```
 
 Las pruebas de la API usan una base de datos aparte (`kuadri_test`) que se crea sola. En GitHub Actions todas las pruebas se ejecutan automáticamente en cada cambio.
@@ -146,6 +161,12 @@ Las pruebas de la API usan una base de datos aparte (`kuadri_test`) que se crea 
 | GET, POST, PUT, DELETE | /api/categorias | Gestionar categorías |
 | GET, POST, PUT, DELETE | /api/tareas | Gestionar tareas (con filtros) |
 | PATCH | /api/tareas/:id/completar | Completar o reabrir una tarea |
+| GET, POST, PUT, DELETE | /api/metas | Gestionar metas con sus pasos y avance |
+| PATCH | /api/metas/:id/cumplir | Marcar una meta como cumplida o reabrirla |
+| POST, PATCH, DELETE | /api/metas/:id/pasos | Agregar, marcar y quitar pasos |
+| GET, POST, PUT, DELETE | /api/deseos | Gestionar la lista de deseos |
+| PATCH | /api/deseos/:id/comprar | Marcar un deseo como comprado |
+| POST, DELETE | /api/deseos/:id/precios | Anotar o borrar un precio del historial |
 | POST | /api/enfoque | Registrar una sesión de enfoque |
 | GET | /api/estadisticas/resumen | Resumen semanal, racha y totales |
 | GET | /api/logros | Logros obtenidos y bloqueados |
@@ -182,7 +203,7 @@ kuadri/
 ## Hoja de ruta
 
 - **Fase 1 (lista):** organización y estudio, recordatorios, enfoque, estadísticas, rachas y logros.
-- **Fase 2:** metas personales y lista de deseos con seguimiento automático de precios.
+- **Fase 2 (lista):** metas personales con pasos y lista de deseos con historial de precios.
 - **Fase 3:** estudio creativo (paletas, tipografías y plantillas) y registro de ocio (juegos, series y libros).
 
 ## Metodología

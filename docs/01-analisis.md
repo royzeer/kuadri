@@ -68,6 +68,13 @@ Desarrollar una aplicación web que permita a una persona registrar y organizar 
 | RF15 | El sistema calcula la racha de días consecutivos con actividad (tarea completada o sesión de enfoque). | Media |
 | RF16 | El sistema otorga logros automáticamente al cumplir condiciones definidas. | Media |
 | RF17 | El usuario puede actualizar su perfil y sus preferencias de notificación. | Baja |
+| RF18 | El usuario puede crear, editar y eliminar metas con nombre, descripción, categoría y fecha objetivo. | Alta |
+| RF19 | El usuario puede agregar, marcar y quitar pasos de una meta; el avance se calcula con los pasos hechos. | Alta |
+| RF20 | El sistema marca la meta como cumplida cuando todos sus pasos están hechos; una meta sin pasos se cumple a mano. | Media |
+| RF21 | El usuario puede crear, editar y eliminar deseos con nombre, enlace, foto, prioridad y precio objetivo. | Alta |
+| RF22 | El usuario puede anotar el precio de un deseo cuando lo ve; el sistema guarda el historial y muestra si bajó o subió. | Alta |
+| RF23 | El sistema avisa en las notificaciones cuando un deseo llega al precio objetivo. | Media |
+| RF24 | El usuario puede marcar un deseo como comprado. | Baja |
 
 ## 4. Requisitos no funcionales
 
@@ -165,6 +172,9 @@ Como usuario, quiero ver mi racha de días activos y los logros que he ganado, p
 - **RN02:** La racha actual es la cantidad de días activos consecutivos que terminan hoy o ayer.
 - **RN03:** Una sesión de enfoque dura entre 1 y 180 minutos.
 - **RN04:** Los logros se otorgan una sola vez por usuario.
+- **RN05:** El avance de una meta es el porcentaje de pasos hechos; una meta cumplida siempre está al 100 %. Si se agrega o desmarca un paso de una meta cumplida, vuelve a quedar en curso.
+- **RN06:** El aviso de precio objetivo se envía una sola vez; si el precio vuelve a subir por encima del objetivo, el aviso queda listo para la siguiente bajada.
+- **RN07:** El precio se anota a mano. No se lee automáticamente de las tiendas, porque las tiendas grandes bloquean esas lecturas y el servidor gratuito se duerme.
 
 | Logro | Condición |
 |---|---|
@@ -174,6 +184,8 @@ Como usuario, quiero ver mi racha de días activos y los logros que he ganado, p
 | Productivo | 10 tareas completadas |
 | Concentrado | 5 horas de enfoque acumuladas |
 | Madrugador | Completar una tarea antes de las 8:00 a. m. |
+| Soñador | Cumplir la primera meta |
+| Paciente | Un deseo llega al precio objetivo |
 
 ## 8. Metodología
 

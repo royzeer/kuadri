@@ -2222,3 +2222,271 @@ a.cuadro-cat-nuevo {
   display: inline-block;
   margin-right: 4px;
 }
+
+/* ---------- Portada pública ---------- */
+.portada {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 14px;
+}
+.portada-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 12px 20px;
+}
+.portada-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+}
+.portada-logo svg {
+  width: 44px;
+  height: 44px;
+  padding: 5px;
+  background: var(--negro);
+  border-radius: 12px;
+}
+
+.portada-heroe {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  align-items: center;
+  gap: 40px;
+  padding: 48px 0 48px 48px;
+  overflow: hidden;
+  background: var(--lima);
+  border-radius: 36px;
+}
+.portada-heroe-texto h1 {
+  font-size: clamp(2.2rem, 4.4vw, 3.5rem);
+}
+.portada-heroe-texto p {
+  max-width: 44ch;
+  margin-top: 18px;
+  font-size: 1.08rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.portada-accion {
+  margin: 24px 0 32px;
+  min-height: 52px;
+  padding: 0 30px;
+}
+.portada-heroe-captura {
+  display: block;
+  width: 118%;
+  height: auto;
+  border-radius: 28px 0 0 28px;
+  box-shadow: var(--sombra-flotante);
+}
+
+.portada-seccion {
+  padding: 64px 12px 0;
+}
+.portada-seccion h2 {
+  max-width: 24ch;
+  margin-bottom: 26px;
+  font-size: clamp(1.6rem, 3vw, 2.3rem);
+  line-height: 1.12;
+}
+
+/* Cada cuadro ocupa más o menos según lo que más usa un estudiante, como una cuadrícula a medio llenar */
+.portada-cuadros {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+.portada-cuadro {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 8px;
+  min-height: 210px;
+  padding: 24px;
+  background: var(--lima-palida);
+  border-radius: var(--radio);
+}
+.portada-cuadro h3 {
+  font-size: 1.14rem;
+}
+.portada-cuadro p {
+  line-height: 1.5;
+}
+.cuadro-entregas {
+  grid-column: span 2;
+  grid-row: span 2;
+  background: var(--lima);
+}
+.cuadro-entregas h3 {
+  font-size: clamp(1.6rem, 3vw, 2.3rem);
+}
+.cuadro-entregas p {
+  max-width: 42ch;
+  font-size: 1.05rem;
+}
+.cuadro-campus {
+  grid-column: span 2;
+  color: var(--blanco);
+  background: var(--negro);
+}
+.cuadro-enfoque,
+.cuadro-ocio {
+  background: var(--lima-clara);
+}
+.cuadro-rachas {
+  color: var(--lima);
+  background: var(--negro);
+}
+.cuadro-rachas p {
+  color: var(--blanco);
+}
+.cuadro-ocio {
+  grid-column: span 2;
+}
+
+.portada-pasos-bloque {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+  align-items: center;
+  gap: 56px;
+}
+.portada-pasos {
+  display: grid;
+  gap: 22px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: paso;
+}
+.portada-pasos li {
+  position: relative;
+  min-height: 56px;
+  padding-left: 72px;
+  counter-increment: paso;
+}
+.portada-pasos li::before {
+  content: counter(paso);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--lima);
+  background: var(--negro);
+  border-radius: var(--radio-sm);
+}
+.portada-pasos h3 {
+  margin-bottom: 4px;
+  font-size: 1.14rem;
+}
+.portada-pasos p {
+  max-width: 48ch;
+  line-height: 1.5;
+  color: var(--tinta-suave);
+}
+.portada-celular {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1.5px solid var(--negro);
+  border-radius: var(--radio);
+}
+
+.portada-preguntas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 30px 48px;
+  margin: 0;
+}
+.portada-preguntas dt {
+  margin-bottom: 6px;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+.portada-preguntas dd {
+  max-width: 54ch;
+  margin: 0;
+  line-height: 1.55;
+  color: var(--tinta-suave);
+}
+
+.portada-pie {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 28px;
+  margin-top: 64px;
+  padding: 26px 30px;
+  color: var(--blanco);
+  background: var(--negro);
+  border-radius: var(--radio);
+}
+.portada-pie nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.portada-pie a {
+  font-weight: 500;
+  color: var(--lima);
+}
+
+@media (max-width: 860px) {
+  .portada {
+    padding: 10px;
+  }
+  .portada-heroe {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+    padding: 30px 22px 0;
+    border-radius: 30px;
+  }
+  .portada-heroe-captura {
+    width: 100%;
+    border-radius: 20px 20px 0 0;
+  }
+  .portada-heroe .muestra {
+    grid-template-columns: repeat(7, 1fr);
+  }
+  .portada-seccion {
+    padding: 48px 6px 0;
+  }
+  .portada-cuadros {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .cuadro-entregas,
+  .cuadro-campus,
+  .cuadro-ocio {
+    grid-column: span 2;
+    grid-row: auto;
+  }
+  .portada-cuadro {
+    min-height: 0;
+  }
+  .portada-pasos-bloque {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 36px;
+  }
+  .portada-celular {
+    max-width: 300px;
+    justify-self: center;
+  }
+  .portada-preguntas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .portada-pie {
+    margin-top: 48px;
+    padding: 24px;
+  }
+}

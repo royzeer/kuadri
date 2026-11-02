@@ -1,9 +1,10 @@
 // Rutas de la aplicación. Las páginas privadas solo se muestran con sesión iniciada.
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Layout from './components/Layout';
 import AvisoApp from './components/AvisoApp';
 import Acceso from './pages/Acceso';
+import Portada from './pages/Portada';
 import Inicio from './pages/Inicio';
 import Tareas from './pages/Tareas';
 import Metas from './pages/Metas';
@@ -13,9 +14,11 @@ import Ocio from './pages/Ocio';
 import Enfoque from './pages/Enfoque';
 import Progreso from './pages/Progreso';
 import Ajustes from './pages/Ajustes';
+import { yaInstalada } from './utils/instalar';
 
 export default function App() {
   const { usuario, cargando } = useAuth();
+  const { pathname } = useLocation();
 
   if (cargando) {
     return (
@@ -26,13 +29,16 @@ export default function App() {
   }
 
   if (!usuario) {
+    // Quien abre la app instalada ya la conoce: va directo a iniciar sesión, sin pasar por la portada
+    const conPortada = !yaInstalada();
     return (
       <>
         <Routes>
+          {conPortada && <Route path="/" element={<Portada />} />}
           <Route path="/registro" element={<Acceso modo="registro" />} />
           <Route path="*" element={<Acceso modo="login" />} />
         </Routes>
-        <AvisoApp />
+        {!(conPortada && pathname === '/') && <AvisoApp />}
       </>
     );
   }

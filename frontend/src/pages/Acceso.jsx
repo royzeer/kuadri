@@ -1,5 +1,5 @@
 // Pantallas de inicio de sesión y registro (CU01, CU02), con panel de marca a la izquierda.
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Check } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -14,6 +14,15 @@ export default function Acceso({ modo }) {
   const [errores, setErrores] = useState({});
   const [error, setError] = useState('');
   const [enviando, setEnviando] = useState(false);
+
+  // Título propio en la pestaña; al salir de la pantalla se devuelve el anterior
+  useEffect(() => {
+    const anterior = document.title;
+    document.title = esRegistro ? 'Crear cuenta | Kuadri' : 'Iniciar sesión | Kuadri';
+    return () => {
+      document.title = anterior;
+    };
+  }, [esRegistro]);
 
   const cambiar = (e) => setDatos({ ...datos, [e.target.name]: e.target.value });
 
@@ -42,9 +51,9 @@ export default function Acceso({ modo }) {
   return (
     <main className="acceso">
       <section className="acceso-marca">
-        <div className="logo">
+        <Link to="/" className="logo" aria-label="Kuadri, ir a la portada">
           <Logo />
-        </div>
+        </Link>
         <h1>
           Tu semana, <span className="resaltado">cuadro por cuadro</span>.
         </h1>

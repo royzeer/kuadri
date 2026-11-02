@@ -10,7 +10,19 @@
     <meta name="apple-mobile-web-app-title" content="Kuadri" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Kuadri: tu panel personal para organizar estudio, metas y tiempo." />
+    <meta name="description" content="Organiza tus tareas y entregas, mide tu tiempo de estudio y sigue tus metas en un solo panel. Conecta tu campus virtual y úsala en celular o computador." />
+    <link rel="canonical" href="https://kuadri.vercel.app/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_CO" />
+    <meta property="og:site_name" content="Kuadri" />
+    <meta property="og:url" content="https://kuadri.vercel.app/" />
+    <meta property="og:title" content="Kuadri: organiza tus tareas, entregas y metas de estudio" />
+    <meta property="og:description" content="Tus entregas, tu tiempo de estudio y tus metas en un solo panel." />
+    <meta property="og:image" content="https://kuadri.vercel.app/portada/vista-previa.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Portada de Kuadri, panel personal para organizar el estudio" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#141414" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,10 +30,34 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <title>Kuadri</title>
+    <title>Kuadri: organiza tus tareas, entregas y metas de estudio</title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Kuadri",
+        "url": "https://kuadri.vercel.app/",
+        "description": "Panel personal para organizar tareas y entregas, medir el tiempo de estudio y seguir metas.",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Web",
+        "inLanguage": "es",
+        "author": {
+          "@type": "Person",
+          "name": "Roycer Cervantes",
+          "url": "https://github.com/royzeer"
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <h1>Kuadri: organiza tus tareas, entregas y metas de estudio</h1>
+      <p>
+        Kuadri es un panel personal para organizar tareas y entregas, recibir recordatorios, medir el tiempo de estudio
+        y seguir metas. Activa JavaScript en tu navegador para usarla.
+      </p>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

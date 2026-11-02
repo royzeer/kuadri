@@ -19,7 +19,7 @@ flowchart LR
   FE -->|HTTP JSON + JWT| API[API REST Express]
   API --> DB[(MySQL)]
   CRON[Planificador node-cron] --> DB
-  CRON -->|SMTP| MAIL[Servidor de correo]
+  CRON -->|API de Resend| MAIL[Servicio de correo]
   MAIL --> U
 ```
 

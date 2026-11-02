@@ -2,6 +2,16 @@
 
 **Tu panel personal para organizar estudio, tiempo y metas.**
 
+[![Pruebas](https://github.com/royzeer/kuadri/actions/workflows/pruebas.yml/badge.svg)](https://github.com/royzeer/kuadri/actions/workflows/pruebas.yml)
+![React 19](https://img.shields.io/badge/React-19-141414)
+![Node.js](https://img.shields.io/badge/Node.js-Express%205-141414)
+![MySQL](https://img.shields.io/badge/MySQL-8-141414)
+[![Licencia MIT](https://img.shields.io/badge/licencia-MIT-B1CB5A)](LICENSE)
+
+**Pruébala en línea: [kuadri.vercel.app](https://kuadri.vercel.app)**
+
+> La API está en un plan gratuito que se duerme cuando nadie la usa. La primera vez que abras la app puede tardar cerca de un minuto en responder; después va normal.
+
 Kuadri es una aplicación web full stack para organizar tareas y entregas, recibir recordatorios automáticos, medir el tiempo de estudio con un temporizador de enfoque y mantener la constancia con rachas y logros. Su diseño propio es plano y alegre, en verde lima, negro y blanco, y funciona en celular y escritorio.
 
 ![Panel principal](docs/capturas/escritorio-inicio.png)
@@ -101,7 +111,9 @@ flowchart LR
   FE -->|HTTP JSON + JWT| API[API REST Express]
   API --> DB[(MySQL)]
   CRON[Planificador de recordatorios] --> DB
-  CRON -->|SMTP| MAIL[Correo]
+  CRON -->|API de Resend| MAIL[Correo]
+  GHA[GitHub Actions] -->|cada 3 horas| API
+  API -->|calendario iCal| CAMPUS[Campus virtuales]
 ```
 
 La API está organizada por capas: **rutas** (URLs y middlewares), **controladores** (reciben la petición y responden), **servicios** (reglas de negocio como rachas y logros) y **modelos** (consultas SQL parametrizadas). Todas las respuestas usan el mismo formato `{ ok, data, mensaje }`.
@@ -167,11 +179,20 @@ npm run dev
 
 Abre `http://localhost:5173`, crea tu cuenta y empieza a usar Kuadri.
 
-**Correos de recordatorio:** si no configuras las variables `SMTP_*`, los correos se muestran en la consola de la API. Para enviarlos de verdad, usa los datos SMTP de tu proveedor de correo.
+**Correos de recordatorio:** si dejas vacías las variables de correo, los correos se muestran en la consola de la API. Para enviarlos de verdad, escribe tu clave de Resend en `RESEND_API_KEY` (recomendado) o los datos de tu servidor de correo en las variables `SMTP_*`.
 
 ## Publicación
 
-Kuadri está preparada para publicarse con planes gratuitos: la base de datos en Aiven (MySQL), la API en Render y la interfaz en Vercel. La guía paso a paso está en [docs/04-despliegue.md](docs/04-despliegue.md).
+Kuadri está publicada con planes gratuitos:
+
+| Parte | Servicio | Dirección |
+|---|---|---|
+| Interfaz | Vercel | [kuadri.vercel.app](https://kuadri.vercel.app) |
+| API | Render | [kuadri.onrender.com](https://kuadri.onrender.com) |
+| Base de datos | Aiven (MySQL) | Privada |
+| Correos | Resend | Envío de recordatorios |
+
+También se instala como app (PWA) en el celular. La guía paso a paso está en [docs/04-despliegue.md](docs/04-despliegue.md).
 
 ## Pruebas
 

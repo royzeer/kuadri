@@ -7,21 +7,60 @@
    cuadro por cuadro.
    ========================================================= */
 
+/* Colores que cambian con el tema (claro por defecto). Las tarjetas lima
+   los vuelven a poner en claro dentro del modo oscuro (islas claras). */
+:root,
+:root[data-tema='oscuro'] :is(
+    .resaltado,
+    .boton-acento,
+    .boton-verde,
+    .chip,
+    .cuadro-cat:not(:nth-child(3n + 2)),
+    .metrica:nth-child(2),
+    .calendario-cabeza .boton,
+    .acceso-marca,
+    .aviso,
+    .meta:not(.cumplida):not(:nth-child(3n + 2)),
+    .deseo-foto,
+    .ocio-tarjeta:not(.estado-terminado):not(.estado-abandonado):not(:nth-child(3n + 2)),
+    .equilibrio-estudio,
+    .portada-heroe,
+    .cuadro-entregas,
+    .cuadro-enfoque,
+    .cuadro-ocio
+  ) {
+  --fondo: #ffffff; /* fondo de la página */
+  --superficie: #ffffff; /* tarjetas, botones y campos */
+  --tinta: #141414; /* texto principal y bordes marcados */
+  --tinta-suave: #6a6f5e;
+  --tinta-tenue: #b9bdaf; /* bordes punteados y cosas bloqueadas */
+  --fondo-tenue: #fafbf6;
+  --linea-tenue: rgba(20, 20, 20, 0.14);
+  --lima-palida: #f1f6df; /* fondo de tarjetas suaves */
+  --lima-borde: #e1ebc0;
+  --oscuro: #141414; /* tarjetas negras */
+  --barra: #141414; /* barra lateral e inferior */
+  --oscuro-hover: #222222;
+  --oscuro-borde: #333333;
+  --gris-oscuro: #2a2a2a;
+  --primario-fondo: #141414;
+  --primario-texto: #ffffff;
+  --primario-hover: #2a2a2a;
+  --peligro-suave: #fdecea;
+  --peligro-suave-hover: #fbd9d5;
+  --alerta-texto: #8a1c13;
+}
+
 :root {
-  /* Base */
+  /* Colores fijos: no cambian con el tema (texto sobre lima, fichas blancas) */
   --blanco: #ffffff;
   --negro: #141414;
-  --tinta: #141414;
-  --tinta-suave: #6a6f5e;
-  --gris-oscuro: #2a2a2a;
   --peligro: #d92d20;
 
   /* Paleta lima */
   --lima: #b1cb5a; /* color principal */
   --lima-fuerte: #95b23c;
   --lima-clara: #d6e6a1;
-  --lima-palida: #f1f6df; /* fondo de tarjetas suaves */
-  --lima-borde: #e1ebc0;
 
   --radio: 28px;
   --radio-sm: 16px;
@@ -30,6 +69,39 @@
 
   --fuente-titulos: 'Poppins', system-ui, sans-serif;
   --fuente: 'Poppins', system-ui, sans-serif;
+
+  color-scheme: light;
+}
+
+/* ---------- Modo oscuro ----------
+   Se activa con data-tema="oscuro" en <html> (ver utils/tema.js).
+   La lima se mantiene igual; el fondo pasa a casi negro y las
+   tarjetas negras se aclaran un poco para que se distingan del fondo. */
+:root[data-tema='oscuro'] {
+  --fondo: #101010;
+  --superficie: #1b1b1b;
+  --tinta: #f1f3ea;
+  --tinta-suave: #a9af99;
+  --tinta-tenue: #6b7061;
+  --fondo-tenue: #151515;
+  --linea-tenue: rgba(255, 255, 255, 0.14);
+  --lima-palida: #1f2516;
+  --lima-borde: #3b4726;
+  --oscuro: #262626;
+  --barra: #1f1f1f;
+  --oscuro-hover: #333333;
+  --oscuro-borde: #454545;
+  --gris-oscuro: #3a3a3a;
+  --primario-fondo: var(--lima);
+  --primario-texto: #141414;
+  --primario-hover: #c3d978;
+  --peligro: #ff8a7a;
+  --peligro-suave: #3b1814;
+  --peligro-suave-hover: #4b1f1a;
+  --alerta-texto: #ffb4a8;
+  --sombra-flotante: 0 18px 50px rgba(0, 0, 0, 0.55);
+
+  color-scheme: dark;
 }
 
 * {
@@ -47,7 +119,7 @@ body {
   font-family: var(--fuente);
   font-size: 15px;
   color: var(--tinta);
-  background: var(--blanco);
+  background: var(--fondo);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -84,7 +156,7 @@ a {
 }
 
 :focus-visible {
-  outline: 2.5px solid var(--negro);
+  outline: 2.5px solid var(--tinta);
   outline-offset: 3px;
 }
 
@@ -103,6 +175,7 @@ a {
 
 /* Palabra destacada sobre una píldora lima */
 .resaltado {
+  color: var(--negro);
   padding: 0 0.28em;
   background: var(--lima);
   border-radius: 0.4em;
@@ -115,18 +188,18 @@ a {
   font-size: 0.88rem;
   text-decoration: none;
   padding: 6px 16px;
-  border: 1.5px solid var(--negro);
+  border: 1.5px solid var(--tinta);
   border-radius: var(--pildora);
 }
 .enlace:hover {
-  color: var(--blanco);
-  background: var(--negro);
+  color: var(--fondo);
+  background: var(--tinta);
 }
 
 /* ---------- Superficies ---------- */
 
 .tarjeta {
-  background: var(--blanco);
+  background: var(--superficie);
   border: 1.5px solid var(--lima-borde);
   border-radius: var(--radio);
   padding: 22px;
@@ -163,8 +236,8 @@ a {
   padding: 0 20px;
   font: 500 0.94rem var(--fuente);
   color: var(--tinta);
-  background: var(--blanco);
-  border: 1.5px solid var(--negro);
+  background: var(--superficie);
+  border: 1.5px solid var(--tinta);
   border-radius: var(--pildora);
   cursor: pointer;
   text-decoration: none;
@@ -182,14 +255,17 @@ a {
   transform: none;
 }
 .boton-primario {
-  color: var(--blanco);
-  background: var(--negro);
+  color: var(--primario-texto);
+  background: var(--primario-fondo);
+  border-color: var(--primario-fondo);
 }
 .boton-primario:hover {
-  background: var(--gris-oscuro);
+  background: var(--primario-hover);
+  border-color: var(--primario-hover);
 }
 .boton-acento,
 .boton-verde {
+  color: var(--negro);
   background: var(--lima);
   border-color: var(--lima);
 }
@@ -200,11 +276,11 @@ a {
 }
 .boton-peligro {
   color: var(--peligro);
-  background: #fdecea;
-  border-color: #fdecea;
+  background: var(--peligro-suave);
+  border-color: var(--peligro-suave);
 }
 .boton-peligro:hover {
-  background: #fbd9d5;
+  background: var(--peligro-suave-hover);
 }
 .boton-icono {
   width: 44px;
@@ -239,8 +315,8 @@ a {
 }
 .entrada:focus {
   outline: none;
-  background: var(--blanco);
-  border-color: var(--negro);
+  background: var(--superficie);
+  border-color: var(--tinta);
 }
 textarea.entrada {
   min-height: 90px;
@@ -254,8 +330,8 @@ textarea.entrada {
 .alerta {
   padding: 12px 16px;
   border-radius: var(--radio-sm);
-  background: #fdecea;
-  color: #8a1c13;
+  background: var(--peligro-suave);
+  color: var(--alerta-texto);
   font-weight: 500;
 }
 .form {
@@ -291,7 +367,7 @@ textarea.entrada {
   gap: 28px;
   padding: 22px 14px;
   min-height: calc(100vh - 48px);
-  background: var(--negro);
+  background: var(--barra);
   color: var(--blanco);
   border-radius: 32px;
 }
@@ -328,7 +404,7 @@ textarea.entrada {
 }
 .nav a:hover {
   color: var(--blanco);
-  background: #222;
+  background: var(--oscuro-hover);
 }
 .nav a.active {
   color: var(--negro);
@@ -348,7 +424,7 @@ textarea.entrada {
   font: 500 0.92rem var(--fuente);
   color: #a6a99e;
   background: none;
-  border: 1.5px solid #333;
+  border: 1.5px solid var(--oscuro-borde);
   border-radius: var(--pildora);
   cursor: pointer;
 }
@@ -400,7 +476,7 @@ textarea.entrada {
   width: 22px;
   height: 22px;
   flex-shrink: 0;
-  border: 1.5px solid var(--negro);
+  border: 1.5px solid var(--tinta);
   border-radius: 50%;
 }
 .rapida input {
@@ -429,7 +505,7 @@ textarea.entrada {
   min-width: 140px;
   padding: 18px 22px;
   color: var(--blanco);
-  background: var(--negro);
+  background: var(--oscuro);
   border-radius: var(--radio);
 }
 .racha-numero {
@@ -456,7 +532,7 @@ textarea.entrada {
   justify-content: space-between;
   gap: 6px;
   padding: 12px 4px;
-  border: 1.5px solid var(--negro);
+  border: 1.5px solid var(--tinta);
   border-radius: var(--pildora);
 }
 .cuadro-dia .caja {
@@ -465,11 +541,12 @@ textarea.entrada {
   width: 34px;
   height: 34px;
   background: transparent;
-  border: 1.5px dashed #b9bdaf;
+  border: 1.5px dashed var(--tinta-tenue);
   border-radius: 50%;
-  color: var(--negro);
+  color: var(--tinta);
 }
 .cuadro-dia .caja[data-nivel='1'] {
+  color: var(--negro);
   background: var(--lima-clara);
   border: none;
 }
@@ -480,7 +557,7 @@ textarea.entrada {
 }
 .cuadro-dia.hoy {
   color: var(--blanco);
-  background: var(--negro);
+  background: var(--oscuro);
 }
 .cuadro-dia.hoy .caja {
   border-color: #555;
@@ -515,7 +592,7 @@ textarea.entrada {
 }
 .cuadro-cat:nth-child(3n + 2) {
   color: var(--blanco);
-  background: var(--negro);
+  background: var(--oscuro);
 }
 .cuadro-cat:nth-child(3n + 2) .cuadro-cat-numero {
   color: var(--lima);
@@ -562,7 +639,7 @@ textarea.entrada {
   color: var(--tinta-suave);
   font-weight: 500;
   background: transparent;
-  border: 1.5px dashed #b9bdaf;
+  border: 1.5px dashed var(--tinta-tenue);
   text-align: center;
 }
 
@@ -583,7 +660,7 @@ textarea.entrada {
 }
 .metrica:nth-child(1) {
   color: var(--blanco);
-  background: var(--negro);
+  background: var(--oscuro);
 }
 .metrica:nth-child(1) .metrica-valor {
   color: var(--lima);
@@ -592,6 +669,7 @@ textarea.entrada {
   color: #b9bdaf;
 }
 .metrica:nth-child(2) {
+  color: var(--negro);
   background: var(--lima);
 }
 .metrica:nth-child(2) .metrica-etiqueta {
@@ -631,16 +709,18 @@ textarea.entrada {
   width: 28px;
   height: 28px;
   flex-shrink: 0;
-  color: var(--negro);
-  background: var(--blanco);
-  border: 1.5px solid var(--negro);
+  color: var(--tinta);
+  background: var(--superficie);
+  border: 1.5px solid var(--tinta);
   border-radius: 50%;
   cursor: pointer;
 }
 .tarea-check:hover {
+  color: var(--negro);
   background: var(--lima-clara);
 }
 .tarea.completada .tarea-check {
+  color: var(--negro);
   background: var(--lima);
   border-color: var(--lima);
 }
@@ -681,12 +761,12 @@ textarea.entrada {
   width: 38px;
   min-height: 38px;
   padding: 0;
-  background: var(--blanco);
+  background: var(--superficie);
   border-color: transparent;
 }
 .tarea-acciones .boton:hover {
-  color: var(--blanco);
-  background: var(--negro);
+  color: var(--fondo);
+  background: var(--tinta);
 }
 .vencida {
   color: var(--peligro);
@@ -712,7 +792,7 @@ textarea.entrada {
   display: inline-flex;
   padding: 4px;
   gap: 4px;
-  border: 1.5px solid var(--negro);
+  border: 1.5px solid var(--tinta);
   border-radius: var(--pildora);
 }
 .pestanas button {
@@ -729,8 +809,8 @@ textarea.entrada {
   cursor: pointer;
 }
 .pestanas button[aria-pressed='true'] {
-  background: var(--negro);
-  color: var(--blanco);
+  background: var(--tinta);
+  color: var(--fondo);
 }
 
 .vacio {
@@ -745,7 +825,7 @@ textarea.entrada {
 /* ---------- Calendario ---------- */
 
 .calendario {
-  background: var(--blanco);
+  background: var(--superficie);
   border: 1.5px solid var(--lima-borde);
   border-radius: var(--radio);
   overflow: hidden;
@@ -756,7 +836,7 @@ textarea.entrada {
   justify-content: space-between;
   padding: 14px;
   color: var(--blanco);
-  background: var(--negro);
+  background: var(--oscuro);
 }
 .calendario-cabeza .boton {
   color: var(--negro);
@@ -783,8 +863,8 @@ textarea.entrada {
   overflow: hidden;
 }
 .calendario-dia.otro-mes {
-  background: #fafbf6;
-  color: #b9bdaf;
+  background: var(--fondo-tenue);
+  color: var(--tinta-tenue);
 }
 .numero-dia {
   display: inline-grid;
@@ -796,6 +876,7 @@ textarea.entrada {
   font-size: 0.84rem;
 }
 .calendario-dia.hoy .numero-dia {
+  color: var(--negro);
   font-weight: 700;
   background: var(--lima);
 }
@@ -812,7 +893,7 @@ textarea.entrada {
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--blanco);
-  background: var(--negro);
+  background: var(--oscuro);
   border: none;
   border-radius: var(--pildora);
   cursor: pointer;
@@ -846,7 +927,7 @@ textarea.entrada {
   padding: 28px;
   text-align: center;
   color: var(--blanco);
-  background: var(--negro);
+  background: var(--oscuro);
   border: none;
 }
 .reloj-tiempo {
@@ -902,8 +983,8 @@ textarea.entrada {
   gap: 10px;
 }
 .duraciones .boton[aria-pressed='true'] {
-  background: var(--negro);
-  color: var(--blanco);
+  background: var(--tinta);
+  color: var(--fondo);
 }
 .controles-reloj {
   display: flex;
@@ -940,7 +1021,7 @@ textarea.entrada {
   border-radius: 14px;
 }
 .barra.hoy {
-  background: var(--negro);
+  background: var(--tinta);
 }
 .barra-valor {
   font-size: 0.74rem;
@@ -979,12 +1060,12 @@ textarea.entrada {
 }
 .logro:nth-child(even) .logro-sticker {
   color: var(--lima);
-  background: var(--negro);
+  background: var(--oscuro);
 }
 .logro.bloqueado .logro-sticker {
-  color: #b9bdaf;
+  color: var(--tinta-tenue);
   background: transparent;
-  border: 1.5px dashed #b9bdaf;
+  border: 1.5px dashed var(--tinta-tenue);
 }
 .logro p {
   font-size: 0.84rem;
@@ -1006,7 +1087,7 @@ textarea.entrada {
   font-weight: 700;
   color: var(--negro);
   background: var(--lima);
-  border: 2px solid var(--blanco);
+  border: 2px solid var(--fondo);
   border-radius: var(--pildora);
 }
 .panel-notificaciones {
@@ -1091,7 +1172,7 @@ textarea.entrada {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   min-height: 100vh;
-  background: var(--blanco);
+  background: var(--fondo);
 }
 .acceso-marca {
   display: flex;
@@ -1110,7 +1191,7 @@ textarea.entrada {
 }
 .acceso-marca .resaltado {
   color: var(--lima);
-  background: var(--negro);
+  background: var(--oscuro);
 }
 .muestra {
   display: grid;
@@ -1122,13 +1203,13 @@ textarea.entrada {
   place-items: center;
   height: 64px;
   font-weight: 500;
-  color: var(--negro);
-  border: 1.5px solid var(--negro);
+  color: var(--tinta);
+  border: 1.5px solid var(--tinta);
   border-radius: var(--pildora);
 }
 .muestra span:nth-child(-n + 5) {
   color: var(--lima);
-  background: var(--negro);
+  background: var(--oscuro);
 }
 .acceso-formulario {
   display: grid;
@@ -1159,7 +1240,7 @@ textarea.entrada {
   content: '';
   flex: 1;
   height: 1.5px;
-  background: rgba(20, 20, 20, 0.14);
+  background: var(--linea-tenue);
 }
 .boton-google {
   display: flex;
@@ -1192,7 +1273,7 @@ textarea.entrada {
   border-radius: var(--radio);
 }
 .meta:nth-child(3n + 2) {
-  --fondo-meta: var(--negro);
+  --fondo-meta: var(--oscuro);
   --texto-meta: var(--blanco);
   --suave-meta: #b9bdaf;
   --barra-fondo: #333;
@@ -1203,7 +1284,7 @@ textarea.entrada {
 }
 .meta.cumplida {
   --fondo-meta: var(--lima-palida);
-  --texto-meta: var(--negro);
+  --texto-meta: var(--tinta);
   --suave-meta: var(--tinta-suave);
   --barra-fondo: var(--lima-borde);
   --barra-relleno: var(--lima-fuerte);
@@ -1366,7 +1447,7 @@ textarea.entrada {
 }
 .meta:nth-child(3n + 2):not(.cumplida) .meta-acciones .boton:not(.boton-primario) {
   color: var(--blanco);
-  background: #2a2a2a;
+  background: var(--gris-oscuro);
 }
 .meta:nth-child(3n + 2):not(.cumplida) .meta-acciones .boton-primario {
   color: var(--negro);
@@ -1387,7 +1468,7 @@ textarea.entrada {
   overflow: hidden;
   font: inherit;
   text-align: left;
-  color: var(--negro);
+  color: var(--tinta);
   background: var(--lima-palida);
   border: none;
   border-radius: var(--radio);
@@ -1410,7 +1491,7 @@ textarea.entrada {
 }
 .deseo:nth-child(3n + 2) .deseo-foto {
   color: var(--lima);
-  background: var(--negro);
+  background: var(--oscuro);
 }
 .deseo:nth-child(3n) .deseo-foto {
   background: var(--lima-clara);
@@ -1427,7 +1508,7 @@ textarea.entrada {
   top: 12px;
   left: 12px;
   color: var(--blanco);
-  background: var(--negro);
+  background: var(--oscuro);
 }
 .deseo-cuerpo {
   display: flex;
@@ -1455,7 +1536,7 @@ textarea.entrada {
   gap: 12px;
   padding: 18px 20px;
   color: var(--blanco);
-  background: var(--negro);
+  background: var(--oscuro);
   border-radius: var(--radio-sm);
 }
 .deseo-resumen .texto-suave {
@@ -1497,14 +1578,14 @@ textarea.entrada {
 }
 .linea-precio {
   fill: none;
-  stroke: var(--negro);
+  stroke: var(--tinta);
   stroke-width: 3;
   stroke-linejoin: round;
   stroke-linecap: round;
 }
 .punto-precio {
   fill: var(--lima);
-  stroke: var(--negro);
+  stroke: var(--tinta);
   stroke-width: 2;
 }
 .linea-objetivo {
@@ -1734,7 +1815,7 @@ textarea.entrada {
   gap: 4px;
   min-width: 190px;
   padding: 8px;
-  background: var(--negro);
+  background: var(--barra);
   border-radius: 24px;
   box-shadow: var(--sombra-flotante);
 }
@@ -1926,7 +2007,7 @@ textarea.entrada {
   transform: translateY(-3px);
 }
 .ocio-tarjeta:nth-child(3n + 2) {
-  --fondo-ocio: var(--negro);
+  --fondo-ocio: var(--oscuro);
   --texto-ocio: var(--blanco);
 }
 .ocio-tarjeta:nth-child(3n) {
@@ -1935,11 +2016,11 @@ textarea.entrada {
 .ocio-tarjeta.estado-terminado,
 .ocio-tarjeta.estado-abandonado {
   --fondo-ocio: var(--lima-palida);
-  --texto-ocio: var(--negro);
+  --texto-ocio: var(--tinta);
 }
 .ocio-tarjeta .chip {
   color: var(--blanco);
-  background: var(--negro);
+  background: var(--oscuro);
 }
 .ocio-tarjeta:nth-child(3n + 2):not(.estado-terminado):not(.estado-abandonado) .chip {
   color: var(--negro);
@@ -2000,7 +2081,7 @@ textarea.entrada {
 .estrellas-fijas {
   display: inline-flex;
   gap: 2px;
-  color: var(--negro);
+  color: var(--texto-ocio, var(--tinta));
 }
 .ocio-resumen {
   display: flex;
@@ -2088,7 +2169,7 @@ textarea.entrada {
 .equilibrio-ocio {
   justify-content: flex-end;
   color: var(--blanco);
-  background: var(--negro);
+  background: var(--gris-oscuro);
 }
 .equilibrio-leyenda {
   display: flex;
@@ -2166,7 +2247,7 @@ a.cuadro-cat-nuevo {
 }
 .acceso-marca .logo svg {
   padding: 5px;
-  background: var(--negro);
+  background: var(--oscuro);
   border-radius: 12px;
   width: 44px;
   height: 44px;
@@ -2183,7 +2264,7 @@ a.cuadro-cat-nuevo {
   gap: 14px;
   padding: 18px;
   color: var(--blanco);
-  background: var(--negro);
+  background: var(--oscuro);
   border-radius: var(--radio);
   box-shadow: var(--sombra-flotante);
 }
@@ -2272,11 +2353,12 @@ a.cuadro-cat-nuevo {
   width: 44px;
   height: 44px;
   padding: 5px;
-  background: var(--negro);
+  background: var(--oscuro);
   border-radius: 12px;
 }
 
 .portada-heroe {
+  color: var(--negro);
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
   align-items: center;
@@ -2342,6 +2424,7 @@ a.cuadro-cat-nuevo {
   line-height: 1.5;
 }
 .cuadro-entregas {
+  color: var(--negro);
   grid-column: span 2;
   grid-row: span 2;
   background: var(--lima);
@@ -2356,15 +2439,16 @@ a.cuadro-cat-nuevo {
 .cuadro-campus {
   grid-column: span 2;
   color: var(--blanco);
-  background: var(--negro);
+  background: var(--oscuro);
 }
 .cuadro-enfoque,
 .cuadro-ocio {
+  color: var(--negro);
   background: var(--lima-clara);
 }
 .cuadro-rachas {
   color: var(--lima);
-  background: var(--negro);
+  background: var(--oscuro);
 }
 .cuadro-rachas p {
   color: var(--blanco);
@@ -2405,7 +2489,7 @@ a.cuadro-cat-nuevo {
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--lima);
-  background: var(--negro);
+  background: var(--oscuro);
   border-radius: var(--radio-sm);
 }
 .portada-pasos h3 {
@@ -2421,7 +2505,7 @@ a.cuadro-cat-nuevo {
   display: block;
   width: 100%;
   height: auto;
-  border: 1.5px solid var(--negro);
+  border: 1.5px solid var(--tinta);
   border-radius: var(--radio);
 }
 
@@ -2452,7 +2536,7 @@ a.cuadro-cat-nuevo {
   margin-top: 64px;
   padding: 26px 30px;
   color: var(--blanco);
-  background: var(--negro);
+  background: var(--oscuro);
   border-radius: var(--radio);
 }
 .portada-pie nav {

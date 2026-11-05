@@ -82,7 +82,8 @@ erDiagram
     int id PK
     varchar nombre
     varchar correo UK
-    varchar contrasena_hash
+    varchar contrasena_hash "NULL si se creó con Google"
+    varchar google_id UK
     boolean avisos_correo
     datetime creado_en
   }
@@ -216,6 +217,7 @@ classDiagram
   class AuthService {
     +registrar(nombre, correo, contrasena)
     +iniciarSesion(correo, contrasena)
+    +entrarConGoogle(credencial)
   }
   class TareaService {
     +listar(usuarioId, filtros)
@@ -289,6 +291,7 @@ Todas las respuestas usan el formato `{ ok, data, mensaje }`. Las rutas marcadas
 |---|---|---|---|
 | POST | /api/auth/registro | Crear cuenta | |
 | POST | /api/auth/login | Iniciar sesión | |
+| POST | /api/auth/google | Entrar con Google: recibe la credencial de Google, crea o vincula la cuenta y devuelve el token | |
 | GET | /api/auth/perfil | Ver perfil | Sí |
 | PUT | /api/auth/perfil | Actualizar nombre y avisos por correo | Sí |
 | GET | /api/categorias | Listar categorías con conteo de tareas | Sí |

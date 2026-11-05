@@ -14,7 +14,7 @@ Versión: 3.0 (Fases 1, 2 y 3)
 
 ## 2. Casos de prueba automatizados
 
-### API (59 pruebas)
+### API (91 pruebas)
 
 | Código | Caso | Resultado esperado | Requisito |
 |---|---|---|---|
@@ -60,8 +60,12 @@ Versión: 3.0 (Fases 1, 2 y 3)
 | CP53 | Borrar rato | El total de minutos se recalcula | RF29 |
 | CP54 | Ocio de otro usuario | 404 | RNF05 |
 | CP55 a CP59 | Colores, nombres de fuentes, nota, fecha de un rato y logros nuevos | Cálculos correctos en bordes: color "rojo", nota 2.5, rato de mañana | RN08, RN09 |
+| CP60 | Entrar con Google por primera vez | Crea la cuenta con sus 3 categorías; la segunda vez entra a la misma cuenta | RF31, RF03 |
+| CP61 | Entrar con Google con un correo ya registrado | Se vincula a la cuenta existente y la contraseña sigue sirviendo | RF31 |
+| CP62 | Cuenta creada con Google intenta entrar con contraseña | 401 | RF31, RNF01 |
+| CP63 | Credencial de Google falsa, sin correo verificado o sin `GOOGLE_CLIENT_ID` | 401, 401 y 503 | RF31 |
 
-### Interfaz (38 pruebas)
+### Interfaz (53 pruebas)
 
 | Caso | Resultado esperado |
 |---|---|
@@ -81,6 +85,7 @@ Versión: 3.0 (Fases 1, 2 y 3)
 | Formulario de plantilla | La tarjeta de ejemplo usa la fuente elegida y texto blanco sobre fondo oscuro |
 | Formulario de ocio | Envía la nota en estrellas; tocar la misma estrella la quita |
 | Equilibrio estudio / ocio | Porcentajes que suman 100 y mensaje según el reparto |
+| Botón de Google | No aparece sin Client ID; envía la credencial a la API, guarda la sesión y muestra el error si la API la rechaza |
 
 ## 3. Pruebas manuales realizadas
 

@@ -20,6 +20,10 @@ const env = {
     secreto: process.env.JWT_SECRET,
     expira: process.env.JWT_EXPIRES_IN || '7d',
   },
+  google: {
+    // Client ID de Google Cloud (OAuth). Si falta, el botón "Entrar con Google" responde 503.
+    clientId: process.env.GOOGLE_CLIENT_ID || '',
+  },
   correo: {
     host: process.env.SMTP_HOST || '',
     port: Number(process.env.SMTP_PORT) || 587,

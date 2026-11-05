@@ -36,6 +36,7 @@ function subIdDeRuta(req) {
 const auth = {
   registro: async (req, res) => exito(res, await authService.registrar(req.body || {}), 'Cuenta creada', 201),
   login: async (req, res) => exito(res, await authService.iniciarSesion(req.body || {}), 'Bienvenido'),
+  google: async (req, res) => exito(res, await authService.entrarConGoogle(req.body || {}), 'Bienvenido'),
   perfil: async (req, res) => exito(res, await usuarios.buscarPorId(req.usuarioId)),
   actualizarPerfil: async (req, res) =>
     exito(res, await authService.actualizarPerfil(req.usuarioId, req.body || {}), 'Perfil actualizado'),

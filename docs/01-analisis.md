@@ -81,6 +81,7 @@ Desarrollar una aplicación web que permita a una persona registrar y organizar 
 | RF28 | El usuario puede registrar actividades de ocio (videojuego, serie, película, libro, música u otro) con estado, nota de 1 a 5 y plataforma. | Media |
 | RF29 | El usuario puede anotar los minutos que dedica a cada actividad de ocio y borrar un rato mal anotado. | Media |
 | RF30 | El usuario ve en Progreso qué parte del tiempo de la semana fue estudio y qué parte fue ocio. | Baja |
+| RF31 | El usuario puede entrar con su cuenta de Google. Si ya existe una cuenta con ese correo se vincula a ella; si no, se crea una nueva con las categorías iniciales. | Media |
 
 ## 4. Requisitos no funcionales
 
@@ -139,7 +140,7 @@ Como usuario, quiero ver mi racha de días activos y los logros que he ganado, p
 | Código | Caso de uso | Actor | Requisitos |
 |---|---|---|---|
 | CU01 | Registrarse | Usuario | RF01, RF03 |
-| CU02 | Iniciar sesión | Usuario | RF02 |
+| CU02 | Iniciar sesión | Usuario | RF02, RF31 |
 | CU03 | Gestionar categorías | Usuario | RF04 |
 | CU04 | Gestionar tareas | Usuario | RF05, RF06, RF07 |
 | CU05 | Consultar calendario | Usuario | RF08 |

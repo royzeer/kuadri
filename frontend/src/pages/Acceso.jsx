@@ -1,15 +1,17 @@
 // Pantallas de inicio de sesión y registro (CU01, CU02), con panel de marca a la izquierda.
+// También se puede entrar con Google: si la cuenta no existe, se crea.
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Check } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Logo from '../components/Logo';
+import BotonGoogle from '../components/BotonGoogle';
 
 const DIAS = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
 
 export default function Acceso({ modo }) {
   const esRegistro = modo === 'registro';
-  const { iniciarSesion, registrarse } = useAuth();
+  const { iniciarSesion, registrarse, entrarConGoogle } = useAuth();
   const [datos, setDatos] = useState({ nombre: '', correo: '', contrasena: '' });
   const [errores, setErrores] = useState({});
   const [error, setError] = useState('');
@@ -44,6 +46,18 @@ export default function Acceso({ modo }) {
     } catch (err) {
       setError(err.message);
       setErrores(err.errores || {});
+      setEnviando(false);
+    }
+  }
+
+  async function conGoogle(credencial) {
+    setEnviando(true);
+    setError('');
+    setErrores({});
+    try {
+      await entrarConGoogle(credencial);
+    } catch (err) {
+      setError(err.message);
       setEnviando(false);
     }
   }
@@ -107,6 +121,8 @@ export default function Acceso({ modo }) {
               {enviando ? 'Un momento...' : esRegistro ? 'Crear cuenta' : 'Entrar'}
             </button>
           </form>
+
+          <BotonGoogle texto={esRegistro ? 'signup_with' : 'signin_with'} alEntrar={conGoogle} alFallar={setError} />
 
           <p style={{ marginTop: 20, fontWeight: 600 }}>
             {esRegistro ? '¿Ya tienes cuenta? ' : '¿Aún no tienes cuenta? '}

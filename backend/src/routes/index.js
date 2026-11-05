@@ -9,6 +9,7 @@ const router = Router();
 router.get('/salud', (_req, res) => res.json({ ok: true, data: { estado: 'activo' }, mensaje: 'Kuadri API' }));
 router.post('/auth/registro', c.auth.registro);
 router.post('/auth/login', c.auth.login);
+router.post('/auth/google', c.auth.google);
 // Protegida con CRON_SECRET (la usa GitHub Actions), no con el token de usuario
 router.post('/campus/sincronizar-todos', c.campus.sincronizarTodos);
 

@@ -7,6 +7,15 @@ async function buscarPorCorreo(correo) {
   return filas[0] || null;
 }
 
+async function buscarPorGoogleId(googleId) {
+  const filas = await query('SELECT * FROM usuarios WHERE google_id = ?', [googleId]);
+  return filas[0] || null;
+}
+
+async function vincularGoogle(id, googleId) {
+  await query('UPDATE usuarios SET google_id = ? WHERE id = ?', [googleId, id]);
+}
+
 async function buscarPorId(id) {
   const filas = await query(`SELECT ${CAMPOS_PUBLICOS} FROM usuarios WHERE id = ?`, [id]);
   return filas[0] || null;
@@ -28,4 +37,4 @@ async function actualizarPerfil(id, { nombre, avisosCorreo }) {
   ]);
 }
 
-module.exports = { buscarPorCorreo, buscarPorId, crear, actualizarPerfil };
+module.exports = { buscarPorCorreo, buscarPorGoogleId, vincularGoogle, buscarPorId, crear, actualizarPerfil };

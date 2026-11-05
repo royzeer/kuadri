@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const env = require('../config/env');
 const { pool } = require('../config/db');
 const usuarios = require('../models/usuario.model');
+const google = require('./google.service');
 const { AppError } = require('../utils/respuesta');
 const { CORREO_REGEX, texto, lanzarSiHayErrores } = require('../utils/validar');
 
@@ -15,6 +16,32 @@ const CATEGORIAS_INICIALES = [
 
 function firmarToken(usuarioId) {
   return jwt.sign({ id: usuarioId }, env.jwt.secreto, { expiresIn: env.jwt.expira });
+}
+
+// Usuario y categorías iniciales se guardan en una sola transacción:
+// o se guarda todo, o no se guarda nada.
+async function crearConCategorias({ nombre, correo, contrasenaHash = null, googleId = null }) {
+  const conexion = await pool.getConnection();
+  try {
+    await conexion.beginTransaction();
+    const [r] = await conexion.execute(
+      'INSERT INTO usuarios (nombre, correo, contrasena_hash, google_id) VALUES (?, ?, ?, ?)',
+      [nombre, correo, contrasenaHash, googleId],
+    );
+    for (const c of CATEGORIAS_INICIALES) {
+      await conexion.execute(
+        'INSERT INTO categorias (usuario_id, nombre, color, icono) VALUES (?, ?, ?, ?)',
+        [r.insertId, c.nombre, c.color, c.icono],
+      );
+    }
+    await conexion.commit();
+    return r.insertId;
+  } catch (error) {
+    await conexion.rollback();
+    throw error;
+  } finally {
+    conexion.release();
+  }
 }
 
 async function registrar(datos) {
@@ -33,32 +60,7 @@ async function registrar(datos) {
   }
 
   const contrasenaHash = await bcrypt.hash(contrasena, 10);
-
-  // Usuario y categorías iniciales se guardan en una sola transacción:
-  // o se guarda todo, o no se guarda nada.
-  const conexion = await pool.getConnection();
-  let usuarioId;
-  try {
-    await conexion.beginTransaction();
-    const [r] = await conexion.execute(
-      'INSERT INTO usuarios (nombre, correo, contrasena_hash) VALUES (?, ?, ?)',
-      [nombre, correo, contrasenaHash],
-    );
-    usuarioId = r.insertId;
-    for (const c of CATEGORIAS_INICIALES) {
-      await conexion.execute(
-        'INSERT INTO categorias (usuario_id, nombre, color, icono) VALUES (?, ?, ?, ?)',
-        [usuarioId, c.nombre, c.color, c.icono],
-      );
-    }
-    await conexion.commit();
-  } catch (error) {
-    await conexion.rollback();
-    throw error;
-  } finally {
-    conexion.release();
-  }
-
+  const usuarioId = await crearConCategorias({ nombre, correo, contrasenaHash });
   const usuario = await usuarios.buscarPorId(usuarioId);
   return { usuario, token: firmarToken(usuarioId) };
 }
@@ -70,11 +72,39 @@ async function iniciarSesion(datos) {
 
   const encontrado = await usuarios.buscarPorCorreo(correo);
   // Mismo mensaje en ambos casos para no revelar qué correos existen.
-  const valida = encontrado && (await bcrypt.compare(contrasena, encontrado.contrasena_hash));
+  // Las cuentas creadas con Google no tienen contraseña: también se rechazan aquí.
+  const valida =
+    encontrado && encontrado.contrasena_hash && (await bcrypt.compare(contrasena, encontrado.contrasena_hash));
   if (!valida) throw new AppError('Correo o contraseña incorrectos', 401);
 
   const usuario = await usuarios.buscarPorId(encontrado.id);
   return { usuario, token: firmarToken(encontrado.id) };
+}
+
+// Entrar con Google (CU01): Google confirma quién es la persona y Kuadri entrega su JWT normal.
+// 1. Si ya entró antes con Google, se usa esa cuenta.
+// 2. Si ya tiene cuenta con el mismo correo, se vincula a Google (no se crea otra).
+// 3. Si no tiene cuenta, se crea una sin contraseña, con sus categorías iniciales.
+async function entrarConGoogle(datos) {
+  const perfil = await google.verificarCredencial(datos.credencial);
+
+  let encontrado = await usuarios.buscarPorGoogleId(perfil.googleId);
+  if (!encontrado) {
+    encontrado = await usuarios.buscarPorCorreo(perfil.correo);
+    if (encontrado) await usuarios.vincularGoogle(encontrado.id, perfil.googleId);
+  }
+
+  let usuarioId = encontrado && encontrado.id;
+  let nuevo = false;
+  if (!usuarioId) {
+    let nombre = texto(perfil.nombre).slice(0, 80);
+    if (nombre.length < 2) nombre = perfil.correo.split('@')[0].slice(0, 80);
+    usuarioId = await crearConCategorias({ nombre, correo: perfil.correo, googleId: perfil.googleId });
+    nuevo = true;
+  }
+
+  const usuario = await usuarios.buscarPorId(usuarioId);
+  return { usuario, token: firmarToken(usuarioId), nuevo };
 }
 
 async function actualizarPerfil(usuarioId, datos) {
@@ -86,4 +116,4 @@ async function actualizarPerfil(usuarioId, datos) {
   return usuarios.buscarPorId(usuarioId);
 }
 
-module.exports = { registrar, iniciarSesion, actualizarPerfil, firmarToken };
+module.exports = { registrar, iniciarSesion, entrarConGoogle, actualizarPerfil, firmarToken };

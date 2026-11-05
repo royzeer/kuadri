@@ -48,6 +48,7 @@ npm run db:init
 | JWT_SECRET | Una frase larga y aleatoria |
 | FRONTEND_URL | La dirección que entregue Vercel (se completa en el paso 3) |
 | RESEND_API_KEY | Clave de Resend (opcional, para correos) |
+| GOOGLE_CLIENT_ID | Client ID de Google para "Entrar con Google" (opcional, ver sección 6) |
 
 4. Comprobar que `https://<tu-api>.onrender.com/api/salud` responde.
 
@@ -81,7 +82,26 @@ Límites del plan gratis (revisados en octubre de 2026): 100 correos al día y 3
 2. En GitHub, abrir el repositorio, ir a Settings, luego Secrets and variables, luego Actions, y crear `CRON_SECRET` con el mismo valor.
 3. El flujo `.github/workflows/sincronizar-campus.yml` corre cada 3 horas, despierta a Render y trae las actividades nuevas de todos los usuarios. Se puede correr a mano desde la pestaña Actions con "Run workflow". GitHub pausa los flujos programados si el repositorio pasa 60 días sin cambios.
 
-## 6. Actualizaciones
+## 6. Entrar con Google (opcional)
+
+El botón usa Google Identity Services. Google entrega a la interfaz una credencial firmada y la API la verifica con el Client ID antes de entregar el token de Kuadri. El Client ID es público (no es una contraseña); no se necesita el "Client secret".
+
+1. Entrar a [console.cloud.google.com](https://console.cloud.google.com) y crear un proyecto llamado `Kuadri` (menú de proyectos arriba a la izquierda, luego "Proyecto nuevo").
+2. Ir a **APIs y servicios**, luego **Pantalla de consentimiento de OAuth** (o **Google Auth Platform**). Elegir tipo **Externo**, nombre de la app `Kuadri`, el correo de soporte y el del desarrollador. Guardar.
+3. En **Público** (Audience), dejar la app **en producción** (botón "Publicar app") para que cualquier cuenta de Google pueda entrar. Como solo pide nombre y correo, Google no exige revisión.
+4. Ir a **Clientes** (o **Credenciales**, luego **Crear credenciales**, luego **ID de cliente de OAuth**). Tipo de aplicación: **Aplicación web**. Nombre: `Kuadri web`.
+5. En **Orígenes autorizados de JavaScript** agregar:
+   - `https://kuadri.vercel.app`
+   - `http://localhost:5173`
+   - `http://localhost` (Google lo pide para probar en local)
+6. No hace falta llenar "URI de redireccionamiento". Guardar y copiar el **ID de cliente** (termina en `.apps.googleusercontent.com`).
+7. En Render, abrir el servicio, ir a Environment y agregar `GOOGLE_CLIENT_ID` con ese valor.
+8. Poner el mismo valor en `frontend/.env.production` como `VITE_GOOGLE_CLIENT_ID=...` y subir el cambio a GitHub; Vercel vuelve a desplegar solo. (También sirve agregarla en Vercel, en Settings, luego Environment Variables, y volver a desplegar.) Para probar en local, ponerla en `frontend/.env`.
+9. Correr la migración `004-entrar-con-google.sql` en Aiven con `npm run db:migrar` (sección 7).
+
+Si `VITE_GOOGLE_CLIENT_ID` está vacío, el botón no aparece. Si falta `GOOGLE_CLIENT_ID` en Render, la API responde 503 y el acceso con correo sigue funcionando.
+
+## 7. Actualizaciones
 
 ### Cambios en la base de datos (migraciones)
 
@@ -96,7 +116,7 @@ cd backend
 npm run db:migrar
 ```
 
-4. Debe aparecer una línea `Migración aplicada: ...` por cada archivo (por ejemplo `001-fase-2-metas-deseos.sql`, `002-fase-3-estudio-ocio.sql` y `003-campus-virtual.sql`) y al final `Base de datos "kuadri" al día.` Las migraciones anteriores se vuelven a pasar sin cambiar nada.
+4. Debe aparecer una línea `Migración aplicada: ...` por cada archivo (por ejemplo `001-fase-2-metas-deseos.sql`, `002-fase-3-estudio-ocio.sql`, `003-campus-virtual.sql` y `004-entrar-con-google.sql`) y al final `Base de datos "kuadri" al día.` Las migraciones anteriores se vuelven a pasar sin cambiar nada.
 5. Volver a dejar el `.env` apuntando a la base local.
 
 Las migraciones están en `database/migraciones/`. El archivo `database/schema.sql` ya trae todo para instalaciones nuevas.

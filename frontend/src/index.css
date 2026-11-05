@@ -1143,6 +1143,29 @@ textarea.entrada {
   font-weight: 700;
   margin-bottom: 6px;
 }
+.acceso-google {
+  margin-top: 18px;
+}
+.separador-o {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  font-weight: 600;
+  color: var(--tinta-suave);
+}
+.separador-o::before,
+.separador-o::after {
+  content: '';
+  flex: 1;
+  height: 1.5px;
+  background: rgba(20, 20, 20, 0.14);
+}
+.boton-google {
+  display: flex;
+  justify-content: center;
+  min-height: 44px;
+}
 
 /* ---------- Adaptación a celular ---------- */
 

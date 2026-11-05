@@ -32,6 +32,7 @@ export function AuthProvider({ children }) {
 
   const iniciarSesion = useCallback((datos) => entrar('/auth/login', datos), [entrar]);
   const registrarse = useCallback((datos) => entrar('/auth/registro', datos), [entrar]);
+  const entrarConGoogle = useCallback((credencial) => entrar('/auth/google', { credencial }), [entrar]);
 
   const cerrarSesion = useCallback(() => {
     guardarToken(null);
@@ -39,7 +40,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ usuario, setUsuario, cargando, iniciarSesion, registrarse, cerrarSesion }}>
+    <AuthContext.Provider value={{ usuario, setUsuario, cargando, iniciarSesion, registrarse, entrarConGoogle, cerrarSesion }}>
       {children}
     </AuthContext.Provider>
   );

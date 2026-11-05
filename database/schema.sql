@@ -10,7 +10,8 @@ CREATE TABLE usuarios (
   id              INT AUTO_INCREMENT PRIMARY KEY,
   nombre          VARCHAR(80)  NOT NULL,
   correo          VARCHAR(120) NOT NULL UNIQUE,
-  contrasena_hash VARCHAR(255) NOT NULL,
+  contrasena_hash VARCHAR(255) NULL,          -- NULL si la cuenta se creó con Google
+  google_id       VARCHAR(64)  NULL UNIQUE,     -- identificador de la cuenta de Google vinculada
   avisos_correo   BOOLEAN      NOT NULL DEFAULT TRUE,
   creado_en       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

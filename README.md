@@ -25,6 +25,7 @@ Estudio en dos instituciones al mismo tiempo (Tecnólogo en Análisis y Desarrol
 ### Fase 1: organización y estudio
 
 - **Cuentas de usuario** con registro, inicio de sesión y contraseñas cifradas.
+- **Entrar con Google** con un clic. Si ya tienes cuenta con ese correo, se vincula a ella; si no, se crea una nueva con sus categorías.
 - **Categorías personalizables** (nombre, color e icono). Al registrarse se crean Universidad, SENA y Personal.
 - **Tareas** con fecha límite, prioridad y categoría, en **vista de lista** con filtros y en **vista de calendario** mensual.
 - **Recordatorios automáticos**: un planificador revisa cada 15 minutos las entregas que vencen en las próximas 24 horas y avisa dentro de la app y por correo.
@@ -98,7 +99,7 @@ Estudio en dos instituciones al mismo tiempo (Tecnólogo en Análisis y Desarrol
 | Capa | Tecnologías |
 |---|---|
 | Front-end | React 19, Vite, React Router, CSS propio (sistema de diseño "lima"), Lucide Icons |
-| Back-end | Node.js, Express 5, JWT, bcrypt, Helmet, node-cron, Resend / Nodemailer |
+| Back-end | Node.js, Express 5, JWT, bcrypt, Google Identity Services (google-auth-library), Helmet, node-cron, Resend / Nodemailer |
 | Base de datos | MySQL 8 (compatible con MariaDB) |
 | Pruebas | Jest y Supertest (API), Vitest y Testing Library (interfaz) |
 | Integración continua | GitHub Actions con MySQL como servicio |
@@ -130,6 +131,7 @@ Más detalle en la documentación:
 
 - Contraseñas cifradas con bcrypt.
 - Autenticación con JWT en todas las rutas privadas.
+- Entrar con Google: la API verifica la firma del token de Google, que sea para Kuadri y que el correo esté verificado antes de entregar su propio JWT. Kuadri nunca ve la contraseña de Google.
 - Cada usuario solo puede ver y modificar sus propios datos (validado en cada consulta).
 - Consultas SQL parametrizadas contra inyección SQL.
 - Validación de datos en el cliente y en el servidor.
@@ -198,8 +200,8 @@ También se instala como app (PWA) en el celular. La guía paso a paso está en 
 ## Pruebas
 
 ```bash
-cd backend && npm test     # 83 pruebas: lógica de rachas, logros, metas, precios, estudio y ocio, campus virtuales, correo, API completa y recordatorios
-cd frontend && npm test    # 46 pruebas: utilidades de fechas, precios, fuentes, ocio y campus, formularios, aviso de instalación
+cd backend && npm test     # 91 pruebas: Entrar con Google, lógica de rachas, logros, metas, precios, estudio y ocio, campus virtuales, correo, API completa y recordatorios
+cd frontend && npm test    # 53 pruebas: botón de Google, utilidades de fechas, precios, fuentes, ocio y campus, formularios, aviso de instalación
 ```
 
 Las pruebas de la API usan una base de datos aparte (`kuadri_test`) que se crea sola. En GitHub Actions todas las pruebas se ejecutan automáticamente en cada cambio.
@@ -210,6 +212,7 @@ Las pruebas de la API usan una base de datos aparte (`kuadri_test`) que se crea 
 |---|---|---|
 | POST | /api/auth/registro | Crear cuenta |
 | POST | /api/auth/login | Iniciar sesión |
+| POST | /api/auth/google | Entrar con Google (crea o vincula la cuenta) |
 | GET, PUT | /api/auth/perfil | Ver y actualizar perfil |
 | GET, POST, PUT, DELETE | /api/categorias | Gestionar categorías |
 | GET, POST, PUT, DELETE | /api/campus | Conectar, editar y desconectar campus virtuales |

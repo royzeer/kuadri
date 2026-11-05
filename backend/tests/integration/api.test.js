@@ -6,6 +6,19 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 const request = require('supertest');
 
+// "Entrar con Google" se prueba sin llamar a Google: la credencial simulada es
+// "google:<id>:<correo>:<nombre>" y se convierte en el perfil que Google devolvería.
+jest.mock('../../src/services/google.service', () => {
+  const { AppError } = require('../../src/utils/respuesta');
+  return {
+    verificarCredencial: jest.fn(async (credencial) => {
+      const [tipo, googleId, correo, nombre] = String(credencial).split(':');
+      if (tipo !== 'google') throw new AppError('No se pudo verificar tu cuenta de Google. Intenta de nuevo.', 401);
+      return { googleId, correo, nombre };
+    }),
+  };
+});
+
 let app;
 let pool;
 let recordatorios;
@@ -61,6 +74,44 @@ describe('Autenticación', () => {
 
     const mal = await request(app).post('/api/auth/login').send({ correo: 'ana@test.com', contrasena: 'otra-clave' });
     expect(mal.status).toBe(401);
+  });
+
+  test('entrar con Google crea la cuenta con sus categorías y después la reconoce', async () => {
+    const nueva = await request(app).post('/api/auth/google').send({ credencial: 'google:g-100:caro@gmail.com:Carolina' });
+    expect(nueva.status).toBe(200);
+    expect(nueva.body.data.nuevo).toBe(true);
+    expect(nueva.body.data.usuario).toMatchObject({ nombre: 'Carolina', correo: 'caro@gmail.com' });
+
+    const categorias = await request(app)
+      .get('/api/categorias')
+      .set('Authorization', `Bearer ${nueva.body.data.token}`);
+    expect(categorias.body.data.map((c) => c.nombre)).toEqual(['Universidad', 'SENA', 'Personal']);
+
+    const otraVez = await request(app).post('/api/auth/google').send({ credencial: 'google:g-100:caro@gmail.com:Carolina' });
+    expect(otraVez.body.data.nuevo).toBe(false);
+    expect(otraVez.body.data.usuario.id).toBe(nueva.body.data.usuario.id);
+
+    // La cuenta de Google no tiene contraseña: no se puede entrar con una cualquiera
+    const sinClave = await request(app).post('/api/auth/login').send({ correo: 'caro@gmail.com', contrasena: 'lo-que-sea' });
+    expect(sinClave.status).toBe(401);
+  });
+
+  test('entrar con Google vincula una cuenta que ya existe con el mismo correo', async () => {
+    const antes = await request(app).post('/api/auth/login').send({ correo: 'ana@test.com', contrasena: 'clave-segura-1' });
+    const res = await request(app).post('/api/auth/google').send({ credencial: 'google:g-200:ana@test.com:Ana G' });
+    expect(res.status).toBe(200);
+    expect(res.body.data.nuevo).toBe(false);
+    expect(res.body.data.usuario.id).toBe(antes.body.data.usuario.id);
+    expect(res.body.data.usuario.nombre).toBe('Prueba');
+
+    // Sigue pudiendo entrar con su contraseña
+    const conClave = await request(app).post('/api/auth/login').send({ correo: 'ana@test.com', contrasena: 'clave-segura-1' });
+    expect(conClave.status).toBe(200);
+  });
+
+  test('entrar con Google rechaza una credencial inválida', async () => {
+    const res = await request(app).post('/api/auth/google').send({ credencial: 'inventada' });
+    expect(res.status).toBe(401);
   });
 
   test('las rutas privadas exigen token', async () => {

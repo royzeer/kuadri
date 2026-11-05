@@ -373,6 +373,32 @@ Todas las respuestas usan el formato `{ ok, data, mensaje }`. Las rutas marcadas
 - **Ocio:** tarjetas que alternan lima, negro y lima clara, con el icono del tipo en un círculo blanco y la nota en estrellas.
 - **Equilibrio:** barra partida en Progreso, lima para el estudio y negro para el ocio.
 
+**Modo oscuro**
+
+Kuadri tiene modo claro y modo oscuro. La primera vez sigue lo que diga el celular o el computador (`prefers-color-scheme`); si la persona elige un modo con el botón de sol y luna del encabezado, o en Ajustes > Apariencia, la elección se guarda en el navegador (`localStorage`, clave `kuadri-tema`) y se respeta en adelante. En Ajustes también se puede volver a "Como el sistema".
+
+El modo se aplica con el atributo `data-tema="oscuro"` en la etiqueta `<html>`. Un script corto en `index.html` lo pone antes de que cargue la página, para que no se vea un destello blanco. El color de la barra del navegador y de la app instalada (`theme-color`) cambia con el modo.
+
+Los colores están en variables de CSS que cambian con el tema:
+
+| Variable | Claro | Oscuro | Uso |
+|---|---|---|---|
+| --fondo | #FFFFFF | #101010 | Fondo de la página |
+| --superficie | #FFFFFF | #1B1B1B | Tarjetas, botones y campos |
+| --tinta | #141414 | #F1F3EA | Texto y bordes marcados |
+| --tinta-suave | #6A6F5E | #A9AF99 | Texto secundario |
+| --lima-palida | #F1F6DF | #1F2516 | Fondo de tareas, campos y gráficos |
+| --oscuro | #141414 | #262626 | Tarjetas negras (racha, temporizador, categorías) |
+| --barra | #141414 | #1F1F1F | Barra lateral y barra inferior |
+| --primario-fondo | #141414 | #B1CB5A | Botón principal |
+
+Reglas del modo oscuro:
+
+- **La lima no cambia.** Las tarjetas lima y lima clara siguen con texto negro. Dentro de ellas se vuelven a usar los colores del modo claro ("islas claras"), para que sus botones y campos se vean igual que de día.
+- **Las tarjetas negras se aclaran un poco** (#262626) para que se distingan del fondo.
+- **El botón principal pasa a lima** con texto negro, porque un botón negro se perdería en el fondo oscuro.
+- **Contraste revisado** con la fórmula de WCAG: el texto principal queda en 15:1 o más, el texto secundario en 7:1 o más y el texto sobre lima en 10:1. Todo supera el mínimo AA (4,5:1).
+
 **Pantallas de la Fase 1:** inicio de sesión y registro (pantalla dividida), inicio, tareas (lista y calendario), enfoque, progreso y ajustes.
 
 **Pantallas de las Fases 2 y 3:** metas, deseos (con detalle e historial de precios), estudio (pestañas de paletas, tipografías y plantillas) y ocio (con detalle de ratos).

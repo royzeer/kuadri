@@ -5,10 +5,14 @@ import { AuthProvider } from './context/AuthContext';
 import { AvisoProvider } from './components/AvisoContext';
 import App from './App';
 import { escucharInstalacion } from './utils/instalar';
+import { iniciarTema } from './utils/tema';
 import './index.css';
 
 // Se escucha desde el inicio porque el navegador avisa una sola vez que la app se puede instalar
 escucharInstalacion();
+
+// Modo claro u oscuro según la elección guardada o el sistema
+iniciarTema();
 
 // El service worker solo se registra en producción para no estorbar mientras se programa
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {

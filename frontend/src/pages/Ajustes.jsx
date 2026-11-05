@@ -9,8 +9,35 @@ import Modal from '../components/Modal';
 import CampusForm from '../components/CampusForm';
 import { EVENTO_CAMPUS, resumenSincronizacion, sincronizarCampus } from '../utils/campus';
 import { COLORES_CATEGORIA, colorTexto } from '../utils/color';
+import { elegirTema, useTema } from '../utils/tema';
 
 const COLORES = COLORES_CATEGORIA;
+
+const OPCIONES_TEMA = [
+  { valor: 'claro', texto: 'Claro' },
+  { valor: 'oscuro', texto: 'Oscuro' },
+  { valor: 'sistema', texto: 'Como el sistema' },
+];
+
+// Apariencia: claro, oscuro o seguir lo que diga el celular / computador
+function SeccionApariencia() {
+  const { eleccion } = useTema();
+  return (
+    <section className="tarjeta" style={{ marginTop: 20 }}>
+      <h2 style={{ marginBottom: 6 }}>Apariencia</h2>
+      <p className="texto-suave" style={{ marginBottom: 14 }}>
+        Elige el modo de color. Se recuerda en este dispositivo.
+      </p>
+      <div className="pestanas" role="group" aria-label="Modo de color">
+        {OPCIONES_TEMA.map((o) => (
+          <button key={o.valor} type="button" aria-pressed={eleccion === o.valor} onClick={() => elegirTema(o.valor)}>
+            {o.texto}
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 function FormCategoria({ categoria, onGuardar, onCancelar }) {
   const [datos, setDatos] = useState({
@@ -64,7 +91,7 @@ function FormCategoria({ categoria, onGuardar, onCancelar }) {
                 border: '1px solid rgba(17, 17, 17, 0.08)',
                 borderRadius: '50%',
                 cursor: 'pointer',
-                boxShadow: datos.color === c ? '0 0 0 3px #fff, 0 0 0 5px #111111' : 'none',
+                boxShadow: datos.color === c ? '0 0 0 3px var(--superficie), 0 0 0 5px var(--tinta)' : 'none',
               }}
             />
           ))}
@@ -277,7 +304,7 @@ export default function Ajustes() {
               type="checkbox"
               checked={perfil.avisosCorreo}
               onChange={(e) => setPerfil({ ...perfil, avisosCorreo: e.target.checked })}
-              style={{ width: 22, height: 22, accentColor: '#111' }}
+              style={{ width: 22, height: 22, accentColor: 'var(--tinta)' }}
             />
             Recibir recordatorios por correo
           </label>
@@ -287,6 +314,8 @@ export default function Ajustes() {
           </button>
         </form>
       </section>
+
+      <SeccionApariencia />
 
       <section className="seccion">
         <div className="seccion-titulo">

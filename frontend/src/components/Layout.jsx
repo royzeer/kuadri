@@ -18,6 +18,7 @@ import {
 import { api } from '../api/cliente';
 import { useAuth } from '../context/AuthContext';
 import Logo from './Logo';
+import BotonTema from './BotonTema';
 import { EVENTO_CAMPUS, sincronizarCampus } from '../utils/campus';
 
 // En el celular solo caben los principales en la barra; el resto va en el menú "Más".
@@ -122,6 +123,7 @@ export function Encabezado({ titulo, subtitulo, children }) {
       </div>
       <div className="encabezado-acciones">
         {children}
+        <BotonTema />
         <Notificaciones />
       </div>
     </header>

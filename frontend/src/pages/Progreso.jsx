@@ -34,7 +34,7 @@ function Equilibrio({ minutosEstudio, minutosOcio }) {
           <i className="punto" aria-hidden="true" /> Estudio: <strong>{formatearMinutos(minutosEstudio)}</strong>
         </span>
         <span>
-          <i className="punto" style={{ '--color': 'var(--negro)' }} aria-hidden="true" /> Ocio:{' '}
+          <i className="punto" style={{ '--color': 'var(--gris-oscuro)' }} aria-hidden="true" /> Ocio:{' '}
           <strong>{formatearMinutos(minutosOcio)}</strong>
         </span>
       </div>

@@ -60,6 +60,7 @@ Estudio en dos instituciones al mismo tiempo (Tecnólogo en Análisis y Desarrol
 ### Diseño
 
 - **Diseño propio** en verde lima, negro y blanco, con tarjetas sólidas y píldoras: la semana se llena cuadro por cuadro y el temporizador avanza en una cuadrícula.
+- **Modo claro y oscuro**: sigue el modo del celular o computador la primera vez y recuerda la elección.
 - **Diseño adaptable** a celular, tableta y escritorio, con navegación inferior en celular y un menú "Más" para las demás secciones.
 - **Se instala como app** en la pantalla principal del celular, con un aviso que explica cómo hacerlo.
 - **Portada pública** que explica qué es Kuadri, con metadatos, `robots.txt` y `sitemap.xml` para los buscadores.

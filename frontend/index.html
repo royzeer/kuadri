@@ -24,6 +24,14 @@
     <meta property="og:image:alt" content="Portada de Kuadri, panel personal para organizar el estudio" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#141414" />
+    <script>
+      // Aplica el modo oscuro antes de pintar la página para que no parpadee en blanco (ver src/utils/tema.js)
+      try {
+        var t = localStorage.getItem('kuadri-tema');
+        if (t !== 'claro' && t !== 'oscuro') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'oscuro' : 'claro';
+        document.documentElement.dataset.tema = t;
+      } catch (e) {}
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
